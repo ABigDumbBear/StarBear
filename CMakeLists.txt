@@ -13,6 +13,7 @@ find_package(glfw3 REQUIRED)
 # Gather up the source and header files.
 list(APPEND SOURCE_FILES
             3rd_party/glad/glad.c
+            src/core/Game.cpp
             src/graphics/Font.cpp
             src/graphics/Mesh.cpp
             src/graphics/Model.cpp
@@ -23,6 +24,7 @@ list(APPEND HEADER_FILES
             3rd_party/glad/glad.h
             3rd_party/KHR/khrplatform.h
             3rd_party/stb_image/stb_image.h
+            include/core/Game.hpp
             include/graphics/Font.hpp
             include/graphics/Mesh.hpp
             include/graphics/Shader.hpp
@@ -38,6 +40,7 @@ target_link_libraries(starBear PUBLIC glfw
                                       ${FREETYPE_LIBRARIES}
                                       ${ASSIMP_LIBRARIES})
 target_include_directories(starBear PUBLIC 3rd_party
+                                           include/core
                                            include/graphics
                                            include/math
                                            ${FREETYPE_INCLUDE_DIRS}

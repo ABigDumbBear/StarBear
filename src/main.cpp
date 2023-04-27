@@ -2,6 +2,9 @@
 #include <GLFW/glfw3.h>
 
 #include <iostream>
+#include <memory>
+
+#include "Game.hpp"
 
 /******************************************************************************/
 int main()
@@ -49,14 +52,10 @@ int main()
   glViewport(0, 0, 1280, 720);
   glEnable(GL_DEPTH_TEST);
 
-  // Run until instructed to close.
-  while(!glfwWindowShouldClose(window))
-  {
-    glfwSwapBuffers(window);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    glfwPollEvents();
-  }
+  // Create a Game and run it.
+  auto game = std::make_unique<StarBear::Game>(window);
+  game->Run();
+  game.reset(nullptr);
 
   glfwTerminate();
   return 0;
