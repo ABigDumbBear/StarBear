@@ -12,7 +12,7 @@
 
 #include "Mat4.hpp"
 
-namespace KumaGL {
+namespace StarBear {
 
 struct MeshVertex
 {
@@ -56,6 +56,6 @@ class Mesh
     GLuint mElementBuffer { 0 };
 };
 
-} // namespace KumaGL
+} // namespace StarBear
 
 #endif

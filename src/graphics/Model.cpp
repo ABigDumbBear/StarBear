@@ -5,7 +5,7 @@
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 
-namespace KumaGL {
+namespace StarBear {
 
 /******************************************************************************/
 void Model::LoadFromFile(const std::string& aFile)
@@ -109,4 +109,4 @@ void Model::ProcessMesh(aiMesh& aMesh,
   mMeshes.emplace_back(std::move(mesh));
 }
 
-} // namespace KumaGL
+} // namespace StarBear

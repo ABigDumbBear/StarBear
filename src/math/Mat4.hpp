@@ -5,7 +5,7 @@
 
 #include "Vec3.hpp"
 
-namespace KumaGL {
+namespace StarBear {
 
 /**
  * A 4x4 matrix used for vector transformation purposes. The values of the
@@ -104,6 +104,6 @@ inline Vec3 operator*(const Mat4& lhs, const Vec3& rhs)
               lhs(0, 2) * rhs.x + lhs(1, 2) * rhs.y + lhs(2, 2) * rhs.z + lhs(3, 2) * 1.0);
 };
 
-} // namespace KumaGL
+} // namespace StarBear
 
 #endif

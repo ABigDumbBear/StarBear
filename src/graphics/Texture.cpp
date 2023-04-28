@@ -3,7 +3,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image/stb_image.h>
 
-namespace KumaGL {
+namespace StarBear {
 
 /******************************************************************************/
 Texture::Texture()
@@ -58,4 +58,4 @@ void Texture::LoadFromData(unsigned char* aData,
   glGenerateMipmap(GL_TEXTURE_2D);
 }
 
-} // namespace KumaGL
+} // namespace StarBear

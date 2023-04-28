@@ -20,19 +20,6 @@ list(APPEND SOURCE_FILES
             src/graphics/Shader.cpp
             src/graphics/Texture.cpp
             src/main.cpp)
-list(APPEND HEADER_FILES
-            3rd_party/glad/glad.h
-            3rd_party/KHR/khrplatform.h
-            3rd_party/stb_image/stb_image.h
-            include/core/Game.hpp
-            include/graphics/Font.hpp
-            include/graphics/Mesh.hpp
-            include/graphics/Shader.hpp
-            include/graphics/Texture.hpp
-            include/graphics/Transform.hpp
-            include/math/Mat4.hpp
-            include/math/MathUtil.hpp
-            include/math/Vec3.hpp)
 
 # Create the executable.
 add_executable(starBear ${SOURCE_FILES})
@@ -40,9 +27,9 @@ target_link_libraries(starBear PUBLIC glfw
                                       ${FREETYPE_LIBRARIES}
                                       ${ASSIMP_LIBRARIES})
 target_include_directories(starBear PUBLIC 3rd_party
-                                           include/core
-                                           include/graphics
-                                           include/math
+                                           src/core
+                                           src/graphics
+                                           src/math
                                            ${FREETYPE_INCLUDE_DIRS}
                                            ${ASSIMP_INCLUDE_DIRS})
 

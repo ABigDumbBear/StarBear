@@ -6,12 +6,12 @@
 
 #include "MathUtil.hpp"
 
-namespace KumaGL {
+namespace StarBear {
 
 class Transform
 {
   public:
-    void Translate(const KumaGL::Vec3& aPos)
+    void Translate(const StarBear::Vec3& aPos)
     {
       mPosition += aPos;
       UpdateMatrix();
@@ -19,15 +19,15 @@ class Transform
 
     void Rotate(float x, float y, float z)
     {
-      mRotation = mRotation * KumaGL::Rotate(Vec3(1, 0, 0), x);
-      mRotation = mRotation * KumaGL::Rotate(Vec3(0, 1, 0), y);
-      mRotation = mRotation * KumaGL::Rotate(Vec3(0, 0, 1), z);
+      mRotation = mRotation * StarBear::Rotate(Vec3(1, 0, 0), x);
+      mRotation = mRotation * StarBear::Rotate(Vec3(0, 1, 0), y);
+      mRotation = mRotation * StarBear::Rotate(Vec3(0, 0, 1), z);
       UpdateMatrix();
     }
 
-    void Rotate(const KumaGL::Vec3& aAxis, float aDegrees)
+    void Rotate(const StarBear::Vec3& aAxis, float aDegrees)
     {
-      mRotation = mRotation * KumaGL::Rotate(aAxis, aDegrees);
+      mRotation = mRotation * StarBear::Rotate(aAxis, aDegrees);
       UpdateMatrix();
     }
 
@@ -45,15 +45,15 @@ class Transform
 
     void SetRotation(float x, float y, float z)
     {
-      mRotation = KumaGL::Rotate(Vec3(1, 0, 0), x);
-      mRotation = mRotation * KumaGL::Rotate(Vec3(0, 1, 0), y);
-      mRotation = mRotation * KumaGL::Rotate(Vec3(0, 0, 1), z);
+      mRotation = StarBear::Rotate(Vec3(1, 0, 0), x);
+      mRotation = mRotation * StarBear::Rotate(Vec3(0, 1, 0), y);
+      mRotation = mRotation * StarBear::Rotate(Vec3(0, 0, 1), z);
       UpdateMatrix();
     }
 
-    void SetRotation(const KumaGL::Vec3& aAxis, float aDegrees)
+    void SetRotation(const StarBear::Vec3& aAxis, float aDegrees)
     {
-      mRotation = KumaGL::Rotate(aAxis, aDegrees);
+      mRotation = StarBear::Rotate(aAxis, aDegrees);
       UpdateMatrix();
     }
 
@@ -72,9 +72,9 @@ class Transform
   private:
     void UpdateMatrix()
     {
-      mMatrix = KumaGL::Translate(mPosition);
+      mMatrix = StarBear::Translate(mPosition);
       mMatrix = mMatrix * mRotation;
-      mMatrix = mMatrix * KumaGL::Scale(mScalar);
+      mMatrix = mMatrix * StarBear::Scale(mScalar);
     }
 
     Vec3 mPosition;
@@ -84,6 +84,6 @@ class Transform
     Mat4 mMatrix;
 };
 
-} // namespace KumaGL
+} // namespace StarBear
 
 #endif

@@ -7,6 +7,8 @@
 #include "Model.hpp"
 #include "Shader.hpp"
 
+#include "ECS.hpp"
+
 namespace StarBear {
 
 class Game
@@ -19,8 +21,10 @@ class Game
   private:
     GLFWwindow* mWindow;
 
-    KumaGL::Shader mShader;
-    KumaGL::Model mModel;
+    Shader mShader;
+    Model mModel;
+
+    Scene mScene;
 };
 
 } // namespace StarBear

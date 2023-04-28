@@ -1,6 +1,6 @@
 #include "Mesh.hpp"
 
-namespace KumaGL {
+namespace StarBear {
 
 /******************************************************************************/
 Mesh::Mesh()
@@ -160,4 +160,4 @@ void Mesh::UpdateIndices()
                GL_STATIC_DRAW);
 }
 
-} // namespace KumaGL
+} // namespace StarBear

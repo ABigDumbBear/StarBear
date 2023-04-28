@@ -4,7 +4,7 @@
 #include <fstream>
 #include <sstream>
 
-namespace KumaGL {
+namespace StarBear {
 
 /******************************************************************************/
 Shader::Shader()
@@ -134,4 +134,4 @@ void Shader::LinkProgram(unsigned int aVertexID,
   }
 }
 
-} // namespace KumaGL
+} // namespace StarBear

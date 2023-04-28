@@ -12,19 +12,19 @@ Game::Game(GLFWwindow* aWindow)
   mShader.LoadFromFiles("resources/shaders/Ship.vert",
                         "resources/shaders/Ship.frag");
   mModel.LoadFromFile("resources/models/Spitfire/OBJ/Spitfire.obj");
+
+  mScene.RegisterComponentType<Transform>(1);
 }
 
 /******************************************************************************/
 void Game::Run()
 {
-  KumaGL::Transform modelTransform;
-  modelTransform.SetPosition(KumaGL::Vec3(0, 0, -10));
+  Transform modelTransform;
+  modelTransform.SetPosition(Vec3(0, 0, -10));
   mShader.Use();
   mShader.SetMat4("modelMatrix", modelTransform.GetMatrix());
-  mShader.SetMat4("viewMatrix", KumaGL::View(KumaGL::Vec3(0, 0, 1),
-                                             KumaGL::Vec3(1, 0, 0),
-                                             KumaGL::Vec3(0, 0, 0)));
-  mShader.SetMat4("projectionMatrix", KumaGL::Perspective(45, 1280, 720, 0.1, 100));
+  mShader.SetMat4("viewMatrix", View(Vec3(0, 0, 1), Vec3(1, 0, 0), Vec3(0, 0, 0)));
+  mShader.SetMat4("projectionMatrix", Perspective(45, 1280, 720, 0.1, 100));
 
   // Run until instructed to close.
   while(!glfwWindowShouldClose(mWindow))

@@ -5,12 +5,13 @@
 #include <cassert>
 #include <cstddef>
 #include <memory>
+#include <queue>
 #include <set>
 #include <typeinfo>
 #include <unordered_map>
 #include <vector>
 
-namespace ecs {
+namespace StarBear {
 
 /*******************************************************************************
  * Definitions
@@ -88,6 +89,30 @@ class ComponentMap : public IComponentMap
 class Scene
 {
   public:
+    Scene(size_t aMaxEntities)
+    {
+      for(size_t i = 0; i < aMaxEntities; ++i)
+      {
+        mAvailableEntities.push(i);
+        mEntitySignatures.emplace_back();
+      }
+    }
+
+    Entity CreateEntity()
+    {
+      assert(!mAvailableEntities.empty());
+
+      Entity entity = mAvailableEntities.front();
+      mAvailableEntities.pop();
+      return entity;
+    }
+
+    void DestroyEntity(Entity aEntity)
+    {
+      mAvailableEntities.push(aEntity);
+      mEntitySignatures[aEntity].reset();
+    }
+
     template<typename T>
     void RegisterComponentType(size_t aMax)
     {
@@ -106,6 +131,7 @@ class Scene
 
       auto componentMap = mComponentMaps[mComponentToIndexMap[name]].get();
       static_cast<ComponentMap<T>*>(componentMap)->AddComponent(aEntity);
+      mEntitySignatures[aEntity].set(mComponentToIndexMap[name]);
     }
 
     template<typename T>
@@ -116,6 +142,7 @@ class Scene
 
       auto componentMap = mComponentMaps[mComponentToIndexMap[name]].get();
       static_cast<ComponentMap<T>*>(componentMap)->RemoveComponent(aEntity);
+      mEntitySignatures[aEntity].reset(mComponentToIndexMap[name]);
     }
 
     template<typename T>
@@ -128,11 +155,27 @@ class Scene
       return static_cast<ComponentMap<T>*>(componentMap)->GetComponent(aEntity);
     }
 
+    template<typename T>
+    void RegisterSystemType(const Signature& aSignature)
+    {
+      auto name = typeid(T).name();
+      assert(mSystemToIndexMap.find(name) == mSystemToIndexMap.end());
+
+      mSystemToIndexMap.emplace(name, mSystemSignatures.size());
+      mSystemSignatures.emplace_back(aSignature);
+    }
+
   private:
+    std::queue<Entity> mAvailableEntities;
+    std::vector<Signature> mEntitySignatures;
+
+    std::unordered_map<const char*, size_t> mSystemToIndexMap;
+    std::vector<Signature> mSystemSignatures;
+
     std::unordered_map<const char*, size_t> mComponentToIndexMap;
     std::vector<std::unique_ptr<IComponentMap>> mComponentMaps;
 };
 
-} // namespace ecs
+} // namespace StarBear
 
 #endif

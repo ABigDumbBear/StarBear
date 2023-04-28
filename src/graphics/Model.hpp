@@ -10,7 +10,7 @@
 #include "Mesh.hpp"
 #include "Texture.hpp"
 
-namespace KumaGL {
+namespace StarBear {
 
 class Model
 {
@@ -35,6 +35,6 @@ class Model
     std::vector<std::unique_ptr<Mesh>> mMeshes;
 };
 
-} // namespace KumaGL
+} // namespace StarBear
 
 #endif

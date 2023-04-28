@@ -5,7 +5,7 @@
 
 #include <glad/glad.h>
 
-namespace KumaGL {
+namespace StarBear {
 
 FT_Library Font::mLibrary = nullptr;
 int Font::mInstances = 0;
@@ -244,4 +244,4 @@ void Font::CreateGlyphMap(int aSize)
   }
 }
 
-} // namespace KumaGL
+} // namespace StarBear

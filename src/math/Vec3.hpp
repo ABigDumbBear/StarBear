@@ -3,7 +3,7 @@
 
 #include <ostream>
 
-namespace KumaGL {
+namespace StarBear {
 
 /**
  * A simple 3-dimensional vector class.
@@ -103,6 +103,6 @@ inline Vec3 operator/(const Vec3& lhs, float rhs)
   return Vec3(lhs.x / rhs, lhs.y / rhs, lhs.z / rhs);
 }
 
-} // namespace KumaGL
+} // namespace StarBear
 
 #endif

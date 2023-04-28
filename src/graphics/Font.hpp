@@ -10,7 +10,7 @@
 class FT_FaceRec_;
 class FT_LibraryRec_;
 
-namespace KumaGL {
+namespace StarBear {
 
 class Font
 {
@@ -46,6 +46,6 @@ class Font
     static int mInstances;
 };
 
-} // namespace KumaGL
+} // namespace StarBear
 
 #endif

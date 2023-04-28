@@ -8,7 +8,7 @@
 #include "Mat4.hpp"
 #include "Vec3.hpp"
 
-namespace KumaGL {
+namespace StarBear {
 
 class Shader
 {
@@ -47,6 +47,6 @@ class Shader
     GLuint mID { 0 };
 };
 
-} // namespace KumaGL
+} // namespace StarBear
 
 #endif

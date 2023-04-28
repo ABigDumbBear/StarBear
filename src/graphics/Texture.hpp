@@ -5,7 +5,7 @@
 
 #include <glad/glad.h>
 
-namespace KumaGL {
+namespace StarBear {
 
 class Texture
 {
@@ -36,6 +36,6 @@ class Texture
     GLuint mID { 0 };
 };
 
-} // namespace KumaGL
+} // namespace StarBear
 
 #endif
