@@ -17,6 +17,7 @@ namespace StarBear {
  * Definitions
  ******************************************************************************/
 const size_t MAX_COMPONENT_TYPES = 64;
+const size_t MAX_ENTITIES = 5000;
 
 using Entity = size_t;
 using EntitySet = std::set<Entity>;
@@ -27,24 +28,28 @@ using Signature = std::bitset<MAX_COMPONENT_TYPES>;
  ******************************************************************************/
 class System
 {
-  protected:
+  public:
     EntitySet mEntities;
 };
 
 /*******************************************************************************
  * ComponentMap
  ******************************************************************************/
-class IComponentMap { };
+class IComponentMap
+{
+  public:
+    virtual void RemoveComponent(Entity aEntity) = 0;
+};
 
 template <typename T>
 class ComponentMap : public IComponentMap
 {
   public:
-    ComponentMap<T>(size_t aMax)
+    ComponentMap<T>(size_t aMaxComponents)
       : mSize(0)
     {
-      mComponents.reserve(aMax);
-      for(size_t i = 0; i < aMax; ++i)
+      mComponents.reserve(aMaxComponents);
+      for(size_t i = 0; i < aMaxComponents; ++i)
       {
         mComponents.emplace_back();
       }
@@ -60,7 +65,7 @@ class ComponentMap : public IComponentMap
       ++mSize;
     }
 
-    void RemoveComponent(Entity aEntity)
+    void RemoveComponent(Entity aEntity) override
     {
       assert(mEntityToIndexMap.find(aEntity) != mEntityToIndexMap.end());
 
@@ -89,9 +94,9 @@ class ComponentMap : public IComponentMap
 class Scene
 {
   public:
-    Scene(size_t aMaxEntities)
+    Scene()
     {
-      for(size_t i = 0; i < aMaxEntities; ++i)
+      for(size_t i = 0; i < MAX_ENTITIES; ++i)
       {
         mAvailableEntities.push(i);
         mEntitySignatures.emplace_back();
@@ -111,6 +116,11 @@ class Scene
     {
       mAvailableEntities.push(aEntity);
       mEntitySignatures[aEntity].reset();
+
+      for(auto& system : mSystems)
+      {
+        system->mEntities.erase(aEntity);
+      }
     }
 
     template<typename T>
@@ -124,6 +134,15 @@ class Scene
     }
 
     template<typename T>
+    void AddComponentToSignature(Signature& aSignature)
+    {
+      auto name = typeid(T).name();
+      assert(mComponentToIndexMap.find(name) != mComponentToIndexMap.end());
+
+      aSignature.set(mComponentToIndexMap[name]);
+    }
+
+    template<typename T>
     void AddComponentToEntity(Entity aEntity)
     {
       auto name = typeid(T).name();
@@ -132,6 +151,15 @@ class Scene
       auto componentMap = mComponentMaps[mComponentToIndexMap[name]].get();
       static_cast<ComponentMap<T>*>(componentMap)->AddComponent(aEntity);
       mEntitySignatures[aEntity].set(mComponentToIndexMap[name]);
+
+      for(size_t i = 0; i < mSystems.size(); ++i)
+      {
+        auto systemSignature = mSystemSignatures[i];
+        if((systemSignature & mEntitySignatures[aEntity]) == systemSignature)
+        {
+          mSystems[i]->mEntities.insert(aEntity);
+        }
+      }
     }
 
     template<typename T>
@@ -143,6 +171,15 @@ class Scene
       auto componentMap = mComponentMaps[mComponentToIndexMap[name]].get();
       static_cast<ComponentMap<T>*>(componentMap)->RemoveComponent(aEntity);
       mEntitySignatures[aEntity].reset(mComponentToIndexMap[name]);
+
+      for(size_t i = 0; i < mSystems.size(); ++i)
+      {
+        auto systemSignature = mSystemSignatures[i];
+        if((systemSignature & mEntitySignatures[aEntity]) != systemSignature)
+        {
+          mSystems[i]->mEntities.erase(aEntity);
+        }
+      }
     }
 
     template<typename T>
@@ -156,13 +193,15 @@ class Scene
     }
 
     template<typename T>
-    void RegisterSystemType(const Signature& aSignature)
+    T* RegisterSystemType(const Signature& aSignature)
     {
       auto name = typeid(T).name();
       assert(mSystemToIndexMap.find(name) == mSystemToIndexMap.end());
 
       mSystemToIndexMap.emplace(name, mSystemSignatures.size());
       mSystemSignatures.emplace_back(aSignature);
+      mSystems.emplace_back(std::make_unique<T>());
+      return static_cast<T*>(mSystems.back().get());
     }
 
   private:
@@ -171,6 +210,7 @@ class Scene
 
     std::unordered_map<const char*, size_t> mSystemToIndexMap;
     std::vector<Signature> mSystemSignatures;
+    std::vector<std::unique_ptr<System>> mSystems;
 
     std::unordered_map<const char*, size_t> mComponentToIndexMap;
     std::vector<std::unique_ptr<IComponentMap>> mComponentMaps;

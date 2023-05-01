@@ -19,6 +19,7 @@ list(APPEND SOURCE_FILES
             src/graphics/Model.cpp
             src/graphics/Shader.cpp
             src/graphics/Texture.cpp
+            src/systems/ShipControllerSystem.cpp
             src/main.cpp)
 
 # Create the executable.
@@ -27,13 +28,14 @@ target_link_libraries(starBear PUBLIC glfw
                                       ${FREETYPE_LIBRARIES}
                                       ${ASSIMP_LIBRARIES})
 target_include_directories(starBear PUBLIC 3rd_party
+                                           src/components
                                            src/core
                                            src/graphics
                                            src/math
+                                           src/systems
                                            ${FREETYPE_INCLUDE_DIRS}
                                            ${ASSIMP_INCLUDE_DIRS})
 
 # Install the executable.
 install(TARGETS starBear DESTINATION ${CMAKE_SOURCE_DIR}/install)
-install(FILES ${HEADER_FILES} DESTINATION ${CMAKE_SOURCE_DIR}/install/include)
 install(DIRECTORY resources DESTINATION ${CMAKE_SOURCE_DIR}/install)
