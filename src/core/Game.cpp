@@ -22,13 +22,29 @@ void GLFWFramebufferSizeCallback(GLFWwindow* aWindow, int aWidth, int aHeight)
 }
 
 /******************************************************************************/
+void GLFWKeyPressedCallback(GLFWwindow* aWindow, int aKey, int aScancode, int aAction, int aMods)
+{
+  auto game = static_cast<Game*>(glfwGetWindowUserPointer(aWindow));
+  if(aAction == GLFW_PRESS)
+  {
+    game->mPressedKeys.insert(aKey);
+  }
+  else if(aAction == GLFW_RELEASE)
+  {
+    game->mPressedKeys.erase(aKey);
+  }
+}
+
+/******************************************************************************/
 Game::Game(GLFWwindow* aWindow)
   : mWindow(aWindow)
   , mShipControllerSystem(nullptr)
 {
   // Set GLFW callbacks.
-  glfwSetFramebufferSizeCallback(mWindow, GLFWFramebufferSizeCallback);
+  glfwSetWindowUserPointer(mWindow, this);
   glfwSetErrorCallback(GLFWErrorCallback);
+  glfwSetFramebufferSizeCallback(mWindow, GLFWFramebufferSizeCallback);
+  glfwSetKeyCallback(mWindow, GLFWKeyPressedCallback);
 
   // Load resources.
   mShader.LoadFromFiles("resources/shaders/Ship.vert",

@@ -22,6 +22,8 @@ class Game
 
     void Run();
 
+    std::set<int> mPressedKeys;
+
   private:
     GLFWwindow* mWindow;
 
@@ -29,8 +31,6 @@ class Game
     Shader mShader;
 
     Scene mScene;
-
-    std::set<int> mPressedKeys;
 
     ShipControllerSystem* mShipControllerSystem;
 };
