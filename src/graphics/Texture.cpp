@@ -9,12 +9,40 @@ namespace StarBear {
 Texture::Texture()
 {
   glGenTextures(1, &mID);
+  mValid = true;
 }
 
 /******************************************************************************/
 Texture::~Texture()
 {
-  glDeleteTextures(1, &mID);
+  if(mValid)
+  {
+    glDeleteTextures(1, &mID);
+  }
+}
+
+/******************************************************************************/
+Texture::Texture(Texture&& aTexture)
+{
+  mWidth = aTexture.mWidth;
+  mHeight = aTexture.mHeight;
+  mID = aTexture.mID;
+
+  mValid = true;
+  aTexture.mValid = false;
+}
+
+/******************************************************************************/
+Texture& Texture::operator=(Texture&& aTexture)
+{
+  mWidth = aTexture.mWidth;
+  mHeight = aTexture.mHeight;
+  mID = aTexture.mID;
+
+  mValid = true;
+  aTexture.mValid = false;
+
+  return *this;
 }
 
 /******************************************************************************/

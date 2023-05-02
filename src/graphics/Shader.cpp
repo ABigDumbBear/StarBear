@@ -15,7 +15,30 @@ Shader::Shader()
 /******************************************************************************/
 Shader::~Shader()
 {
-  glDeleteProgram(mID);
+  if(mValid)
+  {
+    glDeleteProgram(mID);
+  }
+}
+
+/******************************************************************************/
+Shader::Shader(Shader&& aShader)
+{
+  mID = aShader.mID;
+
+  aShader.mValid = false;
+  mValid = true;
+}
+
+/******************************************************************************/
+Shader& Shader::operator=(Shader&& aShader)
+{
+  mID = aShader.mID;
+
+  aShader.mValid = false;
+  mValid = true;
+
+  return *this;
 }
 
 /******************************************************************************/

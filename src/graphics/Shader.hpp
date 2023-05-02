@@ -15,10 +15,10 @@ class Shader
   public:
     Shader();
     ~Shader();
+    Shader(Shader&& aShader);
+    Shader& operator=(Shader&& aShader);
     Shader(const Shader& aShader) = delete;
     Shader& operator=(const Shader& aShader) = delete;
-    Shader(Shader&&) = delete;
-    Shader& operator=(Shader&& aMesh) = delete;
 
     void LoadFromFiles(const std::string& aVertexFile,
                        const std::string& aFragmentFile);
@@ -45,6 +45,8 @@ class Shader
     void LinkProgram(unsigned int aVertexID, unsigned int aFragmentID);
 
     GLuint mID { 0 };
+
+    bool mValid { false };
 };
 
 } // namespace StarBear

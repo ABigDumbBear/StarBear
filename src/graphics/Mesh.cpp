@@ -96,15 +96,52 @@ Mesh::Mesh()
 
   // Unbind the vertex array.
   glBindVertexArray(0);
+
+  mValid = true;
 }
 
 /******************************************************************************/
 Mesh::~Mesh()
 {
-  glDeleteVertexArrays(1, &mVertexArray);
-  glDeleteBuffers(1, &mVertexBuffer);
-  glDeleteBuffers(1, &mInstanceBuffer);
-  glDeleteBuffers(1, &mElementBuffer);
+  if(mValid)
+  {
+    glDeleteVertexArrays(1, &mVertexArray);
+    glDeleteBuffers(1, &mVertexBuffer);
+    glDeleteBuffers(1, &mInstanceBuffer);
+    glDeleteBuffers(1, &mElementBuffer);
+  }
+}
+
+/******************************************************************************/
+Mesh::Mesh(Mesh&& aMesh)
+{
+  mVertices = aMesh.mVertices;
+  mIndices = aMesh.mIndices;
+
+  mVertexArray = aMesh.mVertexArray;
+  mVertexBuffer = aMesh.mVertexBuffer;
+  mInstanceBuffer = aMesh.mInstanceBuffer;
+  mElementBuffer = aMesh.mElementBuffer;
+
+  aMesh.mValid = false;
+  mValid = true;
+}
+
+/******************************************************************************/
+Mesh& Mesh::operator=(Mesh&& aMesh)
+{
+  mVertices = aMesh.mVertices;
+  mIndices = aMesh.mIndices;
+
+  mVertexArray = aMesh.mVertexArray;
+  mVertexBuffer = aMesh.mVertexBuffer;
+  mInstanceBuffer = aMesh.mInstanceBuffer;
+  mElementBuffer = aMesh.mElementBuffer;
+
+  aMesh.mValid = false;
+  mValid = true;
+
+  return *this;
 }
 
 /******************************************************************************/

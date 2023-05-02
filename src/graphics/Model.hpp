@@ -1,7 +1,6 @@
 #ifndef MODEL_HPP
 #define MODEL_HPP
 
-#include <memory>
 #include <vector>
 
 #include <assimp/material.h>
@@ -32,7 +31,7 @@ class Model
                      const aiScene& aScene,
                      const std::string& aWorkingDirectory);
 
-    std::vector<std::unique_ptr<Mesh>> mMeshes;
+    std::vector<Mesh> mMeshes;
 };
 
 } // namespace StarBear

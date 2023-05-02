@@ -12,10 +12,10 @@ class Texture
   public:
     Texture();
     ~Texture();
+    Texture(Texture&& aTexture);
+    Texture& operator=(Texture&& aTexture);
     Texture(const Texture& aTexture) = delete;
     Texture& operator=(const Texture& aTexture) = delete;
-    Texture(Texture&&) = delete;
-    Texture& operator=(Texture&& aMesh) = delete;
 
     void LoadFromFile(const std::string& aFile,
                       GLint aLoadFormat = GL_RGBA);
@@ -34,6 +34,8 @@ class Texture
     int mHeight { 0 };
 
     GLuint mID { 0 };
+
+    bool mValid { false };
 };
 
 } // namespace StarBear

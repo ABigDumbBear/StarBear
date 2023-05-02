@@ -4,8 +4,6 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include <memory>
-
 #include "Model.hpp"
 #include "Shader.hpp"
 
@@ -25,8 +23,8 @@ class Game
   private:
     GLFWwindow* mWindow;
 
-    Shader mShader;
     Model mModel;
+    Shader mShader;
 
     Scene mScene;
 

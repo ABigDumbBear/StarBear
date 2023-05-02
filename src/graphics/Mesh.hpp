@@ -27,10 +27,10 @@ class Mesh
   public:
     Mesh();
     ~Mesh();
+    Mesh(Mesh&& aMesh);
+    Mesh& operator=(Mesh&& aMesh);
     Mesh(const Mesh& aMesh) = delete;
     Mesh& operator=(const Mesh& aMesh) = delete;
-    Mesh(Mesh&&) = delete;
-    Mesh& operator=(Mesh&& aMesh) = delete;
 
     void Draw(const Shader& aShader,
               GLenum aMode = GL_TRIANGLES) const;
@@ -54,6 +54,8 @@ class Mesh
     GLuint mVertexBuffer { 0 };
     GLuint mInstanceBuffer { 0 };
     GLuint mElementBuffer { 0 };
+
+    bool mValid { false };
 };
 
 } // namespace StarBear
