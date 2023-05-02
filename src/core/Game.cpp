@@ -5,6 +5,8 @@
 #include "MathUtil.hpp"
 #include "Transform.hpp"
 
+#include "ShipController.hpp"
+
 namespace StarBear {
 
 /******************************************************************************/
@@ -33,15 +35,20 @@ Game::Game(GLFWwindow* aWindow)
                         "resources/shaders/Ship.frag");
   mModel.LoadFromFile("resources/models/Spitfire/OBJ/Spitfire.obj");
 
-  // Set up the scene.
+  // Register components.
   mScene.RegisterComponentType<Transform>(1);
+  mScene.RegisterComponentType<ShipController>(1);
 
+  // Register systems.
   Signature sig;
   mScene.AddComponentToSignature<Transform>(sig);
+  mScene.AddComponentToSignature<ShipController>(sig);
   mShipControllerSystem = mScene.RegisterSystemType<ShipControllerSystem>(sig);
 
+  // Create entities.
   auto ship = mScene.CreateEntity();
   mScene.AddComponentToEntity<Transform>(ship);
+  mScene.AddComponentToEntity<ShipController>(ship);
 }
 
 /******************************************************************************/

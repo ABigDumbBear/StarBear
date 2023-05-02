@@ -4,6 +4,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include <set>
+
 #include "Model.hpp"
 #include "Shader.hpp"
 
@@ -27,6 +29,8 @@ class Game
     Shader mShader;
 
     Scene mScene;
+
+    std::set<int> mPressedKeys;
 
     ShipControllerSystem* mShipControllerSystem;
 };
