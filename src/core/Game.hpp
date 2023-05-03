@@ -4,12 +4,11 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include <set>
-
 #include "Model.hpp"
 #include "Shader.hpp"
 
 #include "ECS.hpp"
+#include "Input.hpp"
 
 #include "ShipControllerSystem.hpp"
 
@@ -22,10 +21,12 @@ class Game
 
     void Run();
 
-    std::set<int> mPressedKeys;
+    void FramebufferSizeCallback(int aWidth, int aHeight);
+    void KeyCallback(int aKey, int aScancode, int aAction, int aMods);
 
   private:
     GLFWwindow* mWindow;
+    Input mInput;
 
     Model mModel;
     Shader mShader;
