@@ -30,8 +30,12 @@ class Model
                      unsigned int aMeshIndex,
                      const aiScene& aScene,
                      const std::string& aWorkingDirectory);
+    void ProcessMaterialTextures(aiMaterial& aMaterial,
+                                 aiTextureType aTextureType,
+                                 const std::string& aWorkingDirectory);
 
     std::vector<Mesh> mMeshes;
+    std::vector<Texture> mTextures;
 };
 
 } // namespace StarBear

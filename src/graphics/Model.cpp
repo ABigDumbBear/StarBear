@@ -16,13 +16,19 @@ void Model::LoadFromFile(const std::string& aFile)
   auto scene = importer.ReadFile(aFile,
                                  aiProcess_Triangulate | aiProcess_FlipUVs);
 
-  auto workingDirectory = aFile.substr(0, aFile.find_last_of("/\\"));
+  auto workingDirectory = aFile.substr(0, aFile.find_last_of("/\\") + 1);
   ProcessNode(*scene->mRootNode, *scene, workingDirectory);
 }
 
 /******************************************************************************/
 void Model::Draw(const Shader& aShader, GLenum aMode) const
 {
+  for(size_t i = 0; i < mTextures.size(); ++i)
+  {
+    glActiveTexture(GL_TEXTURE0 + i);
+    glBindTexture(GL_TEXTURE_2D, mTextures[i].GetID());
+  }
+
   for(const auto& mesh : mMeshes)
   {
     mesh.Draw(aShader, aMode);
@@ -102,12 +108,35 @@ void Model::ProcessMesh(aiMesh& aMesh,
   // Retrieve the material data.
   if(aMesh.mMaterialIndex >= 0)
   {
+    auto& material = *aScene.mMaterials[aMesh.mMaterialIndex];
+    ProcessMaterialTextures(material, aiTextureType_DIFFUSE, aWorkingDirectory);
   }
 
   mesh.UpdateVertices();
   mesh.UpdateIndices();
 
   mMeshes.emplace_back(std::move(mesh));
+}
+
+/******************************************************************************/
+void Model::ProcessMaterialTextures(aiMaterial& aMaterial,
+                                    aiTextureType aTextureType,
+                                    const std::string& aWorkingDirectory)
+{
+  std::stringstream path;
+  for(size_t i = 0; i < aMaterial.GetTextureCount(aTextureType); ++i)
+  {
+    aiString str;
+    aMaterial.GetTexture(aTextureType, i, &str);
+
+    path << aWorkingDirectory << str.C_Str();
+
+    Texture texture;
+    texture.LoadFromFile(path.str());
+    mTextures.emplace_back(std::move(texture));
+
+    path.str("");
+  }
 }
 
 } // namespace StarBear
