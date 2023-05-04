@@ -22,6 +22,8 @@ class Model
                        int aNumInstances,
                        GLenum aMode = GL_TRIANGLES) const;
 
+    std::vector<Mesh>& GetMeshes() { return mMeshes; }
+
   private:
     void ProcessNode(aiNode& aNode,
                      const aiScene& aScene,

@@ -33,11 +33,6 @@ Game::Game(GLFWwindow* aWindow)
     game->KeyCallback(aKey, aScancode, aAction, aMods);
   });
 
-  // Load resources.
-  mShader.LoadFromFiles("resources/shaders/Ship.vert",
-                        "resources/shaders/Ship.frag");
-  mModel.LoadFromFile("resources/models/Spitfire/OBJ/Spitfire.obj");
-
   // Register components.
   mScene.RegisterComponentType<Transform>(1);
   mScene.RegisterComponentType<ShipController>(1);
@@ -47,6 +42,7 @@ Game::Game(GLFWwindow* aWindow)
   mScene.AddComponentToSignature<Transform>(sig);
   mScene.AddComponentToSignature<ShipController>(sig);
   mShipControllerSystem = mScene.RegisterSystemType<ShipControllerSystem>(sig);
+  mShipRenderSystem = mScene.RegisterSystemType<ShipRenderSystem>(sig);
 
   // Create entities.
   auto ship = mScene.CreateEntity();
@@ -65,15 +61,7 @@ void Game::Run()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     mShipControllerSystem->Update(mScene, mInput);
-
-    auto& modelTransform = mScene.GetComponentForEntity<Transform>(0);
-    mShader.Use();
-    mShader.SetMat4("modelMatrix", modelTransform.GetMatrix());
-    mShader.SetMat4("viewMatrix", View(Vec3(0, 0, 1), Vec3(1, 0, 0), Vec3(0, 0, 30)));
-    mShader.SetMat4("projectionMatrix", Perspective(45, 1280, 720, 0.1, 100));
-    mShader.SetMat4("modelMatrix", modelTransform.GetMatrix());
-
-    mModel.Draw(mShader);
+    mShipRenderSystem->Render(mScene);
 
     glfwPollEvents();
   }

@@ -4,13 +4,11 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "Model.hpp"
-#include "Shader.hpp"
-
 #include "ECS.hpp"
 #include "Input.hpp"
 
 #include "ShipControllerSystem.hpp"
+#include "ShipRenderSystem.hpp"
 
 namespace StarBear {
 
@@ -28,12 +26,10 @@ class Game
     GLFWwindow* mWindow;
     Input mInput;
 
-    Model mModel;
-    Shader mShader;
-
     Scene mScene;
 
     ShipControllerSystem* mShipControllerSystem;
+    ShipRenderSystem* mShipRenderSystem;
 };
 
 } // namespace StarBear

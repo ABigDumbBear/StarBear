@@ -20,6 +20,7 @@ list(APPEND SOURCE_FILES
             src/graphics/Shader.cpp
             src/graphics/Texture.cpp
             src/systems/ShipControllerSystem.cpp
+            src/systems/ShipRenderSystem.cpp
             src/main.cpp)
 
 # Create the executable.
