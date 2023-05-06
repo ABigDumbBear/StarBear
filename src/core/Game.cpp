@@ -4,6 +4,7 @@
 
 #include "MathUtil.hpp"
 
+#include "ParticleEmitter.hpp"
 #include "Physics.hpp"
 #include "ShipController.hpp"
 #include "Transform.hpp"
@@ -14,6 +15,7 @@ namespace StarBear {
 Game::Game(GLFWwindow* aWindow)
   : mWindow(aWindow)
   , mLastFrameTime(0)
+  , mParticleEmitterSystem(nullptr)
   , mShipControllerSystem(nullptr)
   , mPhysicsSystem(nullptr)
   , mShipRenderSystem(nullptr)
@@ -38,6 +40,7 @@ Game::Game(GLFWwindow* aWindow)
   });
 
   // Register components.
+  mScene.RegisterComponentType<ParticleEmitter>(1);
   mScene.RegisterComponentType<Physics>(1);
   mScene.RegisterComponentType<ShipController>(1);
   mScene.RegisterComponentType<Transform>(1);
@@ -53,12 +56,19 @@ Game::Game(GLFWwindow* aWindow)
   mScene.AddComponentToSignature<Physics>(sig);
   mPhysicsSystem = mScene.RegisterSystemType<PhysicsSystem>(sig);
 
+  mScene.RemoveComponentFromSignature<Physics>(sig);
+  mScene.RemoveComponentFromSignature<Transform>(sig);
+  mScene.AddComponentToSignature<ParticleEmitter>(sig);
+  mParticleEmitterSystem = mScene.RegisterSystemType<ParticleEmitterSystem>(sig);
+
   // Create entities.
   auto ship = mScene.CreateEntity();
   mScene.AddComponentToEntity<Transform>(ship);
-  mScene.GetComponentForEntity<Transform>(ship).Rotate(0, 180, 0);
   mScene.AddComponentToEntity<ShipController>(ship);
   mScene.AddComponentToEntity<Physics>(ship);
+
+  auto emitter = mScene.CreateEntity();
+  mScene.AddComponentToEntity<ParticleEmitter>(emitter);
 }
 
 /******************************************************************************/
@@ -72,9 +82,11 @@ void Game::Run()
 
     auto dt = glfwGetTime() - mLastFrameTime;
 
+    mParticleEmitterSystem->Update(mScene, mRandomDevice);
     mShipControllerSystem->Update(mScene, mInput);
     mPhysicsSystem->Update(mScene, dt);
     mShipRenderSystem->Render(mScene);
+    mParticleEmitterSystem->Render(mScene);
 
     mLastFrameTime = glfwGetTime();
 

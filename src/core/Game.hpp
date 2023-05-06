@@ -1,12 +1,15 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
+#include <random>
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #include "ECS.hpp"
 #include "Input.hpp"
 
+#include "ParticleEmitterSystem.hpp"
 #include "PhysicsSystem.hpp"
 #include "ShipControllerSystem.hpp"
 #include "ShipRenderSystem.hpp"
@@ -29,8 +32,10 @@ class Game
 
     Scene mScene;
 
+    std::random_device mRandomDevice;
     double mLastFrameTime;
 
+    ParticleEmitterSystem* mParticleEmitterSystem;
     ShipControllerSystem* mShipControllerSystem;
     PhysicsSystem* mPhysicsSystem;
     ShipRenderSystem* mShipRenderSystem;
