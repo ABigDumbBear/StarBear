@@ -7,6 +7,7 @@
 #include "ECS.hpp"
 #include "Input.hpp"
 
+#include "PhysicsSystem.hpp"
 #include "ShipControllerSystem.hpp"
 #include "ShipRenderSystem.hpp"
 
@@ -28,7 +29,10 @@ class Game
 
     Scene mScene;
 
+    double mLastFrameTime;
+
     ShipControllerSystem* mShipControllerSystem;
+    PhysicsSystem* mPhysicsSystem;
     ShipRenderSystem* mShipRenderSystem;
 };
 

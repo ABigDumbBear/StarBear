@@ -143,6 +143,15 @@ class Scene
     }
 
     template<typename T>
+    void RemoveComponentFromSignature(Signature& aSignature)
+    {
+      auto name = typeid(T).name();
+      assert(mComponentToIndexMap.find(name) != mComponentToIndexMap.end());
+
+      aSignature.reset(mComponentToIndexMap[name]);
+    }
+
+    template<typename T>
     void AddComponentToEntity(Entity aEntity)
     {
       auto name = typeid(T).name();

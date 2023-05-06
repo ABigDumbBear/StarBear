@@ -3,16 +3,20 @@
 #include <iostream>
 
 #include "MathUtil.hpp"
-#include "Transform.hpp"
 
+#include "Physics.hpp"
 #include "ShipController.hpp"
+#include "Transform.hpp"
 
 namespace StarBear {
 
 /******************************************************************************/
 Game::Game(GLFWwindow* aWindow)
   : mWindow(aWindow)
+  , mLastFrameTime(0)
   , mShipControllerSystem(nullptr)
+  , mPhysicsSystem(nullptr)
+  , mShipRenderSystem(nullptr)
 {
   // Set GLFW callbacks.
   glfwSetWindowUserPointer(mWindow, this);
@@ -34,8 +38,9 @@ Game::Game(GLFWwindow* aWindow)
   });
 
   // Register components.
-  mScene.RegisterComponentType<Transform>(1);
+  mScene.RegisterComponentType<Physics>(1);
   mScene.RegisterComponentType<ShipController>(1);
+  mScene.RegisterComponentType<Transform>(1);
 
   // Register systems.
   Signature sig;
@@ -44,11 +49,16 @@ Game::Game(GLFWwindow* aWindow)
   mShipControllerSystem = mScene.RegisterSystemType<ShipControllerSystem>(sig);
   mShipRenderSystem = mScene.RegisterSystemType<ShipRenderSystem>(sig);
 
+  mScene.RemoveComponentFromSignature<ShipController>(sig);
+  mScene.AddComponentToSignature<Physics>(sig);
+  mPhysicsSystem = mScene.RegisterSystemType<PhysicsSystem>(sig);
+
   // Create entities.
   auto ship = mScene.CreateEntity();
   mScene.AddComponentToEntity<Transform>(ship);
   mScene.GetComponentForEntity<Transform>(ship).Rotate(0, 180, 0);
   mScene.AddComponentToEntity<ShipController>(ship);
+  mScene.AddComponentToEntity<Physics>(ship);
 }
 
 /******************************************************************************/
@@ -60,8 +70,13 @@ void Game::Run()
     glfwSwapBuffers(mWindow);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    auto dt = glfwGetTime() - mLastFrameTime;
+
     mShipControllerSystem->Update(mScene, mInput);
+    mPhysicsSystem->Update(mScene, dt);
     mShipRenderSystem->Render(mScene);
+
+    mLastFrameTime = glfwGetTime();
 
     glfwPollEvents();
   }
