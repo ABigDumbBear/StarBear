@@ -38,6 +38,7 @@ class System
 class IComponentMap
 {
   public:
+    virtual bool ContainsComponent(Entity aEntity) const = 0;
     virtual void RemoveComponent(Entity aEntity) = 0;
 };
 
@@ -55,6 +56,11 @@ class ComponentMap : public IComponentMap
       }
     }
 
+    bool ContainsComponent(Entity aEntity) const override
+    {
+      return mEntityToIndexMap.find(aEntity) != mEntityToIndexMap.end();
+    }
+
     void AddComponent(Entity aEntity)
     {
       assert(mSize < mComponents.size());
@@ -69,8 +75,17 @@ class ComponentMap : public IComponentMap
     {
       assert(mEntityToIndexMap.find(aEntity) != mEntityToIndexMap.end());
 
-      mComponents[mEntityToIndexMap[aEntity]] = mComponents.back();
-      mEntityToIndexMap[mIndexToEntityMap[mSize]] = mEntityToIndexMap[aEntity];
+      auto lastValidIndex = mSize - 1;
+      auto removedIndex = mEntityToIndexMap[aEntity];
+      auto movedEntity = mIndexToEntityMap[lastValidIndex];
+
+      mComponents[removedIndex] = mComponents[lastValidIndex];
+      mEntityToIndexMap[movedEntity] = mEntityToIndexMap[aEntity];
+      mIndexToEntityMap[removedIndex] = movedEntity;
+
+      mEntityToIndexMap.erase(aEntity);
+      mIndexToEntityMap.erase(lastValidIndex);
+
       --mSize;
     }
 
@@ -120,6 +135,14 @@ class Scene
       for(auto& system : mSystems)
       {
         system->mEntities.erase(aEntity);
+      }
+
+      for(auto& map : mComponentMaps)
+      {
+        if(map->ContainsComponent(aEntity))
+        {
+          map->RemoveComponent(aEntity);
+        }
       }
     }
 

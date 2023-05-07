@@ -4,6 +4,7 @@
 
 #include "MathUtil.hpp"
 
+#include "Laser.hpp"
 #include "ParticleEmitter.hpp"
 #include "Physics.hpp"
 #include "ShipController.hpp"
@@ -40,10 +41,11 @@ Game::Game(GLFWwindow* aWindow)
   });
 
   // Register components.
+  mScene.RegisterComponentType<Laser>(500);
   mScene.RegisterComponentType<ParticleEmitter>(1);
   mScene.RegisterComponentType<Physics>(1);
   mScene.RegisterComponentType<ShipController>(1);
-  mScene.RegisterComponentType<Transform>(1);
+  mScene.RegisterComponentType<Transform>(501);
 
   // Register systems.
   Signature sig;
@@ -60,6 +62,11 @@ Game::Game(GLFWwindow* aWindow)
   mScene.RemoveComponentFromSignature<Transform>(sig);
   mScene.AddComponentToSignature<ParticleEmitter>(sig);
   mParticleEmitterSystem = mScene.RegisterSystemType<ParticleEmitterSystem>(sig);
+
+  mScene.RemoveComponentFromSignature<ParticleEmitter>(sig);
+  mScene.AddComponentToSignature<Transform>(sig);
+  mScene.AddComponentToSignature<Laser>(sig);
+  mLaserSystem = mScene.RegisterSystemType<LaserSystem>(sig);
 
   // Create entities.
   auto ship = mScene.CreateEntity();
@@ -82,9 +89,12 @@ void Game::Run()
 
     auto dt = glfwGetTime() - mLastFrameTime;
 
+    mLaserSystem->Update(mScene);
     mParticleEmitterSystem->Update(mScene, mRandomDevice);
     mShipControllerSystem->Update(mScene, mInput);
     mPhysicsSystem->Update(mScene, dt);
+
+    mLaserSystem->Render(mScene);
     mShipRenderSystem->Render(mScene);
     mParticleEmitterSystem->Render(mScene);
 

@@ -45,7 +45,7 @@ void ParticleEmitterSystem::Update(Scene& aScene, std::random_device& aDevice)
     for(const auto& entity : mEntities)
     {
       auto& emitter = aScene.GetComponentForEntity<ParticleEmitter>(entity);
-      if(emitter.mSize < 500)
+      if(emitter.mSize < emitter.mParticles.size())
       {
         std::mt19937 generator(aDevice());
         std::uniform_real_distribution<> dist(-emitter.mRadius, emitter.mRadius);
@@ -64,7 +64,16 @@ void ParticleEmitterSystem::Update(Scene& aScene, std::random_device& aDevice)
     auto& emitter = aScene.GetComponentForEntity<ParticleEmitter>(entity);
     for(size_t i = 0; i < emitter.mSize; ++i)
     {
-      emitter.mParticles[i].z += 1;
+      emitter.mParticles[i].z += 1.5;
+
+      // if the particle is too far forward, swap it with the last
+      // active particle
+      if(emitter.mParticles[i].z > 50)
+      {
+        --emitter.mSize;
+        emitter.mParticles[i] = emitter.mParticles[emitter.mSize];
+        --i;
+      }
     }
   }
 }

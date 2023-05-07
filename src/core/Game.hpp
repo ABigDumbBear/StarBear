@@ -13,6 +13,7 @@
 #include "PhysicsSystem.hpp"
 #include "ShipControllerSystem.hpp"
 #include "ShipRenderSystem.hpp"
+#include "LaserSystem.hpp"
 
 namespace StarBear {
 
@@ -35,6 +36,7 @@ class Game
     std::random_device mRandomDevice;
     double mLastFrameTime;
 
+    LaserSystem* mLaserSystem;
     ParticleEmitterSystem* mParticleEmitterSystem;
     ShipControllerSystem* mShipControllerSystem;
     PhysicsSystem* mPhysicsSystem;

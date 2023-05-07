@@ -4,6 +4,7 @@
 
 #include "MathUtil.hpp"
 
+#include "Laser.hpp"
 #include "ShipController.hpp"
 #include "Transform.hpp"
 
@@ -27,6 +28,16 @@ void ShipControllerSystem::Update(Scene& aScene, const Input& aInput)
   if(aInput.mPressedKeys.count(GLFW_KEY_D))
   {
     mTargetPos.x += 1;
+  }
+
+  if(aInput.mPressedKeys.count(GLFW_KEY_SPACE))
+  {
+    // create a laser
+    auto laser = aScene.CreateEntity();
+    aScene.AddComponentToEntity<Laser>(laser);
+    aScene.AddComponentToEntity<Transform>(laser);
+
+    aScene.GetComponentForEntity<Transform>(laser).SetPosition(mTargetPos);
   }
 
   for(const auto& entity : mEntities)
