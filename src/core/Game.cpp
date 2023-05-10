@@ -4,6 +4,7 @@
 
 #include "MathUtil.hpp"
 
+#include "Enemy.hpp"
 #include "Laser.hpp"
 #include "ParticleEmitter.hpp"
 #include "Physics.hpp"
@@ -41,6 +42,7 @@ Game::Game(GLFWwindow* aWindow)
   });
 
   // Register components.
+  mScene.RegisterComponentType<Enemy>(1);
   mScene.RegisterComponentType<Laser>(500);
   mScene.RegisterComponentType<ParticleEmitter>(1);
   mScene.RegisterComponentType<Physics>(1);
@@ -54,19 +56,23 @@ Game::Game(GLFWwindow* aWindow)
   mShipControllerSystem = mScene.RegisterSystemType<ShipControllerSystem>(sig);
   mShipRenderSystem = mScene.RegisterSystemType<ShipRenderSystem>(sig);
 
-  mScene.RemoveComponentFromSignature<ShipController>(sig);
+  sig.reset();
   mScene.AddComponentToSignature<Physics>(sig);
   mPhysicsSystem = mScene.RegisterSystemType<PhysicsSystem>(sig);
 
-  mScene.RemoveComponentFromSignature<Physics>(sig);
-  mScene.RemoveComponentFromSignature<Transform>(sig);
+  sig.reset();
   mScene.AddComponentToSignature<ParticleEmitter>(sig);
   mParticleEmitterSystem = mScene.RegisterSystemType<ParticleEmitterSystem>(sig);
 
-  mScene.RemoveComponentFromSignature<ParticleEmitter>(sig);
+  sig.reset();
   mScene.AddComponentToSignature<Transform>(sig);
   mScene.AddComponentToSignature<Laser>(sig);
   mLaserSystem = mScene.RegisterSystemType<LaserSystem>(sig);
+
+  sig.reset();
+  mScene.AddComponentToSignature<Enemy>(sig);
+  mScene.AddComponentToSignature<Transform>(sig);
+  mEnemySystem = mScene.RegisterSystemType<EnemySystem>(sig);
 
   // Create entities.
   auto ship = mScene.CreateEntity();
@@ -76,6 +82,11 @@ Game::Game(GLFWwindow* aWindow)
 
   auto emitter = mScene.CreateEntity();
   mScene.AddComponentToEntity<ParticleEmitter>(emitter);
+
+  auto enemy = mScene.CreateEntity();
+  mScene.AddComponentToEntity<Enemy>(enemy);
+  mScene.AddComponentToEntity<Transform>(enemy);
+  mScene.GetComponentForEntity<Transform>(enemy).SetPosition(Vec3(0, 0, -10));
 }
 
 /******************************************************************************/
@@ -90,12 +101,14 @@ void Game::Run()
     auto dt = glfwGetTime() - mLastFrameTime;
 
     mLaserSystem->Update(mScene);
-    mParticleEmitterSystem->Update(mScene, mRandomDevice);
-    mShipControllerSystem->Update(mScene, mInput);
+    mParticleEmitterSystem->Update(mScene, mRandomDevice, dt);
+    mShipControllerSystem->Update(mScene, mInput, dt);
+    mEnemySystem->Update(mScene, dt);
     mPhysicsSystem->Update(mScene, dt);
 
     mLaserSystem->Render(mScene);
     mShipRenderSystem->Render(mScene);
+    mEnemySystem->Render(mScene);
     mParticleEmitterSystem->Render(mScene);
 
     mLastFrameTime = glfwGetTime();

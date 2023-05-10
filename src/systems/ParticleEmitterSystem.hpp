@@ -15,14 +15,14 @@ class ParticleEmitterSystem : public System
   public:
     ParticleEmitterSystem();
 
-    void Update(Scene& aScene, std::random_device& aDevice);
+    void Update(Scene& aScene, std::random_device& aDevice, double dt);
     void Render(Scene& aScene);
 
   private:
-    size_t mFrameCounter { 0 };
-
     Mesh mMesh;
     Shader mShader;
+
+    double mTimer { 0 };
 };
 
 } // namespace StarBear

@@ -19,6 +19,7 @@ list(APPEND SOURCE_FILES
             src/graphics/Model.cpp
             src/graphics/Shader.cpp
             src/graphics/Texture.cpp
+            src/systems/EnemySystem.cpp
             src/systems/LaserSystem.cpp
             src/systems/PhysicsSystem.cpp
             src/systems/ShipControllerSystem.cpp

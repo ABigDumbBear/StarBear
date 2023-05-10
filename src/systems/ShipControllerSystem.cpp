@@ -11,8 +11,10 @@
 namespace StarBear {
 
 /******************************************************************************/
-void ShipControllerSystem::Update(Scene& aScene, const Input& aInput)
+void ShipControllerSystem::Update(Scene& aScene, const Input& aInput, double dt)
 {
+  mTimer += dt;
+
   if(aInput.mPressedKeys.count(GLFW_KEY_W))
   {
     mTargetPos.y += 1;
@@ -30,7 +32,7 @@ void ShipControllerSystem::Update(Scene& aScene, const Input& aInput)
     mTargetPos.x += 1;
   }
 
-  if(aInput.mPressedKeys.count(GLFW_KEY_SPACE))
+  if(aInput.mPressedKeys.count(GLFW_KEY_SPACE) && mTimer > 0.2)
   {
     // create a laser
     auto laser = aScene.CreateEntity();
@@ -38,6 +40,8 @@ void ShipControllerSystem::Update(Scene& aScene, const Input& aInput)
     aScene.AddComponentToEntity<Transform>(laser);
 
     aScene.GetComponentForEntity<Transform>(laser).SetPosition(mTargetPos);
+
+    mTimer = 0;
   }
 
   for(const auto& entity : mEntities)
@@ -46,7 +50,7 @@ void ShipControllerSystem::Update(Scene& aScene, const Input& aInput)
     auto& transform = aScene.GetComponentForEntity<Transform>(entity);
 
     auto newPos = transform.GetPosition();
-    newPos = Lerp(newPos, mTargetPos, 0.1);
+    newPos = Lerp(newPos, mTargetPos, 0.3);
     newPos.z = 0;
     transform.SetPosition(newPos);
   }

@@ -4,8 +4,6 @@
 
 #include "MathUtil.hpp"
 
-#include <iostream>
-
 namespace StarBear {
 
 /******************************************************************************/
@@ -36,11 +34,11 @@ ParticleEmitterSystem::ParticleEmitterSystem()
 }
 
 /******************************************************************************/
-void ParticleEmitterSystem::Update(Scene& aScene, std::random_device& aDevice)
+void ParticleEmitterSystem::Update(Scene& aScene, std::random_device& aDevice, double dt)
 {
   // spawn particles
-  ++mFrameCounter;
-  if(mFrameCounter > 1)
+  mTimer += dt;
+  if(mTimer > 0.02)
   {
     for(const auto& entity : mEntities)
     {
@@ -55,7 +53,7 @@ void ParticleEmitterSystem::Update(Scene& aScene, std::random_device& aDevice)
       }
     }
 
-    mFrameCounter = 0;
+    mTimer = 0;
   }
 
   // move particles

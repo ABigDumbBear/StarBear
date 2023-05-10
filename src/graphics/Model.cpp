@@ -38,6 +38,12 @@ void Model::Draw(const Shader& aShader, GLenum aMode) const
 /******************************************************************************/
 void Model::DrawInstanced(const Shader& aShader, int aNumInstances, GLenum aMode) const
 {
+  for(size_t i = 0; i < mTextures.size(); ++i)
+  {
+    glActiveTexture(GL_TEXTURE0 + i);
+    glBindTexture(GL_TEXTURE_2D, mTextures[i].GetID());
+  }
+
   for(const auto& mesh : mMeshes)
   {
     mesh.DrawInstanced(aShader, aNumInstances, aMode);
