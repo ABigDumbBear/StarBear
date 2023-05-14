@@ -33,15 +33,13 @@ void ShipControllerSystem::Update(Scene& aScene, const Input& aInput, double dt)
     mTargetPos.x += 1;
   }
 
-  if(aInput.mPressedKeys.count(GLFW_KEY_SPACE) && mTimer > 0.2)
+  if(aInput.mPressedKeys.count(GLFW_KEY_SPACE) && mTimer > 1)
   {
     // create a laser
     auto laser = aScene.CreateEntity();
     aScene.AddComponentToEntity<Laser>(laser);
     aScene.AddComponentToEntity<Transform>(laser);
     aScene.AddComponentToEntity<Hitbox>(laser);
-    aScene.GetComponentForEntity<Hitbox>(laser).mWidth = 0;
-    aScene.GetComponentForEntity<Hitbox>(laser).mHeight = 0;
 
     aScene.GetComponentForEntity<Transform>(laser).SetPosition(mTargetPos);
 

@@ -98,6 +98,9 @@ Game::Game(GLFWwindow* aWindow)
   mScene.AddComponentToEntity<Transform>(enemy);
   mScene.GetComponentForEntity<Transform>(enemy).SetPosition(Vec3(0, 0, -10));
   mScene.AddComponentToEntity<Hitbox>(enemy);
+  mScene.GetComponentForEntity<Hitbox>(enemy).mWidth = 5;
+  mScene.GetComponentForEntity<Hitbox>(enemy).mHeight = 5;
+  mScene.GetComponentForEntity<Hitbox>(enemy).mDepth = 5;
 }
 
 /******************************************************************************/
