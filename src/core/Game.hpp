@@ -9,6 +9,7 @@
 #include "ECS.hpp"
 #include "Input.hpp"
 
+#include "CollisionSystem.hpp"
 #include "EnemySystem.hpp"
 #include "ParticleEmitterSystem.hpp"
 #include "PhysicsSystem.hpp"
@@ -37,6 +38,7 @@ class Game
     std::random_device mRandomDevice;
     double mLastFrameTime;
 
+    CollisionSystem* mCollisionSystem;
     EnemySystem* mEnemySystem;
     LaserSystem* mLaserSystem;
     ParticleEmitterSystem* mParticleEmitterSystem;

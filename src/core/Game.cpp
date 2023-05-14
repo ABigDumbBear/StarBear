@@ -4,6 +4,7 @@
 
 #include "MathUtil.hpp"
 
+#include "Hitbox.hpp"
 #include "Enemy.hpp"
 #include "Laser.hpp"
 #include "ParticleEmitter.hpp"
@@ -17,6 +18,9 @@ namespace StarBear {
 Game::Game(GLFWwindow* aWindow)
   : mWindow(aWindow)
   , mLastFrameTime(0)
+  , mCollisionSystem(nullptr)
+  , mEnemySystem(nullptr)
+  , mLaserSystem(nullptr)
   , mParticleEmitterSystem(nullptr)
   , mShipControllerSystem(nullptr)
   , mPhysicsSystem(nullptr)
@@ -42,6 +46,7 @@ Game::Game(GLFWwindow* aWindow)
   });
 
   // Register components.
+  mScene.RegisterComponentType<Hitbox>(502);
   mScene.RegisterComponentType<Enemy>(1);
   mScene.RegisterComponentType<Laser>(500);
   mScene.RegisterComponentType<ParticleEmitter>(1);
@@ -74,6 +79,11 @@ Game::Game(GLFWwindow* aWindow)
   mScene.AddComponentToSignature<Transform>(sig);
   mEnemySystem = mScene.RegisterSystemType<EnemySystem>(sig);
 
+  sig.reset();
+  mScene.AddComponentToSignature<Transform>(sig);
+  mScene.AddComponentToSignature<Hitbox>(sig);
+  mCollisionSystem = mScene.RegisterSystemType<CollisionSystem>(sig);
+
   // Create entities.
   auto ship = mScene.CreateEntity();
   mScene.AddComponentToEntity<Transform>(ship);
@@ -87,6 +97,7 @@ Game::Game(GLFWwindow* aWindow)
   mScene.AddComponentToEntity<Enemy>(enemy);
   mScene.AddComponentToEntity<Transform>(enemy);
   mScene.GetComponentForEntity<Transform>(enemy).SetPosition(Vec3(0, 0, -10));
+  mScene.AddComponentToEntity<Hitbox>(enemy);
 }
 
 /******************************************************************************/
@@ -100,6 +111,7 @@ void Game::Run()
 
     auto dt = glfwGetTime() - mLastFrameTime;
 
+    mCollisionSystem->Update(mScene);
     mLaserSystem->Update(mScene);
     mParticleEmitterSystem->Update(mScene, mRandomDevice, dt);
     mShipControllerSystem->Update(mScene, mInput, dt);

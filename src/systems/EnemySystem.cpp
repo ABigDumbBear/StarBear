@@ -2,6 +2,7 @@
 
 #include <cmath>
 
+#include "Hitbox.hpp"
 #include "Enemy.hpp"
 #include "Transform.hpp"
 
@@ -35,6 +36,8 @@ void EnemySystem::Update(Scene& aScene, double dt)
   {
     auto& transform = aScene.GetComponentForEntity<Transform>(entity);
     transform.SetRotation(0, 0, easeInOutBack(mTimer) * 360);
+
+    auto& hitbox = aScene.GetComponentForEntity<Hitbox>(entity);
   }
 
   if(mTimer > 1)

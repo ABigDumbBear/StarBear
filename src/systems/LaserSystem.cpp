@@ -1,5 +1,6 @@
 #include "LaserSystem.hpp"
 
+#include "Hitbox.hpp"
 #include "Laser.hpp"
 #include "Transform.hpp"
 
@@ -17,13 +18,13 @@ LaserSystem::LaserSystem()
   mMesh.mVertices.emplace_back(vertex);
   vertex.mPosition = Vec3(-0.5, 0, 3.5);
   mMesh.mVertices.emplace_back(vertex);
-  vertex.mPosition = Vec3(0, -0.5, 0);
+  vertex.mPosition = Vec3(-0.5, 0.5, 0);
   mMesh.mVertices.emplace_back(vertex);
-  vertex.mPosition = Vec3(0, 0.5, 0);
+  vertex.mPosition = Vec3(0.5, 0.5, 0);
   mMesh.mVertices.emplace_back(vertex);
-  vertex.mPosition = Vec3(0, 0.5, 3.5);
+  vertex.mPosition = Vec3(0.5, 0.5, 3.5);
   mMesh.mVertices.emplace_back(vertex);
-  vertex.mPosition = Vec3(0, -0.5, 3.5);
+  vertex.mPosition = Vec3(-0.5, 0.5, 3.5);
   mMesh.mVertices.emplace_back(vertex);
 
   mMesh.mIndices.emplace_back(0);
@@ -59,6 +60,12 @@ void LaserSystem::Update(Scene& aScene)
     transform.SetPosition(newPos);
 
     if(newPos.z < -800)
+    {
+      deadLasers.emplace_back(entity);
+    }
+
+    auto& hitbox = aScene.GetComponentForEntity<Hitbox>(entity);
+    if(hitbox.mCollided)
     {
       deadLasers.emplace_back(entity);
     }

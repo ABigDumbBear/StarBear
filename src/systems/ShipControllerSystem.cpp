@@ -7,6 +7,7 @@
 #include "Laser.hpp"
 #include "ShipController.hpp"
 #include "Transform.hpp"
+#include "Hitbox.hpp"
 
 namespace StarBear {
 
@@ -38,6 +39,9 @@ void ShipControllerSystem::Update(Scene& aScene, const Input& aInput, double dt)
     auto laser = aScene.CreateEntity();
     aScene.AddComponentToEntity<Laser>(laser);
     aScene.AddComponentToEntity<Transform>(laser);
+    aScene.AddComponentToEntity<Hitbox>(laser);
+    aScene.GetComponentForEntity<Hitbox>(laser).mWidth = 0;
+    aScene.GetComponentForEntity<Hitbox>(laser).mHeight = 0;
 
     aScene.GetComponentForEntity<Transform>(laser).SetPosition(mTargetPos);
 
