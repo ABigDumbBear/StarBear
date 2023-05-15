@@ -2,15 +2,8 @@
 
 #include <iostream>
 
+#include "EntityFactory.hpp"
 #include "MathUtil.hpp"
-
-#include "Hitbox.hpp"
-#include "Enemy.hpp"
-#include "Laser.hpp"
-#include "ParticleEmitter.hpp"
-#include "Physics.hpp"
-#include "ShipController.hpp"
-#include "Transform.hpp"
 
 namespace StarBear {
 
@@ -85,22 +78,13 @@ Game::Game(GLFWwindow* aWindow)
   mCollisionSystem = mScene.RegisterSystemType<CollisionSystem>(sig);
 
   // Create entities.
-  auto ship = mScene.CreateEntity();
-  mScene.AddComponentToEntity<Transform>(ship);
-  mScene.AddComponentToEntity<ShipController>(ship);
-  mScene.AddComponentToEntity<Physics>(ship);
+  CreateShip(mScene);
+  CreateEmitter(mScene);
 
-  auto emitter = mScene.CreateEntity();
-  mScene.AddComponentToEntity<ParticleEmitter>(emitter);
-
-  auto enemy = mScene.CreateEntity();
-  mScene.AddComponentToEntity<Enemy>(enemy);
-  mScene.AddComponentToEntity<Transform>(enemy);
-  mScene.GetComponentForEntity<Transform>(enemy).SetPosition(Vec3(0, 0, -10));
-  mScene.AddComponentToEntity<Hitbox>(enemy);
-  mScene.GetComponentForEntity<Hitbox>(enemy).mWidth = 5;
-  mScene.GetComponentForEntity<Hitbox>(enemy).mHeight = 5;
-  mScene.GetComponentForEntity<Hitbox>(enemy).mDepth = 5;
+  auto enemy = CreateEnemy(mScene);
+  mScene.GetComponentForEntity<Transform>(enemy).SetPosition(Vec3(0, 0, -50));
+  mScene.GetComponentForEntity<Hitbox>(enemy).mHeight = 50;
+  mScene.GetComponentForEntity<Hitbox>(enemy).mWidth = 50;
 }
 
 /******************************************************************************/
@@ -124,7 +108,8 @@ void Game::Run()
     mLaserSystem->Render(mScene);
     mShipRenderSystem->Render(mScene);
     mEnemySystem->Render(mScene);
-    mParticleEmitterSystem->Render(mScene);
+    //mParticleEmitterSystem->Render(mScene);
+    mCollisionSystem->Render(mScene);
 
     mLastFrameTime = glfwGetTime();
 

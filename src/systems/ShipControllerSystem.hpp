@@ -14,7 +14,7 @@ class ShipControllerSystem : public System
     void Update(Scene& aScene, const Input& aInput, double dt);
 
   private:
-    Vec3 mTargetPos { 0, 0, -10 };
+    Vec3 mTargetPos { 0, 0, -1 };
 
     double mTimer { 0 };
 };

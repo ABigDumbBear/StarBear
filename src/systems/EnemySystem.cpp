@@ -6,8 +6,6 @@
 #include "Enemy.hpp"
 #include "Transform.hpp"
 
-#include <iostream>
-
 namespace StarBear {
 
 float easeInOutBack(double x)
@@ -35,7 +33,7 @@ void EnemySystem::Update(Scene& aScene, double dt)
   for(const auto& entity : mEntities)
   {
     auto& transform = aScene.GetComponentForEntity<Transform>(entity);
-    transform.SetRotation(0, 0, easeInOutBack(mTimer) * 360);
+    //transform.SetRotation(0, 0, easeInOutBack(mTimer) * 360);
   }
 
   if(mTimer > 1)
@@ -69,7 +67,7 @@ void EnemySystem::Render(Scene& aScene)
   // Set shader uniforms and draw the model.
   mShader.Use();
   mShader.SetMat4("viewMatrix", View(Vec3(0, 0, 1), Vec3(1, 0, 0), Vec3(0, 0, 50)));
-  mShader.SetMat4("projectionMatrix", Perspective(45, 1280, 720, 0.1, 100));
+  mShader.SetMat4("projectionMatrix", Perspective(45, 1280, 720, 0.1, 1000));
 
   mModel.DrawInstanced(mShader, mEntities.size());
 }

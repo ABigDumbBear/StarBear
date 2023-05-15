@@ -39,6 +39,7 @@ target_include_directories(starBear PUBLIC 3rd_party
                                            src/graphics
                                            src/math
                                            src/systems
+                                           src/util
                                            ${FREETYPE_INCLUDE_DIRS}
                                            ${ASSIMP_INCLUDE_DIRS})
 

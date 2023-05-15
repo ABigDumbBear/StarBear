@@ -40,7 +40,7 @@ void ShipRenderSystem::Render(Scene& aScene)
   // Set shader uniforms and draw the model.
   mShader.Use();
   mShader.SetMat4("viewMatrix", View(Vec3(0, 0, 1), Vec3(1, 0, 0), Vec3(0, 0, 50)));
-  mShader.SetMat4("projectionMatrix", Perspective(45, 1280, 720, 0.1, 100));
+  mShader.SetMat4("projectionMatrix", Perspective(45, 1280, 720, 0.1, 1000));
 
   mModel.DrawInstanced(mShader, mEntities.size());
 }

@@ -2,12 +2,11 @@
 
 #include <GLFW/glfw3.h>
 
+#include "EntityFactory.hpp"
 #include "MathUtil.hpp"
 
-#include "Laser.hpp"
 #include "ShipController.hpp"
 #include "Transform.hpp"
-#include "Hitbox.hpp"
 
 namespace StarBear {
 
@@ -33,15 +32,14 @@ void ShipControllerSystem::Update(Scene& aScene, const Input& aInput, double dt)
     mTargetPos.x += 1;
   }
 
-  if(aInput.mPressedKeys.count(GLFW_KEY_SPACE) && mTimer > 1)
+  if(aInput.mPressedKeys.count(GLFW_KEY_SPACE) && mTimer > 0.1)
   {
     // create a laser
-    auto laser = aScene.CreateEntity();
-    aScene.AddComponentToEntity<Laser>(laser);
-    aScene.AddComponentToEntity<Transform>(laser);
-    aScene.AddComponentToEntity<Hitbox>(laser);
-
+    auto laser = CreateLaser(aScene);
     aScene.GetComponentForEntity<Transform>(laser).SetPosition(mTargetPos);
+    aScene.GetComponentForEntity<Hitbox>(laser).mWidth = 2;
+    aScene.GetComponentForEntity<Hitbox>(laser).mHeight = 2;
+    aScene.GetComponentForEntity<Hitbox>(laser).mWidth = 2;
 
     mTimer = 0;
   }

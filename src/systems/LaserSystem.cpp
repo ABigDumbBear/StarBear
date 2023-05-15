@@ -4,6 +4,8 @@
 #include "Laser.hpp"
 #include "Transform.hpp"
 
+#include <iostream>
+
 namespace StarBear {
 
 /******************************************************************************/
@@ -50,7 +52,7 @@ LaserSystem::LaserSystem()
 /******************************************************************************/
 void LaserSystem::Update(Scene& aScene)
 {
-  std::vector<Entity> deadLasers;
+  std::set<Entity> deadLasers;
   for(const auto& entity : mEntities)
   {
     auto& transform = aScene.GetComponentForEntity<Transform>(entity);
@@ -61,13 +63,14 @@ void LaserSystem::Update(Scene& aScene)
 
     if(newPos.z < -800)
     {
-      deadLasers.emplace_back(entity);
+      deadLasers.insert(entity);
     }
 
     auto& hitbox = aScene.GetComponentForEntity<Hitbox>(entity);
     if(hitbox.mCollided)
     {
-      deadLasers.emplace_back(entity);
+      std::cout << "deleting laser" << std::endl;
+      deadLasers.insert(entity);
     }
   }
 
