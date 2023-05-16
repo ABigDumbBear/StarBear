@@ -2,47 +2,12 @@
 
 #include "Mat4.hpp"
 
-#include <iostream>
-
 namespace StarBear {
 
 /******************************************************************************/
 CollisionSystem::CollisionSystem()
 {
-  MeshVertex vertex;
-  vertex.mPosition = Vec3(-0.5, 0, 0);
-  mMesh.mVertices.emplace_back(vertex);
-  vertex.mPosition = Vec3(0.5, 0, 0);
-  mMesh.mVertices.emplace_back(vertex);
-  vertex.mPosition = Vec3(0.5, 0, 3.5);
-  mMesh.mVertices.emplace_back(vertex);
-  vertex.mPosition = Vec3(-0.5, 0, 3.5);
-  mMesh.mVertices.emplace_back(vertex);
-  vertex.mPosition = Vec3(-0.5, 0.5, 0);
-  mMesh.mVertices.emplace_back(vertex);
-  vertex.mPosition = Vec3(0.5, 0.5, 0);
-  mMesh.mVertices.emplace_back(vertex);
-  vertex.mPosition = Vec3(0.5, 0.5, 3.5);
-  mMesh.mVertices.emplace_back(vertex);
-  vertex.mPosition = Vec3(-0.5, 0.5, 3.5);
-  mMesh.mVertices.emplace_back(vertex);
-
-  mMesh.mIndices.emplace_back(0);
-  mMesh.mIndices.emplace_back(1);
-  mMesh.mIndices.emplace_back(3);
-  mMesh.mIndices.emplace_back(3);
-  mMesh.mIndices.emplace_back(1);
-  mMesh.mIndices.emplace_back(2);
-  mMesh.mIndices.emplace_back(4);
-  mMesh.mIndices.emplace_back(5);
-  mMesh.mIndices.emplace_back(7);
-  mMesh.mIndices.emplace_back(7);
-  mMesh.mIndices.emplace_back(5);
-  mMesh.mIndices.emplace_back(6);
-
-  mMesh.UpdateVertices();
-  mMesh.UpdateIndices();
-
+  mMesh.InitCube();
   mShader.LoadFromFiles("resources/shaders/Hitbox.vert",
                         "resources/shaders/Hitbox.frag");
 }
@@ -84,7 +49,12 @@ void CollisionSystem::Render(Scene& aScene)
     auto& transform = aScene.GetComponentForEntity<Transform>(entity);
     auto& hitbox = aScene.GetComponentForEntity<Hitbox>(entity);
 
-    auto mat = Translate(transform.GetPosition());
+    auto targetPos = transform.GetPosition();
+    targetPos.x += hitbox.x;
+    targetPos.y += hitbox.y;
+    targetPos.z += hitbox.z;
+
+    auto mat = Translate(targetPos);
     mat = mat * Scale(Vec3(hitbox.mWidth, hitbox.mHeight, hitbox.mDepth));
     modelMatrices.emplace_back(mat);
   }
@@ -130,22 +100,6 @@ bool CollisionSystem::CheckCollision(const Transform& aTransformA,
     {
       if(nearA >= farB && nearB >= farA)
       {
-        std::cout << "---------------------- collision!" << std::endl;
-        std::cout << "leftA: " << leftA << std::endl;
-        std::cout << "rightA: " << rightA << std::endl;
-        std::cout << "bottomA: " << bottomA << std::endl;
-        std::cout << "topA: " << topA << std::endl;
-        std::cout << "farA: " << farA << std::endl;
-        std::cout << "nearA: " << nearA << std::endl;
-        std::cout << std::endl;
-
-        std::cout << "leftB: " << leftB << std::endl;
-        std::cout << "rightB: " << rightB << std::endl;
-        std::cout << "bottomB: " << bottomB << std::endl;
-        std::cout << "topB: " << topB << std::endl;
-        std::cout << "farB: " << farB << std::endl;
-        std::cout << "nearB: " << nearB << std::endl;
-
         collision = true;
       }
     }

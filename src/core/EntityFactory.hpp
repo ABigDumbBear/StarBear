@@ -43,6 +43,12 @@ inline Entity CreateEnemy(Scene& aScene)
   aScene.AddComponentToEntity<Transform>(entity);
   aScene.AddComponentToEntity<Hitbox>(entity);
 
+  auto& hitbox = aScene.GetComponentForEntity<Hitbox>(entity);
+  hitbox.mHeight = 2.5;
+  hitbox.mWidth = 5;
+  hitbox.x = -2.5;
+  hitbox.y = -1;
+
   return entity;
 }
 

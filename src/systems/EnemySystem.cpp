@@ -33,7 +33,7 @@ void EnemySystem::Update(Scene& aScene, double dt)
   for(const auto& entity : mEntities)
   {
     auto& transform = aScene.GetComponentForEntity<Transform>(entity);
-    //transform.SetRotation(0, 0, easeInOutBack(mTimer) * 360);
+    transform.SetRotation(0, 0, easeInOutBack(mTimer) * 360);
   }
 
   if(mTimer > 1)

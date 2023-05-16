@@ -41,6 +41,8 @@ class Mesh
     void UpdateVertices();
     void UpdateIndices();
 
+    void InitCube();
+
     GLuint GetVertexArrayID() const { return mVertexArray; }
     GLuint GetVertexBufferID() const { return mVertexBuffer; }
     GLuint GetInstanceBufferID() const { return mInstanceBuffer; }

@@ -197,4 +197,169 @@ void Mesh::UpdateIndices()
                GL_STATIC_DRAW);
 }
 
+/******************************************************************************/
+void Mesh::InitCube()
+{
+  MeshVertex vertex;
+
+  // Front face
+  vertex.mPosition = Vec3(0, 0, 1);
+  vertex.mNormal = Vec3(0, 0, -1);
+  vertex.mTexCoords[0] = 0;
+  vertex.mTexCoords[1] = 1;
+  mVertices.emplace_back(vertex);
+  vertex.mPosition = Vec3(1, 0, 1);
+  vertex.mTexCoords[0] = 1;
+  vertex.mTexCoords[1] = 1;
+  mVertices.emplace_back(vertex);
+  vertex.mPosition = Vec3(1, 1, 1);
+  vertex.mTexCoords[0] = 1;
+  vertex.mTexCoords[1] = 0;
+  mVertices.emplace_back(vertex);
+  vertex.mPosition = Vec3(0, 1, 1);
+  vertex.mTexCoords[0] = 0;
+  vertex.mTexCoords[1] = 0;
+  mVertices.emplace_back(vertex);
+
+  mIndices.emplace_back(0);
+  mIndices.emplace_back(1);
+  mIndices.emplace_back(3);
+  mIndices.emplace_back(1);
+  mIndices.emplace_back(2);
+  mIndices.emplace_back(3);
+
+  // Top face
+  vertex.mPosition = Vec3(0, 1, 1);
+  vertex.mNormal = Vec3(0, 1, 0);
+  vertex.mTexCoords[0] = 0;
+  vertex.mTexCoords[1] = 1;
+  mVertices.emplace_back(vertex);
+  vertex.mPosition = Vec3(1, 1, 1);
+  vertex.mTexCoords[0] = 1;
+  vertex.mTexCoords[1] = 1;
+  mVertices.emplace_back(vertex);
+  vertex.mPosition = Vec3(1, 1, 0);
+  vertex.mTexCoords[0] = 1;
+  vertex.mTexCoords[1] = 0;
+  mVertices.emplace_back(vertex);
+  vertex.mPosition = Vec3(0, 1, 0);
+  vertex.mTexCoords[0] = 0;
+  vertex.mTexCoords[1] = 0;
+  mVertices.emplace_back(vertex);
+
+  mIndices.emplace_back(4);
+  mIndices.emplace_back(5);
+  mIndices.emplace_back(7);
+  mIndices.emplace_back(5);
+  mIndices.emplace_back(6);
+  mIndices.emplace_back(7);
+
+  // Back face
+  vertex.mPosition = Vec3(0, 0, 0);
+  vertex.mNormal = Vec3(0, 0, 1);
+  vertex.mTexCoords[0] = 0;
+  vertex.mTexCoords[1] = 1;
+  mVertices.emplace_back(vertex);
+  vertex.mPosition = Vec3(1, 0, 0);
+  vertex.mTexCoords[0] = 1;
+  vertex.mTexCoords[1] = 1;
+  mVertices.emplace_back(vertex);
+  vertex.mPosition = Vec3(1, 1, 0);
+  vertex.mTexCoords[0] = 1;
+  vertex.mTexCoords[1] = 0;
+  mVertices.emplace_back(vertex);
+  vertex.mPosition = Vec3(0, 1, 0);
+  vertex.mTexCoords[0] = 0;
+  vertex.mTexCoords[1] = 0;
+  mVertices.emplace_back(vertex);
+
+  mIndices.emplace_back(8);
+  mIndices.emplace_back(9);
+  mIndices.emplace_back(11);
+  mIndices.emplace_back(9);
+  mIndices.emplace_back(10);
+  mIndices.emplace_back(11);
+
+  // Left face
+  vertex.mPosition = Vec3(0, 0, 0);
+  vertex.mNormal = Vec3(-1, 0, 0);
+  vertex.mTexCoords[0] = 0;
+  vertex.mTexCoords[1] = 1;
+  mVertices.emplace_back(vertex);
+  vertex.mPosition = Vec3(0, 0, 1);
+  vertex.mTexCoords[0] = 1;
+  vertex.mTexCoords[1] = 1;
+  mVertices.emplace_back(vertex);
+  vertex.mPosition = Vec3(0, 1, 1);
+  vertex.mTexCoords[0] = 1;
+  vertex.mTexCoords[1] = 0;
+  mVertices.emplace_back(vertex);
+  vertex.mPosition = Vec3(0, 1, 0);
+  vertex.mTexCoords[0] = 0;
+  vertex.mTexCoords[1] = 0;
+  mVertices.emplace_back(vertex);
+
+  mIndices.emplace_back(12);
+  mIndices.emplace_back(13);
+  mIndices.emplace_back(15);
+  mIndices.emplace_back(13);
+  mIndices.emplace_back(14);
+  mIndices.emplace_back(15);
+
+  // Bottom face
+  vertex.mPosition = Vec3(0, 0, 0);
+  vertex.mNormal = Vec3(0, -1, 0);
+  vertex.mTexCoords[0] = 0;
+  vertex.mTexCoords[1] = 1;
+  mVertices.emplace_back(vertex);
+  vertex.mPosition = Vec3(1, 0, 0);
+  vertex.mTexCoords[0] = 1;
+  vertex.mTexCoords[1] = 1;
+  mVertices.emplace_back(vertex);
+  vertex.mPosition = Vec3(1, 0, 1);
+  vertex.mTexCoords[0] = 1;
+  vertex.mTexCoords[1] = 0;
+  mVertices.emplace_back(vertex);
+  vertex.mPosition = Vec3(0, 0, 1);
+  vertex.mTexCoords[0] = 0;
+  vertex.mTexCoords[1] = 0;
+  mVertices.emplace_back(vertex);
+
+  mIndices.emplace_back(16);
+  mIndices.emplace_back(17);
+  mIndices.emplace_back(19);
+  mIndices.emplace_back(17);
+  mIndices.emplace_back(18);
+  mIndices.emplace_back(19);
+
+  // Right face
+  vertex.mPosition = Vec3(1, 0, 1);
+  vertex.mNormal = Vec3(1, 0, 0);
+  vertex.mTexCoords[0] = 0;
+  vertex.mTexCoords[1] = 1;
+  mVertices.emplace_back(vertex);
+  vertex.mPosition = Vec3(1, 0, 0);
+  vertex.mTexCoords[0] = 1;
+  vertex.mTexCoords[1] = 1;
+  mVertices.emplace_back(vertex);
+  vertex.mPosition = Vec3(1, 1, 0);
+  vertex.mTexCoords[0] = 1;
+  vertex.mTexCoords[1] = 0;
+  mVertices.emplace_back(vertex);
+  vertex.mPosition = Vec3(1, 1, 1);
+  vertex.mTexCoords[0] = 0;
+  vertex.mTexCoords[1] = 0;
+  mVertices.emplace_back(vertex);
+
+  mIndices.emplace_back(20);
+  mIndices.emplace_back(21);
+  mIndices.emplace_back(23);
+  mIndices.emplace_back(21);
+  mIndices.emplace_back(22);
+  mIndices.emplace_back(23);
+
+  UpdateVertices();
+  UpdateIndices();
+}
+
 } // namespace StarBear

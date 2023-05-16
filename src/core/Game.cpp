@@ -83,8 +83,9 @@ Game::Game(GLFWwindow* aWindow)
 
   auto enemy = CreateEnemy(mScene);
   mScene.GetComponentForEntity<Transform>(enemy).SetPosition(Vec3(0, 0, -50));
-  mScene.GetComponentForEntity<Hitbox>(enemy).mHeight = 50;
-  mScene.GetComponentForEntity<Hitbox>(enemy).mWidth = 50;
+  mScene.GetComponentForEntity<Hitbox>(enemy).mHeight = 2.5;
+  mScene.GetComponentForEntity<Hitbox>(enemy).mWidth = 5;
+  mScene.GetComponentForEntity<Hitbox>(enemy).x = -2.5;
 }
 
 /******************************************************************************/
@@ -108,7 +109,7 @@ void Game::Run()
     mLaserSystem->Render(mScene);
     mShipRenderSystem->Render(mScene);
     mEnemySystem->Render(mScene);
-    //mParticleEmitterSystem->Render(mScene);
+    mParticleEmitterSystem->Render(mScene);
     mCollisionSystem->Render(mScene);
 
     mLastFrameTime = glfwGetTime();

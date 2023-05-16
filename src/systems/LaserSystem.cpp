@@ -4,47 +4,12 @@
 #include "Laser.hpp"
 #include "Transform.hpp"
 
-#include <iostream>
-
 namespace StarBear {
 
 /******************************************************************************/
 LaserSystem::LaserSystem()
 {
-  MeshVertex vertex;
-  vertex.mPosition = Vec3(-0.5, 0, 0);
-  mMesh.mVertices.emplace_back(vertex);
-  vertex.mPosition = Vec3(0.5, 0, 0);
-  mMesh.mVertices.emplace_back(vertex);
-  vertex.mPosition = Vec3(0.5, 0, 3.5);
-  mMesh.mVertices.emplace_back(vertex);
-  vertex.mPosition = Vec3(-0.5, 0, 3.5);
-  mMesh.mVertices.emplace_back(vertex);
-  vertex.mPosition = Vec3(-0.5, 0.5, 0);
-  mMesh.mVertices.emplace_back(vertex);
-  vertex.mPosition = Vec3(0.5, 0.5, 0);
-  mMesh.mVertices.emplace_back(vertex);
-  vertex.mPosition = Vec3(0.5, 0.5, 3.5);
-  mMesh.mVertices.emplace_back(vertex);
-  vertex.mPosition = Vec3(-0.5, 0.5, 3.5);
-  mMesh.mVertices.emplace_back(vertex);
-
-  mMesh.mIndices.emplace_back(0);
-  mMesh.mIndices.emplace_back(1);
-  mMesh.mIndices.emplace_back(3);
-  mMesh.mIndices.emplace_back(3);
-  mMesh.mIndices.emplace_back(1);
-  mMesh.mIndices.emplace_back(2);
-  mMesh.mIndices.emplace_back(4);
-  mMesh.mIndices.emplace_back(5);
-  mMesh.mIndices.emplace_back(7);
-  mMesh.mIndices.emplace_back(7);
-  mMesh.mIndices.emplace_back(5);
-  mMesh.mIndices.emplace_back(6);
-
-  mMesh.UpdateVertices();
-  mMesh.UpdateIndices();
-
+  mMesh.InitCube();
   mShader.LoadFromFiles("resources/shaders/Particle.vert",
                         "resources/shaders/Particle.frag");
 }
@@ -69,7 +34,6 @@ void LaserSystem::Update(Scene& aScene)
     auto& hitbox = aScene.GetComponentForEntity<Hitbox>(entity);
     if(hitbox.mCollided)
     {
-      std::cout << "deleting laser" << std::endl;
       deadLasers.insert(entity);
     }
   }

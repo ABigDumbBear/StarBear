@@ -37,9 +37,9 @@ void ShipControllerSystem::Update(Scene& aScene, const Input& aInput, double dt)
     // create a laser
     auto laser = CreateLaser(aScene);
     aScene.GetComponentForEntity<Transform>(laser).SetPosition(mTargetPos);
-    aScene.GetComponentForEntity<Hitbox>(laser).mWidth = 2;
-    aScene.GetComponentForEntity<Hitbox>(laser).mHeight = 2;
-    aScene.GetComponentForEntity<Hitbox>(laser).mWidth = 2;
+
+    laser = CreateLaser(aScene);
+    aScene.GetComponentForEntity<Transform>(laser).SetPosition(mTargetPos + Vec3(2, 0, 0));
 
     mTimer = 0;
   }
