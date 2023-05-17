@@ -9,43 +9,50 @@ namespace StarBear {
 /******************************************************************************/
 void ParticleEmitterSystem::Update(Scene& aScene, std::random_device& aDevice, double dt)
 {
-  // spawn particles
   mTimer += dt;
-  if(mTimer > 0.02)
+
+  // spawn particles
+  for(const auto& entity : mEntities)
   {
-    for(const auto& entity : mEntities)
+    auto& emitter = aScene.GetComponentForEntity<ParticleEmitter>(entity);
+
+    int numParticles = emitter.mIntensity * mTimer;
+    int maxParticles = emitter.mParticles.size() - emitter.mActiveParticles;
+    numParticles = std::min(maxParticles, numParticles);
+
+    for(int i = 0; i < numParticles; ++i)
     {
-      auto& emitter = aScene.GetComponentForEntity<ParticleEmitter>(entity);
-      if(emitter.mSize < emitter.mParticles.size())
-      {
-        std::mt19937 generator(aDevice());
-        std::uniform_real_distribution<> dist(-emitter.mRadius, emitter.mRadius);
+      std::mt19937 generator(aDevice());
+      std::uniform_real_distribution<> dist(-emitter.mRadius, emitter.mRadius);
 
-        emitter.mParticles[emitter.mSize] = Vec3(dist(generator), dist(generator), -30);
-        ++emitter.mSize;
-      }
+      auto& particle = emitter.mParticles[emitter.mActiveParticles];
+      particle.mPosition = Vec3(dist(generator), dist(generator), dist(generator));
+      ++emitter.mActiveParticles;
     }
-
-    mTimer = 0;
   }
 
   // move particles
   for(const auto& entity : mEntities)
   {
     auto& emitter = aScene.GetComponentForEntity<ParticleEmitter>(entity);
-    for(size_t i = 0; i < emitter.mSize; ++i)
+    for(size_t i = 0; i < emitter.mActiveParticles; ++i)
     {
-      emitter.mParticles[i].z += 1.5;
+      emitter.mParticles[i].mPosition.z += 1.5;
 
       // if the particle is too far forward, swap it with the last
       // active particle
-      if(emitter.mParticles[i].z > 50)
+      if(emitter.mParticles[i].mPosition.z > 50)
       {
-        --emitter.mSize;
-        emitter.mParticles[i] = emitter.mParticles[emitter.mSize];
+        --emitter.mActiveParticles;
+        emitter.mParticles[i] = emitter.mParticles[emitter.mActiveParticles];
         --i;
       }
     }
+  }
+
+  if(mTimer >= 1)
+  {
+    mTimer = 0;
   }
 }
 
@@ -56,9 +63,9 @@ void ParticleEmitterSystem::Render(Scene& aScene, ResourceMap& aMap)
   for(const auto& entity : mEntities)
   {
     auto& emitter = aScene.GetComponentForEntity<ParticleEmitter>(entity);
-    for(size_t i = 0; i < emitter.mSize; ++i)
+    for(size_t i = 0; i < emitter.mActiveParticles; ++i)
     {
-      auto mat = Translate(emitter.mParticles[i]);
+      auto mat = Translate(emitter.mParticles[i].mPosition);
       modelMatrices.emplace_back(mat);
     }
   }
