@@ -39,7 +39,7 @@ inline Entity CreateLaser(Scene& aScene)
 inline Entity CreateEnemy(Scene& aScene)
 {
   auto entity = aScene.CreateEntity();
-  aScene.AddComponentToEntity<Enemy>(entity);
+  aScene.AddComponentToEntity<Enemy>(entity).mHealth = 10;
   aScene.AddComponentToEntity<Transform>(entity);
 
   auto& hitbox = aScene.AddComponentToEntity<Hitbox>(entity);

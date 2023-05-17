@@ -41,6 +41,7 @@ class Mesh
     void UpdateVertices();
     void UpdateIndices();
 
+    void InitQuad();
     void InitCube();
 
     GLuint GetVertexArrayID() const { return mVertexArray; }

@@ -7,33 +7,6 @@
 namespace StarBear {
 
 /******************************************************************************/
-ParticleEmitterSystem::ParticleEmitterSystem()
-{
-  MeshVertex vertex;
-  vertex.mPosition = Vec3(0, 0, 0);
-  mMesh.mVertices.emplace_back(vertex);
-  vertex.mPosition = Vec3(0.1, 0, 0);
-  mMesh.mVertices.emplace_back(vertex);
-  vertex.mPosition = Vec3(0.1, 0.1, 0);
-  mMesh.mVertices.emplace_back(vertex);
-  vertex.mPosition = Vec3(0, 0.1, 0);
-  mMesh.mVertices.emplace_back(vertex);
-
-  mMesh.mIndices.emplace_back(0);
-  mMesh.mIndices.emplace_back(1);
-  mMesh.mIndices.emplace_back(3);
-  mMesh.mIndices.emplace_back(3);
-  mMesh.mIndices.emplace_back(1);
-  mMesh.mIndices.emplace_back(2);
-
-  mMesh.UpdateVertices();
-  mMesh.UpdateIndices();
-
-  mShader.LoadFromFiles("resources/shaders/Particle.vert",
-                        "resources/shaders/Particle.frag");
-}
-
-/******************************************************************************/
 void ParticleEmitterSystem::Update(Scene& aScene, std::random_device& aDevice, double dt)
 {
   // spawn particles
@@ -77,7 +50,7 @@ void ParticleEmitterSystem::Update(Scene& aScene, std::random_device& aDevice, d
 }
 
 /******************************************************************************/
-void ParticleEmitterSystem::Render(Scene& aScene)
+void ParticleEmitterSystem::Render(Scene& aScene, ResourceMap& aMap)
 {
   std::vector<Mat4> modelMatrices;
   for(const auto& entity : mEntities)
@@ -90,17 +63,20 @@ void ParticleEmitterSystem::Render(Scene& aScene)
     }
   }
 
-  glBindBuffer(GL_ARRAY_BUFFER, mMesh.GetInstanceBufferID());
+  auto& mesh = aMap.GetMesh(MeshType::eQUAD);
+  auto& shader = aMap.GetShader(ShaderType::ePARTICLE);
+
+  glBindBuffer(GL_ARRAY_BUFFER, mesh.GetInstanceBufferID());
   glBufferData(GL_ARRAY_BUFFER,
                modelMatrices.size() * sizeof(Mat4),
                modelMatrices.data(),
                GL_DYNAMIC_DRAW);
 
-  mShader.Use();
-  mShader.SetMat4("viewMatrix", View(Vec3(0, 0, 1), Vec3(1, 0, 0), Vec3(0, 0, 50)));
-  mShader.SetMat4("projectionMatrix", Perspective(45, 1280, 720, 0.1, 100));
+  shader.Use();
+  shader.SetMat4("viewMatrix", View(Vec3(0, 0, 1), Vec3(1, 0, 0), Vec3(0, 0, 50)));
+  shader.SetMat4("projectionMatrix", Perspective(45, 1280, 720, 0.1, 100));
 
-  mMesh.DrawInstanced(mShader, modelMatrices.size());
+  mesh.DrawInstanced(shader, modelMatrices.size());
 }
 
 } // namespace StarBear

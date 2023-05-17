@@ -198,6 +198,31 @@ void Mesh::UpdateIndices()
 }
 
 /******************************************************************************/
+void Mesh::InitQuad()
+{
+  MeshVertex vertex;
+
+  vertex.mPosition = Vec3(0, 0, 0);
+  mVertices.emplace_back(vertex);
+  vertex.mPosition = Vec3(0.1, 0, 0);
+  mVertices.emplace_back(vertex);
+  vertex.mPosition = Vec3(0.1, 0.1, 0);
+  mVertices.emplace_back(vertex);
+  vertex.mPosition = Vec3(0, 0.1, 0);
+  mVertices.emplace_back(vertex);
+
+  mIndices.emplace_back(0);
+  mIndices.emplace_back(1);
+  mIndices.emplace_back(3);
+  mIndices.emplace_back(3);
+  mIndices.emplace_back(1);
+  mIndices.emplace_back(2);
+
+  UpdateVertices();
+  UpdateIndices();
+}
+
+/******************************************************************************/
 void Mesh::InitCube()
 {
   MeshVertex vertex;

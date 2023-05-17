@@ -14,6 +14,7 @@ find_package(glfw3 REQUIRED)
 list(APPEND SOURCE_FILES
             3rd_party/glad/glad.c
             src/core/Game.cpp
+            src/core/ResourceMap.cpp
             src/graphics/Font.cpp
             src/graphics/Mesh.cpp
             src/graphics/Model.cpp

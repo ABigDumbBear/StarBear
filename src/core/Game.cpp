@@ -1,6 +1,7 @@
 #include "Game.hpp"
 
 #include <iostream>
+#include <random>
 
 #include "EntityFactory.hpp"
 #include "MathUtil.hpp"
@@ -40,7 +41,7 @@ Game::Game(GLFWwindow* aWindow)
 
   // Register components.
   mScene.RegisterComponentType<Hitbox>(502);
-  mScene.RegisterComponentType<Enemy>(1);
+  mScene.RegisterComponentType<Enemy>(5);
   mScene.RegisterComponentType<Laser>(500);
   mScene.RegisterComponentType<ParticleEmitter>(1);
   mScene.RegisterComponentType<Physics>(1);
@@ -82,13 +83,24 @@ Game::Game(GLFWwindow* aWindow)
   CreateEmitter(mScene);
 
   auto enemy = CreateEnemy(mScene);
-  mScene.GetComponentForEntity<Transform>(enemy).SetPosition(Vec3(0, 0, -50));
-  mScene.GetComponentForEntity<Transform>(enemy).Scale(3, 3, 3);
+  mScene.GetComponentForEntity<Transform>(enemy).SetPosition(Vec3(10, 10, -50));
+  mScene.GetComponentForEntity<Transform>(enemy).Scale(2.5, 2.5, 2.5);
+  enemy = CreateEnemy(mScene);
+  mScene.GetComponentForEntity<Transform>(enemy).SetPosition(Vec3(-10, 10, -50));
+  mScene.GetComponentForEntity<Transform>(enemy).Scale(2.5, 2.5, 2.5);
+  enemy = CreateEnemy(mScene);
+  mScene.GetComponentForEntity<Transform>(enemy).SetPosition(Vec3(-10, -10, -50));
+  mScene.GetComponentForEntity<Transform>(enemy).Scale(2.5, 2.5, 2.5);
+  enemy = CreateEnemy(mScene);
+  mScene.GetComponentForEntity<Transform>(enemy).SetPosition(Vec3(10, -10, -50));
+  mScene.GetComponentForEntity<Transform>(enemy).Scale(2.5, 2.5, 2.5);
 }
 
 /******************************************************************************/
 void Game::Run()
 {
+  std::random_device rd;
+
   // Run until instructed to close.
   while(!glfwWindowShouldClose(mWindow))
   {
@@ -99,16 +111,16 @@ void Game::Run()
 
     mCollisionSystem->Update(mScene);
     mLaserSystem->Update(mScene);
-    mParticleEmitterSystem->Update(mScene, mRandomDevice, dt);
+    mParticleEmitterSystem->Update(mScene, rd, dt);
     mShipControllerSystem->Update(mScene, mInput, dt);
     mEnemySystem->Update(mScene, dt);
     mPhysicsSystem->Update(mScene, dt);
 
-    mLaserSystem->Render(mScene);
-    mShipRenderSystem->Render(mScene);
-    mEnemySystem->Render(mScene);
-    mParticleEmitterSystem->Render(mScene);
-    mCollisionSystem->Render(mScene);
+    mLaserSystem->Render(mScene, mResourceMap);
+    mShipRenderSystem->Render(mScene, mResourceMap);
+    mEnemySystem->Render(mScene, mResourceMap);
+    mParticleEmitterSystem->Render(mScene, mResourceMap);
+    mCollisionSystem->Render(mScene, mResourceMap);
 
     mLastFrameTime = glfwGetTime();
 

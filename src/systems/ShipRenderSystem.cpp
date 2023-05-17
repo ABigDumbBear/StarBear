@@ -8,15 +8,7 @@
 namespace StarBear {
 
 /******************************************************************************/
-ShipRenderSystem::ShipRenderSystem()
-{
-  mShader.LoadFromFiles("resources/shaders/Ship.vert",
-                        "resources/shaders/Ship.frag");
-  mModel.LoadFromFile("resources/models/Spitfire/OBJ/Spitfire.obj");
-}
-
-/******************************************************************************/
-void ShipRenderSystem::Render(Scene& aScene)
+void ShipRenderSystem::Render(Scene& aScene, ResourceMap& aMap)
 {
   // Store the model matrix for each ship.
   std::vector<Mat4> modelMatrices;
@@ -28,7 +20,8 @@ void ShipRenderSystem::Render(Scene& aScene)
 
   // For each mesh in the model, bind the mesh's instance buffer and
   // write the model matrices into it.
-  for(const auto& mesh : mModel.GetMeshes())
+  auto& model = aMap.GetModel(ModelType::eSPITFIRE);
+  for(const auto& mesh : model.GetMeshes())
   {
     glBindBuffer(GL_ARRAY_BUFFER, mesh.GetInstanceBufferID());
     glBufferData(GL_ARRAY_BUFFER,
@@ -38,11 +31,12 @@ void ShipRenderSystem::Render(Scene& aScene)
   }
 
   // Set shader uniforms and draw the model.
-  mShader.Use();
-  mShader.SetMat4("viewMatrix", View(Vec3(0, 0, 1), Vec3(1, 0, 0), Vec3(0, 0, 50)));
-  mShader.SetMat4("projectionMatrix", Perspective(45, 1280, 720, 0.1, 1000));
+  auto& shader = aMap.GetShader(ShaderType::eSHIP);
+  shader.Use();
+  shader.SetMat4("viewMatrix", View(Vec3(0, 0, 1), Vec3(1, 0, 0), Vec3(0, 0, 50)));
+  shader.SetMat4("projectionMatrix", Perspective(45, 1280, 720, 0.1, 1000));
 
-  mModel.DrawInstanced(mShader, mEntities.size());
+  model.DrawInstanced(shader, mEntities.size());
 }
 
 } // namespace StarBear

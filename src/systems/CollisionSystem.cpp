@@ -5,14 +5,6 @@
 namespace StarBear {
 
 /******************************************************************************/
-CollisionSystem::CollisionSystem()
-{
-  mMesh.InitCube();
-  mShader.LoadFromFiles("resources/shaders/Hitbox.vert",
-                        "resources/shaders/Hitbox.frag");
-}
-
-/******************************************************************************/
 void CollisionSystem::Update(Scene& aScene)
 {
   for(const auto& entity : mEntities)
@@ -41,7 +33,7 @@ void CollisionSystem::Update(Scene& aScene)
 }
 
 /******************************************************************************/
-void CollisionSystem::Render(Scene& aScene)
+void CollisionSystem::Render(Scene& aScene, ResourceMap& aMap)
 {
   std::vector<Mat4> modelMatrices;
   for(const auto& entity : mEntities)
@@ -59,17 +51,20 @@ void CollisionSystem::Render(Scene& aScene)
     modelMatrices.emplace_back(mat);
   }
 
-  glBindBuffer(GL_ARRAY_BUFFER, mMesh.GetInstanceBufferID());
+  auto& mesh = aMap.GetMesh(MeshType::eCUBE);
+  auto& shader = aMap.GetShader(ShaderType::eHITBOX);
+
+  glBindBuffer(GL_ARRAY_BUFFER, mesh.GetInstanceBufferID());
   glBufferData(GL_ARRAY_BUFFER,
                modelMatrices.size() * sizeof(Mat4),
                modelMatrices.data(),
                GL_DYNAMIC_DRAW);
 
-  mShader.Use();
-  mShader.SetMat4("viewMatrix", View(Vec3(0, 0, 1), Vec3(1, 0, 0), Vec3(0, 0, 50)));
-  mShader.SetMat4("projectionMatrix", Perspective(45, 1280, 720, 0.1, 1000));
+  shader.Use();
+  shader.SetMat4("viewMatrix", View(Vec3(0, 0, 1), Vec3(1, 0, 0), Vec3(0, 0, 50)));
+  shader.SetMat4("projectionMatrix", Perspective(45, 1280, 720, 0.1, 1000));
 
-  mMesh.DrawInstanced(mShader, modelMatrices.size(), GL_LINE_LOOP);
+  mesh.DrawInstanced(shader, modelMatrices.size(), GL_LINE_LOOP);
 }
 
 /******************************************************************************/

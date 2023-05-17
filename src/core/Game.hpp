@@ -1,13 +1,13 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
-#include <random>
-
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #include "ECS.hpp"
 #include "Input.hpp"
+
+#include "ResourceMap.hpp"
 
 #include "CollisionSystem.hpp"
 #include "EnemySystem.hpp"
@@ -33,9 +33,9 @@ class Game
     GLFWwindow* mWindow;
     Input mInput;
 
-    Scene mScene;
+    ResourceMap mResourceMap;
 
-    std::random_device mRandomDevice;
+    Scene mScene;
     double mLastFrameTime;
 
     CollisionSystem* mCollisionSystem;

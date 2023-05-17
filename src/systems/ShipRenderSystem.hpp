@@ -2,22 +2,14 @@
 #define SHIPRENDERSYSTEM_HPP
 
 #include "ECS.hpp"
-
-#include "Model.hpp"
-#include "Shader.hpp"
+#include "ResourceMap.hpp"
 
 namespace StarBear {
 
 class ShipRenderSystem : public System
 {
   public:
-    ShipRenderSystem();
-
-    void Render(Scene& aScene);
-
-  private:
-    Model mModel;
-    Shader mShader;
+    void Render(Scene& aScene, ResourceMap& aMap);
 };
 
 } // namespace StarBear

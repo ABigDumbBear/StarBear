@@ -2,26 +2,19 @@
 #define PARTICLEEMITTERSYSTEM_HPP
 
 #include "ECS.hpp"
+#include "ResourceMap.hpp"
 
 #include <random>
-
-#include "Mesh.hpp"
-#include "Shader.hpp"
 
 namespace StarBear {
 
 class ParticleEmitterSystem : public System
 {
   public:
-    ParticleEmitterSystem();
-
     void Update(Scene& aScene, std::random_device& aDevice, double dt);
-    void Render(Scene& aScene);
+    void Render(Scene& aScene, ResourceMap& aMap);
 
   private:
-    Mesh mMesh;
-    Shader mShader;
-
     double mTimer { 0 };
 };
 
