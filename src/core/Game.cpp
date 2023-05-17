@@ -83,9 +83,7 @@ Game::Game(GLFWwindow* aWindow)
 
   auto enemy = CreateEnemy(mScene);
   mScene.GetComponentForEntity<Transform>(enemy).SetPosition(Vec3(0, 0, -50));
-  mScene.GetComponentForEntity<Hitbox>(enemy).mHeight = 2.5;
-  mScene.GetComponentForEntity<Hitbox>(enemy).mWidth = 5;
-  mScene.GetComponentForEntity<Hitbox>(enemy).x = -2.5;
+  mScene.GetComponentForEntity<Transform>(enemy).Scale(3, 3, 3);
 }
 
 /******************************************************************************/

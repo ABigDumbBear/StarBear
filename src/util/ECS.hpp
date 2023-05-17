@@ -61,7 +61,7 @@ class ComponentMap : public IComponentMap
       return mEntityToIndexMap.find(aEntity) != mEntityToIndexMap.end();
     }
 
-    void AddComponent(Entity aEntity)
+    T& AddComponent(Entity aEntity)
     {
       assert(mSize < mComponents.size());
       assert(mEntityToIndexMap.find(aEntity) == mEntityToIndexMap.end());
@@ -69,6 +69,8 @@ class ComponentMap : public IComponentMap
       mEntityToIndexMap[aEntity] = mSize;
       mIndexToEntityMap[mSize] = aEntity;
       ++mSize;
+
+      return mComponents[mEntityToIndexMap[aEntity]];
     }
 
     void RemoveComponent(Entity aEntity) override
@@ -166,13 +168,11 @@ class Scene
     }
 
     template<typename T>
-    void AddComponentToEntity(Entity aEntity)
+    T& AddComponentToEntity(Entity aEntity)
     {
       auto name = typeid(T).name();
       assert(mComponentToIndexMap.find(name) != mComponentToIndexMap.end());
 
-      auto componentMap = mComponentMaps[mComponentToIndexMap[name]].get();
-      static_cast<ComponentMap<T>*>(componentMap)->AddComponent(aEntity);
       mEntitySignatures[aEntity].set(mComponentToIndexMap[name]);
 
       for(size_t i = 0; i < mSystems.size(); ++i)
@@ -183,6 +183,9 @@ class Scene
           mSystems[i]->mEntities.insert(aEntity);
         }
       }
+
+      auto componentMap = mComponentMaps[mComponentToIndexMap[name]].get();
+      return static_cast<ComponentMap<T>*>(componentMap)->AddComponent(aEntity);
     }
 
     template<typename T>
