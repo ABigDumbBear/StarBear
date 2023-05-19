@@ -9,6 +9,7 @@ Mesh::Mesh()
   glGenVertexArrays(1, &mVertexArray);
   glGenBuffers(1, &mVertexBuffer);
   glGenBuffers(1, &mInstanceBuffer);
+  glGenBuffers(1, &mCustomBuffer);
   glGenBuffers(1, &mElementBuffer);
 
   // Bind the vertex array.
@@ -108,6 +109,7 @@ Mesh::~Mesh()
     glDeleteVertexArrays(1, &mVertexArray);
     glDeleteBuffers(1, &mVertexBuffer);
     glDeleteBuffers(1, &mInstanceBuffer);
+    glDeleteBuffers(1, &mCustomBuffer);
     glDeleteBuffers(1, &mElementBuffer);
   }
 }
@@ -121,6 +123,7 @@ Mesh::Mesh(Mesh&& aMesh)
   mVertexArray = aMesh.mVertexArray;
   mVertexBuffer = aMesh.mVertexBuffer;
   mInstanceBuffer = aMesh.mInstanceBuffer;
+  mCustomBuffer = aMesh.mCustomBuffer;
   mElementBuffer = aMesh.mElementBuffer;
 
   aMesh.mValid = false;
@@ -136,6 +139,7 @@ Mesh& Mesh::operator=(Mesh&& aMesh)
   mVertexArray = aMesh.mVertexArray;
   mVertexBuffer = aMesh.mVertexBuffer;
   mInstanceBuffer = aMesh.mInstanceBuffer;
+  mCustomBuffer = aMesh.mCustomBuffer;
   mElementBuffer = aMesh.mElementBuffer;
 
   aMesh.mValid = false;

@@ -12,10 +12,12 @@ void ShipRenderSystem::Render(Scene& aScene, ResourceMap& aMap)
 {
   // Store the model matrix for each ship.
   std::vector<Mat4> modelMatrices;
+  std::vector<float> inverts;
   for(const auto& entity : mEntities)
   {
     auto& transform = aScene.GetComponentForEntity<Transform>(entity);
     modelMatrices.emplace_back(transform.GetMatrix());
+    inverts.emplace_back(1);
   }
 
   // For each mesh in the model, bind the mesh's instance buffer and
@@ -27,6 +29,12 @@ void ShipRenderSystem::Render(Scene& aScene, ResourceMap& aMap)
     glBufferData(GL_ARRAY_BUFFER,
                  modelMatrices.size() * sizeof(Mat4),
                  modelMatrices.data(),
+                 GL_DYNAMIC_DRAW);
+
+    glBindBuffer(GL_ARRAY_BUFFER, mesh.GetCustomBufferID());
+    glBufferData(GL_ARRAY_BUFFER,
+                 inverts.size() * sizeof(float),
+                 inverts.data(),
                  GL_DYNAMIC_DRAW);
   }
 

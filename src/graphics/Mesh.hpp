@@ -47,6 +47,7 @@ class Mesh
     GLuint GetVertexArrayID() const { return mVertexArray; }
     GLuint GetVertexBufferID() const { return mVertexBuffer; }
     GLuint GetInstanceBufferID() const { return mInstanceBuffer; }
+    GLuint GetCustomBufferID() const { return mCustomBuffer; }
     GLuint GetElementBufferID() const { return mElementBuffer; }
 
     std::vector<MeshVertex> mVertices;
@@ -56,6 +57,7 @@ class Mesh
     GLuint mVertexArray { 0 };
     GLuint mVertexBuffer { 0 };
     GLuint mInstanceBuffer { 0 };
+    GLuint mCustomBuffer { 0 };
     GLuint mElementBuffer { 0 };
 
     bool mValid { false };

@@ -119,7 +119,7 @@ void Game::Run()
     mLaserSystem->Render(mScene, mResourceMap);
     mShipRenderSystem->Render(mScene, mResourceMap);
     mEnemySystem->Render(mScene, mResourceMap);
-    mParticleEmitterSystem->Render(mScene, mResourceMap);
+    //mParticleEmitterSystem->Render(mScene, mResourceMap);
     mCollisionSystem->Render(mScene, mResourceMap);
 
     mLastFrameTime = glfwGetTime();

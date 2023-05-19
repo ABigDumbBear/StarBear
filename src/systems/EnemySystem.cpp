@@ -28,7 +28,7 @@ void EnemySystem::Update(Scene& aScene, double dt)
   for(const auto& entity : mEntities)
   {
     auto& transform = aScene.GetComponentForEntity<Transform>(entity);
-    transform.SetRotation(0, 0, easeInOutBack(mTimer) * 360);
+    //transform.SetRotation(0, 0, easeInOutBack(mTimer) * 360);
 
     auto& enemy = aScene.GetComponentForEntity<Enemy>(entity);
     auto& hitbox = aScene.GetComponentForEntity<Hitbox>(entity);
@@ -58,10 +58,14 @@ void EnemySystem::Render(Scene& aScene, ResourceMap& aMap)
 {
   // Store the model matrix for each ship.
   std::vector<Mat4> modelMatrices;
+  std::vector<float> inverts;
   for(const auto& entity : mEntities)
   {
     auto& transform = aScene.GetComponentForEntity<Transform>(entity);
     modelMatrices.emplace_back(transform.GetMatrix());
+
+    auto& hitbox = aScene.GetComponentForEntity<Hitbox>(entity);
+    inverts.emplace_back((float)hitbox.mCollided);
   }
 
   // For each mesh in the model, bind the mesh's instance buffer and
@@ -73,6 +77,12 @@ void EnemySystem::Render(Scene& aScene, ResourceMap& aMap)
     glBufferData(GL_ARRAY_BUFFER,
                  modelMatrices.size() * sizeof(Mat4),
                  modelMatrices.data(),
+                 GL_DYNAMIC_DRAW);
+
+    glBindBuffer(GL_ARRAY_BUFFER, mesh.GetCustomBufferID());
+    glBufferData(GL_ARRAY_BUFFER,
+                 inverts.size() * sizeof(float),
+                 inverts.data(),
                  GL_DYNAMIC_DRAW);
   }
 
