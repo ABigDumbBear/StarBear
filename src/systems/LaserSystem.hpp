@@ -9,7 +9,7 @@ namespace StarBear {
 class LaserSystem : public System
 {
   public:
-    void Update(Scene& aScene);
+    void Update(Scene& aScene, double dt);
     void Render(Scene& aScene, ResourceMap& aMap);
 };
 

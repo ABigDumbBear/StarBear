@@ -14,7 +14,6 @@
 #include "ParticleEmitterSystem.hpp"
 #include "PhysicsSystem.hpp"
 #include "ShipControllerSystem.hpp"
-#include "ShipRenderSystem.hpp"
 #include "LaserSystem.hpp"
 
 namespace StarBear {
@@ -44,7 +43,6 @@ class Game
     ParticleEmitterSystem* mParticleEmitterSystem;
     ShipControllerSystem* mShipControllerSystem;
     PhysicsSystem* mPhysicsSystem;
-    ShipRenderSystem* mShipRenderSystem;
 };
 
 } // namespace StarBear

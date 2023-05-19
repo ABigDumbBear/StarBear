@@ -4,28 +4,29 @@
 #include "Laser.hpp"
 #include "Transform.hpp"
 
+#include <iostream>
+
 namespace StarBear {
 
 /******************************************************************************/
-void LaserSystem::Update(Scene& aScene)
+void LaserSystem::Update(Scene& aScene, double dt)
 {
+  std::cout << "------------------ updating lasers" << std::endl;
   std::set<Entity> deadLasers;
   for(const auto& entity : mEntities)
   {
-    auto& transform = aScene.GetComponentForEntity<Transform>(entity);
-
-    auto newPos = transform.GetPosition();
-    newPos.z -= 3;
-    transform.SetPosition(newPos);
-
-    if(newPos.z < -800)
+    auto& laser = aScene.GetComponentForEntity<Laser>(entity);
+    laser.mLifetime -= dt;
+    if(laser.mLifetime <= 0)
     {
+      std::cout << "laser dead: " << dt << std::endl;
       deadLasers.insert(entity);
     }
 
     auto& hitbox = aScene.GetComponentForEntity<Hitbox>(entity);
     if(hitbox.mCollided)
     {
+      std::cout << "laser collided" << std::endl;
       deadLasers.insert(entity);
     }
   }

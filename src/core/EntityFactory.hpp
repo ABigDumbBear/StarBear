@@ -19,7 +19,6 @@ inline Entity CreateShip(Scene& aScene)
   auto entity = aScene.CreateEntity();
   aScene.AddComponentToEntity<Transform>(entity);
   aScene.AddComponentToEntity<ShipController>(entity);
-  aScene.AddComponentToEntity<Physics>(entity);
 
   return entity;
 }
@@ -31,6 +30,7 @@ inline Entity CreateLaser(Scene& aScene)
   aScene.AddComponentToEntity<Laser>(entity);
   aScene.AddComponentToEntity<Transform>(entity);
   aScene.AddComponentToEntity<Hitbox>(entity);
+  aScene.AddComponentToEntity<Physics>(entity);
 
   return entity;
 }

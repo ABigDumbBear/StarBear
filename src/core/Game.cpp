@@ -18,7 +18,6 @@ Game::Game(GLFWwindow* aWindow)
   , mParticleEmitterSystem(nullptr)
   , mShipControllerSystem(nullptr)
   , mPhysicsSystem(nullptr)
-  , mShipRenderSystem(nullptr)
 {
   // Set GLFW callbacks.
   glfwSetWindowUserPointer(mWindow, this);
@@ -40,20 +39,19 @@ Game::Game(GLFWwindow* aWindow)
   });
 
   // Register components.
-  mScene.RegisterComponentType<Hitbox>(502);
-  mScene.RegisterComponentType<Enemy>(5);
-  mScene.RegisterComponentType<Laser>(500);
-  mScene.RegisterComponentType<ParticleEmitter>(1);
-  mScene.RegisterComponentType<Physics>(1);
-  mScene.RegisterComponentType<ShipController>(1);
-  mScene.RegisterComponentType<Transform>(501);
+  mScene.RegisterComponentType<Hitbox>(1000);
+  mScene.RegisterComponentType<Enemy>(1000);
+  mScene.RegisterComponentType<Laser>(1000);
+  mScene.RegisterComponentType<ParticleEmitter>(1000);
+  mScene.RegisterComponentType<Physics>(1000);
+  mScene.RegisterComponentType<ShipController>(1000);
+  mScene.RegisterComponentType<Transform>(1000);
 
   // Register systems.
   Signature sig;
   mScene.AddComponentToSignature<Transform>(sig);
   mScene.AddComponentToSignature<ShipController>(sig);
   mShipControllerSystem = mScene.RegisterSystemType<ShipControllerSystem>(sig);
-  mShipRenderSystem = mScene.RegisterSystemType<ShipRenderSystem>(sig);
 
   sig.reset();
   mScene.AddComponentToSignature<Physics>(sig);
@@ -110,16 +108,16 @@ void Game::Run()
     auto dt = glfwGetTime() - mLastFrameTime;
 
     mCollisionSystem->Update(mScene);
-    mLaserSystem->Update(mScene);
+    mEnemySystem->Update(mScene, dt);
+    mLaserSystem->Update(mScene, dt);
     mParticleEmitterSystem->Update(mScene, rd, dt);
     mShipControllerSystem->Update(mScene, mInput, dt);
-    mEnemySystem->Update(mScene, dt);
     mPhysicsSystem->Update(mScene, dt);
 
     mLaserSystem->Render(mScene, mResourceMap);
-    mShipRenderSystem->Render(mScene, mResourceMap);
+    mShipControllerSystem->Render(mScene, mResourceMap);
     mEnemySystem->Render(mScene, mResourceMap);
-    //mParticleEmitterSystem->Render(mScene, mResourceMap);
+    mParticleEmitterSystem->Render(mScene, mResourceMap);
     mCollisionSystem->Render(mScene, mResourceMap);
 
     mLastFrameTime = glfwGetTime();

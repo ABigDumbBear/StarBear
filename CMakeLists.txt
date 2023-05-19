@@ -25,7 +25,6 @@ list(APPEND SOURCE_FILES
             src/systems/LaserSystem.cpp
             src/systems/PhysicsSystem.cpp
             src/systems/ShipControllerSystem.cpp
-            src/systems/ShipRenderSystem.cpp
             src/systems/ParticleEmitterSystem.cpp
             src/main.cpp)
 

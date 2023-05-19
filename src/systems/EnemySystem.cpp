@@ -3,6 +3,10 @@
 #include <cmath>
 #include <set>
 
+#include <iostream>
+
+#include "EntityFactory.hpp"
+
 #include "Hitbox.hpp"
 #include "Enemy.hpp"
 #include "Transform.hpp"
@@ -22,6 +26,7 @@ float easeInOutBack(double x)
 /******************************************************************************/
 void EnemySystem::Update(Scene& aScene, double dt)
 {
+  std::cout << "------------------------ updating enemies" << std::endl;
   mTimer += dt;
 
   std::set<Entity> deadEntities;
@@ -29,6 +34,15 @@ void EnemySystem::Update(Scene& aScene, double dt)
   {
     auto& transform = aScene.GetComponentForEntity<Transform>(entity);
     //transform.SetRotation(0, 0, easeInOutBack(mTimer) * 360);
+
+    if(mTimer > 1)
+    {
+      auto laser = CreateLaser(aScene);
+      aScene.GetComponentForEntity<Transform>(laser).SetPosition(transform.GetPosition() + Vec3(0, 0, 5));
+      auto& physics = aScene.GetComponentForEntity<Physics>(laser);
+
+      physics.mVelocity.z = 50;
+    }
 
     auto& enemy = aScene.GetComponentForEntity<Enemy>(entity);
     auto& hitbox = aScene.GetComponentForEntity<Hitbox>(entity);
