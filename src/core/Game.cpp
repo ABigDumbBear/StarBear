@@ -99,6 +99,9 @@ void Game::Run()
 {
   std::random_device rd;
 
+  auto view = View(Vec3(0, 0, 1), Vec3(1, 0, 0), Vec3(0, 0, 50));
+  auto proj = Perspective(45, 1280, 720, 0.1, 1000);
+
   // Run until instructed to close.
   while(!glfwWindowShouldClose(mWindow))
   {
@@ -114,11 +117,11 @@ void Game::Run()
     mShipControllerSystem->Update(mScene, mInput, dt);
     mPhysicsSystem->Update(mScene, dt);
 
-    mLaserSystem->Render(mScene, mResourceMap);
-    mShipControllerSystem->Render(mScene, mResourceMap);
-    mEnemySystem->Render(mScene, mResourceMap);
-    mParticleEmitterSystem->Render(mScene, mResourceMap);
-    mCollisionSystem->Render(mScene, mResourceMap);
+    mLaserSystem->Render(mScene, mResourceMap, view, proj);
+    mShipControllerSystem->Render(mScene, mResourceMap, view, proj);
+    mEnemySystem->Render(mScene, mResourceMap, view, proj);
+    mParticleEmitterSystem->Render(mScene, mResourceMap, view, proj);
+    mCollisionSystem->Render(mScene, mResourceMap, view, proj);
 
     mLastFrameTime = glfwGetTime();
 

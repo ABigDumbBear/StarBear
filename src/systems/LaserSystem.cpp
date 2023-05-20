@@ -4,14 +4,11 @@
 #include "Laser.hpp"
 #include "Transform.hpp"
 
-#include <iostream>
-
 namespace StarBear {
 
 /******************************************************************************/
 void LaserSystem::Update(Scene& aScene, double dt)
 {
-  std::cout << "------------------------ updating lasers" << std::endl;
   std::set<Entity> deadLasers;
   for(const auto& entity : mEntities)
   {
@@ -19,14 +16,12 @@ void LaserSystem::Update(Scene& aScene, double dt)
     laser.mLifetime -= dt;
     if(laser.mLifetime <= 0)
     {
-      std::cout << "laser dead: " << laser.mLifetime << std::endl;
       deadLasers.insert(entity);
     }
 
     auto& hitbox = aScene.GetComponentForEntity<Hitbox>(entity);
     if(hitbox.mCollided)
     {
-      std::cout << "laser collided" << std::endl;
       deadLasers.insert(entity);
     }
   }
@@ -38,7 +33,10 @@ void LaserSystem::Update(Scene& aScene, double dt)
 }
 
 /******************************************************************************/
-void LaserSystem::Render(Scene& aScene, ResourceMap& aMap)
+void LaserSystem::Render(Scene& aScene,
+                         ResourceMap& aMap,
+                         const Mat4& aView,
+                         const Mat4& aProj)
 {
   std::vector<Mat4> modelMatrices;
   for(const auto& entity : mEntities)
@@ -57,8 +55,8 @@ void LaserSystem::Render(Scene& aScene, ResourceMap& aMap)
                GL_DYNAMIC_DRAW);
 
   shader.Use();
-  shader.SetMat4("viewMatrix", View(Vec3(0, 0, 1), Vec3(1, 0, 0), Vec3(0, 0, 50)));
-  shader.SetMat4("projectionMatrix", Perspective(45, 1280, 720, 0.1, 1000));
+  shader.SetMat4("viewMatrix", aView);
+  shader.SetMat4("projectionMatrix", aProj);
 
   mesh.DrawInstanced(shader, modelMatrices.size());
 }

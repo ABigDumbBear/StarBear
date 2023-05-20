@@ -10,7 +10,10 @@ class LaserSystem : public System
 {
   public:
     void Update(Scene& aScene, double dt);
-    void Render(Scene& aScene, ResourceMap& aMap);
+    void Render(Scene& aScene,
+                ResourceMap& aMap,
+                const Mat4& aView,
+                const Mat4& aProj);
 };
 
 } // namespace StarBear

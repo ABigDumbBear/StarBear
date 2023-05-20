@@ -37,7 +37,7 @@ void ShipControllerSystem::Update(Scene& aScene, const Input& aInput, double dt)
     // create a laser
     auto laser = CreateLaser(aScene);
     aScene.GetComponentForEntity<Transform>(laser).SetPosition(mTargetPos);
-    aScene.GetComponentForEntity<Physics>(laser).mVelocity.z = -5;
+    aScene.GetComponentForEntity<Physics>(laser).mVelocity.z = -100;
 
     mTimer = 0;
   }
@@ -55,7 +55,10 @@ void ShipControllerSystem::Update(Scene& aScene, const Input& aInput, double dt)
 }
 
 /******************************************************************************/
-void ShipControllerSystem::Render(Scene& aScene, ResourceMap& aMap)
+void ShipControllerSystem::Render(Scene& aScene,
+                                  ResourceMap& aMap,
+                                  const Mat4& aView,
+                                  const Mat4& aProj)
 {
   // Store the model matrix for each ship.
   std::vector<Mat4> modelMatrices;
@@ -64,7 +67,7 @@ void ShipControllerSystem::Render(Scene& aScene, ResourceMap& aMap)
   {
     auto& transform = aScene.GetComponentForEntity<Transform>(entity);
     modelMatrices.emplace_back(transform.GetMatrix());
-    inverts.emplace_back(1);
+    inverts.emplace_back(0);
   }
 
   // For each mesh in the model, bind the mesh's instance buffer and
@@ -88,8 +91,8 @@ void ShipControllerSystem::Render(Scene& aScene, ResourceMap& aMap)
   // Set shader uniforms and draw the model.
   auto& shader = aMap.GetShader(ShaderType::eSHIP);
   shader.Use();
-  shader.SetMat4("viewMatrix", View(Vec3(0, 0, 1), Vec3(1, 0, 0), Vec3(0, 0, 50)));
-  shader.SetMat4("projectionMatrix", Perspective(45, 1280, 720, 0.1, 1000));
+  shader.SetMat4("viewMatrix", aView);
+  shader.SetMat4("projectionMatrix", aProj);
 
   model.DrawInstanced(shader, mEntities.size());
 }

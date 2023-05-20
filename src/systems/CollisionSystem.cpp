@@ -33,7 +33,10 @@ void CollisionSystem::Update(Scene& aScene)
 }
 
 /******************************************************************************/
-void CollisionSystem::Render(Scene& aScene, ResourceMap& aMap)
+void CollisionSystem::Render(Scene& aScene,
+                             ResourceMap& aMap,
+                             const Mat4& aView,
+                             const Mat4& aProj)
 {
   std::vector<Mat4> modelMatrices;
   for(const auto& entity : mEntities)
@@ -61,8 +64,8 @@ void CollisionSystem::Render(Scene& aScene, ResourceMap& aMap)
                GL_DYNAMIC_DRAW);
 
   shader.Use();
-  shader.SetMat4("viewMatrix", View(Vec3(0, 0, 1), Vec3(1, 0, 0), Vec3(0, 0, 50)));
-  shader.SetMat4("projectionMatrix", Perspective(45, 1280, 720, 0.1, 1000));
+  shader.SetMat4("viewMatrix", aView);
+  shader.SetMat4("projectionMatrix", aProj);
 
   mesh.DrawInstanced(shader, modelMatrices.size(), GL_LINE_LOOP);
 }

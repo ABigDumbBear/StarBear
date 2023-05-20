@@ -3,8 +3,6 @@
 #include <cmath>
 #include <set>
 
-#include <iostream>
-
 #include "EntityFactory.hpp"
 
 #include "Hitbox.hpp"
@@ -26,7 +24,6 @@ float easeInOutBack(double x)
 /******************************************************************************/
 void EnemySystem::Update(Scene& aScene, double dt)
 {
-  std::cout << "------------------------ updating enemies" << std::endl;
   mTimer += dt;
 
   std::set<Entity> deadEntities;
@@ -68,7 +65,10 @@ void EnemySystem::Update(Scene& aScene, double dt)
 }
 
 /******************************************************************************/
-void EnemySystem::Render(Scene& aScene, ResourceMap& aMap)
+void EnemySystem::Render(Scene& aScene,
+                         ResourceMap& aMap,
+                         const Mat4& aView,
+                         const Mat4& aProj)
 {
   // Store the model matrix for each ship.
   std::vector<Mat4> modelMatrices;
@@ -103,8 +103,8 @@ void EnemySystem::Render(Scene& aScene, ResourceMap& aMap)
   // Set shader uniforms and draw the model.
   auto& shader = aMap.GetShader(ShaderType::eSHIP);
   shader.Use();
-  shader.SetMat4("viewMatrix", View(Vec3(0, 0, 1), Vec3(1, 0, 0), Vec3(0, 0, 50)));
-  shader.SetMat4("projectionMatrix", Perspective(45, 1280, 720, 0.1, 1000));
+  shader.SetMat4("viewMatrix", aView);
+  shader.SetMat4("projectionMatrix", aProj);
 
   model.DrawInstanced(shader, mEntities.size());
 }
