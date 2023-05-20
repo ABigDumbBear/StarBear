@@ -11,7 +11,7 @@ namespace StarBear {
 /******************************************************************************/
 void LaserSystem::Update(Scene& aScene, double dt)
 {
-  std::cout << "------------------ updating lasers" << std::endl;
+  std::cout << "------------------------ updating lasers" << std::endl;
   std::set<Entity> deadLasers;
   for(const auto& entity : mEntities)
   {
@@ -19,7 +19,7 @@ void LaserSystem::Update(Scene& aScene, double dt)
     laser.mLifetime -= dt;
     if(laser.mLifetime <= 0)
     {
-      std::cout << "laser dead: " << dt << std::endl;
+      std::cout << "laser dead: " << laser.mLifetime << std::endl;
       deadLasers.insert(entity);
     }
 
