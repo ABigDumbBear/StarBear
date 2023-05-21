@@ -11,16 +11,6 @@
 
 namespace StarBear {
 
-float easeInOutBack(double x)
-{
-  float c1 = 1.70158;
-  float c2 = c1 * 1.525;
-
-  return x < 0.5 ?
-         (std::pow(2.0 * x, 2.0) * ((c2 + 1.0) * 2.0 * x - c2)) / 2.0 :
-         (std::pow(2.0 * x - 2.0, 2.0) * ((c2 + 1.0) * (x * 2.0 - 2.0) + c2) + 2.0) / 2.0;
-}
-
 /******************************************************************************/
 void EnemySystem::Update(Scene& aScene, double dt)
 {
@@ -30,7 +20,6 @@ void EnemySystem::Update(Scene& aScene, double dt)
   for(const auto& entity : mEntities)
   {
     auto& transform = aScene.GetComponentForEntity<Transform>(entity);
-    //transform.SetRotation(0, 0, easeInOutBack(mTimer) * 360);
 
     if(mTimer > 1)
     {

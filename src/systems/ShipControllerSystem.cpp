@@ -10,6 +10,16 @@
 
 namespace StarBear {
 
+float easeInOutBack(double x)
+{
+  float c1 = 1.70158;
+  float c2 = c1 * 1.525;
+
+  return x < 0.5 ?
+         (std::pow(2.0 * x, 2.0) * ((c2 + 1.0) * 2.0 * x - c2)) / 2.0 :
+         (std::pow(2.0 * x - 2.0, 2.0) * ((c2 + 1.0) * (x * 2.0 - 2.0) + c2) + 2.0) / 2.0;
+}
+
 /******************************************************************************/
 void ShipControllerSystem::Update(Scene& aScene, const Input& aInput, double dt)
 {
@@ -32,14 +42,11 @@ void ShipControllerSystem::Update(Scene& aScene, const Input& aInput, double dt)
     mTargetPos.x += 1;
   }
 
-  if(aInput.mPressedKeys.count(GLFW_KEY_SPACE) && mTimer > 0.1)
+  if(aInput.mPressedKeys.count(GLFW_KEY_SPACE) && mTimer > 0.08)
   {
-    // create a laser
     auto laser = CreateLaser(aScene);
     aScene.GetComponentForEntity<Transform>(laser).SetPosition(mTargetPos);
     aScene.GetComponentForEntity<Physics>(laser).mVelocity.z = -100;
-
-    mTimer = 0;
   }
 
   for(const auto& entity : mEntities)
@@ -47,10 +54,38 @@ void ShipControllerSystem::Update(Scene& aScene, const Input& aInput, double dt)
     auto& controller = aScene.GetComponentForEntity<ShipController>(entity);
     auto& transform = aScene.GetComponentForEntity<Transform>(entity);
 
+    if(aInput.mPressedKeys.count(GLFW_KEY_Q))
+    {
+      controller.mState = ShipState::eROLLING;
+    }
+
     auto newPos = transform.GetPosition();
     newPos = Lerp(newPos, mTargetPos, 0.3);
     newPos.z = 0;
     transform.SetPosition(newPos);
+
+    switch(controller.mState)
+    {
+      case ShipState::eROLLING:
+      {
+        controller.mRollRotation += dt;
+        transform.SetRotation(0, 0, easeInOutBack(controller.mRollRotation) * 360);
+
+        if(controller.mRollRotation >= 1)
+        {
+          controller.mRollRotation = 0;
+          controller.mState = ShipState::eDEFAULT;
+        }
+        break;
+      }
+      case ShipState::eDEFAULT:
+      default: { break; }
+    }
+  }
+
+  if(mTimer > 1)
+  {
+    mTimer = 0;
   }
 }
 
