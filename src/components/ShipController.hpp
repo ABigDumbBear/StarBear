@@ -19,6 +19,9 @@ struct ShipController
   ShipState mState { ShipState::eDEFAULT };
 
   float mRollRotation { 0 };
+
+  float mFireRate { 50 };
+  double mTimeSinceFired { 0 };
 };
 
 } // namespace StarBear

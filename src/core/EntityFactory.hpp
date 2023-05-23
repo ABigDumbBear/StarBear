@@ -55,7 +55,7 @@ inline Entity CreateEnemy(Scene& aScene)
 inline Entity CreateEmitter(Scene& aScene)
 {
   auto entity = aScene.CreateEntity();
-  aScene.AddComponentToEntity<ParticleEmitter>(entity).mIntensity = 5;
+  aScene.AddComponentToEntity<ParticleEmitter>(entity).mIntensity = 50;
 
   return entity;
 }

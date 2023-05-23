@@ -23,8 +23,6 @@ float easeInOutBack(double x)
 /******************************************************************************/
 void ShipControllerSystem::Update(Scene& aScene, const Input& aInput, double dt)
 {
-  mTimer += dt;
-
   if(aInput.mPressedKeys.count(GLFW_KEY_W))
   {
     mTargetPos.y += 1;
@@ -42,19 +40,23 @@ void ShipControllerSystem::Update(Scene& aScene, const Input& aInput, double dt)
     mTargetPos.x += 1;
   }
 
-  if(aInput.mPressedKeys.count(GLFW_KEY_SPACE) && mTimer > 0.08)
-  {
-    auto laser = CreateLaser(aScene);
-    aScene.GetComponentForEntity<Transform>(laser).SetPosition(mTargetPos);
-    aScene.GetComponentForEntity<Physics>(laser).mVelocity.z = -100;
-  }
-
   for(const auto& entity : mEntities)
   {
     auto& controller = aScene.GetComponentForEntity<ShipController>(entity);
     auto& transform = aScene.GetComponentForEntity<Transform>(entity);
 
-    if(aInput.mPressedKeys.count(GLFW_KEY_Q))
+    controller.mTimeSinceFired += dt;
+    if(aInput.mPressedKeys.count(GLFW_KEY_SPACE) &&
+       controller.mTimeSinceFired >= 1.0 / controller.mFireRate)
+    {
+      auto laser = CreateLaser(aScene);
+      aScene.GetComponentForEntity<Physics>(laser).mVelocity.z = -100;
+      aScene.GetComponentForEntity<Transform>(laser).SetPosition(mTargetPos);
+
+      controller.mTimeSinceFired = 0;
+    }
+
+    if(aInput.mPressedKeys.count(GLFW_KEY_J))
     {
       controller.mState = ShipState::eROLLING;
     }
@@ -81,11 +83,6 @@ void ShipControllerSystem::Update(Scene& aScene, const Input& aInput, double dt)
       case ShipState::eDEFAULT:
       default: { break; }
     }
-  }
-
-  if(mTimer > 1)
-  {
-    mTimer = 0;
   }
 }
 

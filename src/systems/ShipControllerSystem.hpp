@@ -21,8 +21,6 @@ class ShipControllerSystem : public System
 
   private:
     Vec3 mTargetPos { 0, 0, -1 };
-
-    double mTimer { 0 };
 };
 
 } // namespace StarBear
