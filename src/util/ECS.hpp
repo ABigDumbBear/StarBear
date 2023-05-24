@@ -220,6 +220,16 @@ class Scene
     }
 
     template<typename T>
+    bool DoesEntityHaveComponent(Entity aEntity)
+    {
+      auto name = typeid(T).name();
+      assert(mComponentToIndexMap.find(name) != mComponentToIndexMap.end());
+
+      auto componentMap = mComponentMaps[mComponentToIndexMap[name]].get();
+      return static_cast<ComponentMap<T>*>(componentMap)->ContainsComponent(aEntity);
+    }
+
+    template<typename T>
     T* RegisterSystemType(const Signature& aSignature)
     {
       auto name = typeid(T).name();

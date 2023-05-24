@@ -13,6 +13,7 @@ enum class ShipState
 
 struct ShipController
 {
+  Vec3 mTargetPos { 0, 0, -1 };
   Vec3 mForward { 0, 0, -1 };
   float mSpeed { 0 };
 
@@ -20,7 +21,7 @@ struct ShipController
 
   float mRollRotation { 0 };
 
-  float mFireRate { 50 };
+  float mFireRate { 10 };
   double mTimeSinceFired { 0 };
 };
 

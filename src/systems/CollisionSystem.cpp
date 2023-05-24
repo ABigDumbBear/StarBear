@@ -2,6 +2,8 @@
 
 #include "Mat4.hpp"
 
+#include "Laser.hpp"
+
 namespace StarBear {
 
 /******************************************************************************/
@@ -18,6 +20,7 @@ void CollisionSystem::Update(Scene& aScene)
     for(const auto& entityB : mEntities)
     {
       if(entityA == entityB) { continue; }
+      if(aScene.DoesEntityHaveComponent<Laser>(entityB)) { continue; }
 
       auto& transformA = aScene.GetComponentForEntity<Transform>(entityA);
       auto& hitboxA = aScene.GetComponentForEntity<Hitbox>(entityA);
@@ -26,7 +29,8 @@ void CollisionSystem::Update(Scene& aScene)
 
       if(!hitboxB.mCollided)
       {
-        hitboxB.mCollided = CheckCollision(transformA, hitboxA, transformB, hitboxB);
+        hitboxA.mCollided = CheckCollision(transformA, hitboxA, transformB, hitboxB);
+        hitboxB.mCollided = hitboxA.mCollided;
       }
     }
   }

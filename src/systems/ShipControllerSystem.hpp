@@ -20,7 +20,7 @@ class ShipControllerSystem : public System
                 const Mat4& aProj);
 
   private:
-    Vec3 mTargetPos { 0, 0, -1 };
+    void Fire(Scene& aScene, Entity aShip);
 };
 
 } // namespace StarBear

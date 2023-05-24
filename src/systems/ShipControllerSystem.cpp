@@ -23,46 +23,45 @@ float easeInOutBack(double x)
 /******************************************************************************/
 void ShipControllerSystem::Update(Scene& aScene, const Input& aInput, double dt)
 {
-  if(aInput.mPressedKeys.count(GLFW_KEY_W))
-  {
-    mTargetPos.y += 1;
-  }
-  if(aInput.mPressedKeys.count(GLFW_KEY_A))
-  {
-    mTargetPos.x -= 1;
-  }
-  if(aInput.mPressedKeys.count(GLFW_KEY_S))
-  {
-    mTargetPos.y -= 1;
-  }
-  if(aInput.mPressedKeys.count(GLFW_KEY_D))
-  {
-    mTargetPos.x += 1;
-  }
-
   for(const auto& entity : mEntities)
   {
     auto& controller = aScene.GetComponentForEntity<ShipController>(entity);
     auto& transform = aScene.GetComponentForEntity<Transform>(entity);
 
+    // Handle directional input
+    if(aInput.mPressedKeys.count(GLFW_KEY_W))
+    {
+      controller.mTargetPos.y += 1;
+    }
+    if(aInput.mPressedKeys.count(GLFW_KEY_A))
+    {
+      controller.mTargetPos.x -= 1;
+    }
+    if(aInput.mPressedKeys.count(GLFW_KEY_S))
+    {
+      controller.mTargetPos.y -= 1;
+    }
+    if(aInput.mPressedKeys.count(GLFW_KEY_D))
+    {
+      controller.mTargetPos.x += 1;
+    }
+
+    // Handle firing input
     controller.mTimeSinceFired += dt;
     if(aInput.mPressedKeys.count(GLFW_KEY_SPACE) &&
        controller.mTimeSinceFired >= 1.0 / controller.mFireRate)
     {
-      auto laser = CreateLaser(aScene);
-      aScene.GetComponentForEntity<Physics>(laser).mVelocity.z = -100;
-      aScene.GetComponentForEntity<Transform>(laser).SetPosition(mTargetPos);
-
-      controller.mTimeSinceFired = 0;
+      Fire(aScene, entity);
     }
 
+    // Handle rolling input
     if(aInput.mPressedKeys.count(GLFW_KEY_J))
     {
       controller.mState = ShipState::eROLLING;
     }
 
     auto newPos = transform.GetPosition();
-    newPos = Lerp(newPos, mTargetPos, 0.3);
+    newPos = Lerp(newPos, controller.mTargetPos, 0.3);
     newPos.z = 0;
     transform.SetPosition(newPos);
 
@@ -77,6 +76,7 @@ void ShipControllerSystem::Update(Scene& aScene, const Input& aInput, double dt)
         {
           controller.mRollRotation = 0;
           controller.mState = ShipState::eDEFAULT;
+          transform.SetRotation(0, 0, 0);
         }
         break;
       }
@@ -127,6 +127,18 @@ void ShipControllerSystem::Render(Scene& aScene,
   shader.SetMat4("projectionMatrix", aProj);
 
   model.DrawInstanced(shader, mEntities.size());
+}
+
+/******************************************************************************/
+void ShipControllerSystem::Fire(Scene& aScene, Entity aShip)
+{
+  auto& controller = aScene.GetComponentForEntity<ShipController>(aShip);
+
+  auto laser = CreateLaser(aScene);
+  aScene.GetComponentForEntity<Physics>(laser).mVelocity.z = -100;
+  aScene.GetComponentForEntity<Transform>(laser).SetPosition(controller.mTargetPos);
+
+  controller.mTimeSinceFired = 0;
 }
 
 } // namespace StarBear
