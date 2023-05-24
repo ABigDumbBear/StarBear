@@ -29,6 +29,8 @@ using Signature = std::bitset<MAX_COMPONENT_TYPES>;
 class System
 {
   public:
+    virtual ~System() = default;
+
     EntitySet mEntities;
 };
 
@@ -38,6 +40,8 @@ class System
 class IComponentMap
 {
   public:
+    virtual ~IComponentMap() = default;
+
     virtual bool ContainsComponent(Entity aEntity) const = 0;
     virtual void RemoveComponent(Entity aEntity) = 0;
 };
