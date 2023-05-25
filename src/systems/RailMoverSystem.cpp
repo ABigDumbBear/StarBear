@@ -17,8 +17,6 @@ void RailMoverSystem::Update(Scene& aScene)
 
     transform.Translate(Vec3(0, 0, -1));
 
-    std::cout << "rail mover position: " << transform.GetPosition() << std::endl;
-
     for(const auto& child : railMover.mChildren)
     {
       auto& childTransform = aScene.GetComponentForEntity<Transform>(child);

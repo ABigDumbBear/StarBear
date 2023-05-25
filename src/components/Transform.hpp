@@ -1,10 +1,14 @@
 #ifndef TRANSFORM_HPP
 #define TRANSFORM_HPP
 
+#include <set>
+
 #include "Mat4.hpp"
 #include "Vec3.hpp"
 
 #include "MathUtil.hpp"
+
+#include "ECS.hpp"
 
 namespace StarBear {
 
@@ -13,75 +17,80 @@ class Transform
   public:
     void Translate(const StarBear::Vec3& aPos)
     {
-      mPosition += aPos;
+      mLocalPosition += aPos;
       UpdateMatrix();
     }
 
     void Rotate(float x, float y, float z)
     {
-      mRotation = mRotation * StarBear::Rotate(Vec3(1, 0, 0), x);
-      mRotation = mRotation * StarBear::Rotate(Vec3(0, 1, 0), y);
-      mRotation = mRotation * StarBear::Rotate(Vec3(0, 0, 1), z);
+      mLocalRotation = mLocalRotation * StarBear::Rotate(Vec3(1, 0, 0), x);
+      mLocalRotation = mLocalRotation * StarBear::Rotate(Vec3(0, 1, 0), y);
+      mLocalRotation = mLocalRotation * StarBear::Rotate(Vec3(0, 0, 1), z);
       UpdateMatrix();
     }
 
     void Rotate(const StarBear::Vec3& aAxis, float aDegrees)
     {
-      mRotation = mRotation * StarBear::Rotate(aAxis, aDegrees);
+      mLocalRotation = mLocalRotation * StarBear::Rotate(aAxis, aDegrees);
       UpdateMatrix();
     }
 
     void Scale(float x, float y, float z)
     {
-      mScalar *= Vec3(x, y, z);
+      mLocalScalar *= Vec3(x, y, z);
       UpdateMatrix();
     }
 
     void SetPosition(const Vec3& aPos)
     {
-      mPosition = aPos;
+      mLocalPosition = aPos;
       UpdateMatrix();
     }
 
     void SetRotation(float x, float y, float z)
     {
-      mRotation = StarBear::Rotate(Vec3(1, 0, 0), x);
-      mRotation = mRotation * StarBear::Rotate(Vec3(0, 1, 0), y);
-      mRotation = mRotation * StarBear::Rotate(Vec3(0, 0, 1), z);
+      mLocalRotation = StarBear::Rotate(Vec3(1, 0, 0), x);
+      mLocalRotation = mLocalRotation * StarBear::Rotate(Vec3(0, 1, 0), y);
+      mLocalRotation = mLocalRotation * StarBear::Rotate(Vec3(0, 0, 1), z);
       UpdateMatrix();
     }
 
     void SetRotation(const StarBear::Vec3& aAxis, float aDegrees)
     {
-      mRotation = StarBear::Rotate(aAxis, aDegrees);
+      mLocalRotation = StarBear::Rotate(aAxis, aDegrees);
       UpdateMatrix();
     }
 
     void SetScale(float x, float y, float z)
     {
-      mScalar = Vec3(x, y, z);
+      mLocalScalar = Vec3(x, y, z);
       UpdateMatrix();
     }
 
-    const Vec3& GetPosition() const { return mPosition; }
-    const Mat4& GetRotation() const { return mRotation; }
-    const Vec3& GetScalar() const { return mScalar; }
+    const Vec3& GetPosition() const { return mLocalPosition; }
+    const Mat4& GetRotation() const { return mLocalRotation; }
+    const Vec3& GetScalar() const { return mLocalScalar; }
+    const Mat4& GetMatrix() const { return mLocalToWorldMatrix; }
 
-    const Mat4& GetMatrix() const { return mMatrix; }
+    std::set<Entity> mChildren;
 
   private:
     void UpdateMatrix()
     {
-      mMatrix = StarBear::Translate(mPosition);
-      mMatrix = mMatrix * mRotation;
-      mMatrix = mMatrix * StarBear::Scale(mScalar);
+      mLocalToWorldMatrix = StarBear::Translate(mLocalPosition);
+      mLocalToWorldMatrix = mLocalToWorldMatrix * mLocalRotation;
+      mLocalToWorldMatrix = mLocalToWorldMatrix * StarBear::Scale(mLocalScalar);
     }
 
-    Vec3 mPosition;
-    Mat4 mRotation;
-    Vec3 mScalar { 1, 1, 1 };
+    Vec3 mLocalPosition;
+    Mat4 mLocalRotation;
+    Vec3 mLocalScalar { 1, 1, 1 };
 
-    Mat4 mMatrix;
+    Mat4 mLocalToWorldMatrix;
+
+    Vec3 mWorldPosition;
+    Mat4 mWorldRotation;
+    Vec3 mWorldScalar { 1, 1, 1 };
 };
 
 } // namespace StarBear

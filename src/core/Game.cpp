@@ -142,7 +142,7 @@ void Game::Run()
     mParticleEmitterSystem->Update(mScene, rd, dt);
     mShipControllerSystem->Update(mScene, mInput, dt);
     mPhysicsSystem->Update(mScene, dt);
-    mRailMoverSystem->Update(mScene);
+    //mRailMoverSystem->Update(mScene);
 
     for(const auto& entity : mCameraSystem->mEntities)
     {
