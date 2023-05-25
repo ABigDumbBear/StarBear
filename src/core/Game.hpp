@@ -9,10 +9,12 @@
 
 #include "ResourceMap.hpp"
 
+#include "CameraSystem.hpp"
 #include "CollisionSystem.hpp"
 #include "EnemySystem.hpp"
 #include "ParticleEmitterSystem.hpp"
 #include "PhysicsSystem.hpp"
+#include "RailMoverSystem.hpp"
 #include "ShipControllerSystem.hpp"
 #include "LaserSystem.hpp"
 
@@ -37,10 +39,12 @@ class Game
     Scene mScene;
     double mLastFrameTime;
 
+    CameraSystem* mCameraSystem;
     CollisionSystem* mCollisionSystem;
     EnemySystem* mEnemySystem;
     LaserSystem* mLaserSystem;
     ParticleEmitterSystem* mParticleEmitterSystem;
+    RailMoverSystem* mRailMoverSystem;
     ShipControllerSystem* mShipControllerSystem;
     PhysicsSystem* mPhysicsSystem;
 };

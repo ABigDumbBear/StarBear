@@ -6,16 +6,21 @@
 #include "EntityFactory.hpp"
 #include "MathUtil.hpp"
 
+#include "Camera.hpp"
+#include "RailMover.hpp"
+
 namespace StarBear {
 
 /******************************************************************************/
 Game::Game(GLFWwindow* aWindow)
   : mWindow(aWindow)
   , mLastFrameTime(0)
+  , mCameraSystem(nullptr)
   , mCollisionSystem(nullptr)
   , mEnemySystem(nullptr)
   , mLaserSystem(nullptr)
   , mParticleEmitterSystem(nullptr)
+  , mRailMoverSystem(nullptr)
   , mShipControllerSystem(nullptr)
   , mPhysicsSystem(nullptr)
 {
@@ -39,6 +44,7 @@ Game::Game(GLFWwindow* aWindow)
   });
 
   // Register components.
+  mScene.RegisterComponentType<Camera>(1000);
   mScene.RegisterComponentType<Hitbox>(1000);
   mScene.RegisterComponentType<Enemy>(1000);
   mScene.RegisterComponentType<Laser>(1000);
@@ -46,6 +52,7 @@ Game::Game(GLFWwindow* aWindow)
   mScene.RegisterComponentType<Physics>(1000);
   mScene.RegisterComponentType<ShipController>(1000);
   mScene.RegisterComponentType<Transform>(1000);
+  mScene.RegisterComponentType<RailMover>(1000);
 
   // Register systems.
   Signature sig;
@@ -76,8 +83,18 @@ Game::Game(GLFWwindow* aWindow)
   mScene.AddComponentToSignature<Hitbox>(sig);
   mCollisionSystem = mScene.RegisterSystemType<CollisionSystem>(sig);
 
+  sig.reset();
+  mScene.AddComponentToSignature<Transform>(sig);
+  mScene.AddComponentToSignature<RailMover>(sig);
+  mRailMoverSystem = mScene.RegisterSystemType<RailMoverSystem>(sig);
+
+  sig.reset();
+  mScene.AddComponentToSignature<Transform>(sig);
+  mScene.AddComponentToSignature<Camera>(sig);
+  mCameraSystem = mScene.RegisterSystemType<CameraSystem>(sig);
+
   // Create entities.
-  CreateShip(mScene);
+  auto ship = CreateShip(mScene);
   CreateEmitter(mScene);
 
   auto enemy = CreateEnemy(mScene);
@@ -92,6 +109,16 @@ Game::Game(GLFWwindow* aWindow)
   enemy = CreateEnemy(mScene);
   mScene.GetComponentForEntity<Transform>(enemy).SetPosition(Vec3(10, -10, -50));
   mScene.GetComponentForEntity<Transform>(enemy).Scale(2.5, 2.5, 2.5);
+
+  auto camera = mScene.CreateEntity();
+  mScene.AddComponentToEntity<Transform>(camera).SetPosition(Vec3(0, 0, 50));
+  mScene.AddComponentToEntity<Camera>(camera);
+
+  auto mover = mScene.CreateEntity();
+  mScene.AddComponentToEntity<Transform>(mover);
+  auto& railMover = mScene.AddComponentToEntity<RailMover>(mover);
+  railMover.mChildren.insert(ship);
+  railMover.mChildren.insert(camera);
 }
 
 /******************************************************************************/
@@ -99,7 +126,6 @@ void Game::Run()
 {
   std::random_device rd;
 
-  auto view = View(Vec3(0, 0, 1), Vec3(1, 0, 0), Vec3(0, 0, 50));
   auto proj = Perspective(45, 1280, 720, 0.1, 1000);
 
   // Run until instructed to close.
@@ -116,12 +142,19 @@ void Game::Run()
     mParticleEmitterSystem->Update(mScene, rd, dt);
     mShipControllerSystem->Update(mScene, mInput, dt);
     mPhysicsSystem->Update(mScene, dt);
+    mRailMoverSystem->Update(mScene);
 
-    mLaserSystem->Render(mScene, mResourceMap, view, proj);
-    mShipControllerSystem->Render(mScene, mResourceMap, view, proj);
-    mEnemySystem->Render(mScene, mResourceMap, view, proj);
-    mParticleEmitterSystem->Render(mScene, mResourceMap, view, proj);
-    mCollisionSystem->Render(mScene, mResourceMap, view, proj);
+    for(const auto& entity : mCameraSystem->mEntities)
+    {
+      auto& transform = mScene.GetComponentForEntity<Transform>(entity);
+      auto view = View(Vec3(0, 0, 1), Vec3(1, 0, 0), transform.GetPosition());
+
+      mLaserSystem->Render(mScene, mResourceMap, view, proj);
+      mShipControllerSystem->Render(mScene, mResourceMap, view, proj);
+      mEnemySystem->Render(mScene, mResourceMap, view, proj);
+      mParticleEmitterSystem->Render(mScene, mResourceMap, view, proj);
+      mCollisionSystem->Render(mScene, mResourceMap, view, proj);
+    }
 
     mLastFrameTime = glfwGetTime();
 

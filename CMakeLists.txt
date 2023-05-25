@@ -24,6 +24,7 @@ list(APPEND SOURCE_FILES
             src/systems/EnemySystem.cpp
             src/systems/LaserSystem.cpp
             src/systems/PhysicsSystem.cpp
+            src/systems/RailMoverSystem.cpp
             src/systems/ShipControllerSystem.cpp
             src/systems/ParticleEmitterSystem.cpp
             src/main.cpp)
