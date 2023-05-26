@@ -3,8 +3,6 @@
 #include "RailMover.hpp"
 #include "Transform.hpp"
 
-#include <iostream>
-
 namespace StarBear {
 
 /******************************************************************************/
