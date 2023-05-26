@@ -20,13 +20,18 @@ class Transform
       std::cout << "parent rotation matrix: " << std::endl << aParent.mRotationMatrix << std::endl;
       std::cout << "parent scalar matrix: " << std::endl << aParent.mScalarMatrix << std::endl;
 
-      mTranslationMatrix = aParent.mTranslationMatrix * mTranslationMatrix;
+      mTranslationMatrix = aParent.mTranslationMatrix * StarBear::Translate(mLocalPosition);
       mRotationMatrix = aParent.mRotationMatrix * mRotationMatrix;
-      mScalarMatrix = aParent.mScalarMatrix * mScalarMatrix;
+      mScalarMatrix = aParent.mScalarMatrix * StarBear::Scale(mLocalScalar);
 
       std::cout << "child translation matrix: " << std::endl << mTranslationMatrix << std::endl;
       std::cout << "child rotation matrix: " << std::endl << mRotationMatrix << std::endl;
       std::cout << "child scalar matrix: " << std::endl << mScalarMatrix << std::endl;
+
+      mLocalToWorldMatrix = mScalarMatrix * mRotationMatrix * mTranslationMatrix;
+
+      mWorldPosition = mLocalToWorldMatrix * mLocalPosition;
+      mWorldScalar = mLocalToWorldMatrix * mLocalScalar;
     }
 
     void Translate(const StarBear::Vec3& aPos)
