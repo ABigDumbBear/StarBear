@@ -142,12 +142,14 @@ void Game::Run()
     mParticleEmitterSystem->Update(mScene, rd, dt);
     mShipControllerSystem->Update(mScene, mInput, dt);
     mPhysicsSystem->Update(mScene, dt);
-    //mRailMoverSystem->Update(mScene);
+    mRailMoverSystem->Update(mScene);
 
     for(const auto& entity : mCameraSystem->mEntities)
     {
       auto& transform = mScene.GetComponentForEntity<Transform>(entity);
       auto view = View(Vec3(0, 0, 1), Vec3(1, 0, 0), transform.GetPosition());
+
+      std::cout << "camera pos: " << transform.GetPosition() << std::endl;
 
       mLaserSystem->Render(mScene, mResourceMap, view, proj);
       mShipControllerSystem->Render(mScene, mResourceMap, view, proj);

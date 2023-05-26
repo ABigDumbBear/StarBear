@@ -8,6 +8,8 @@
 #include "ShipController.hpp"
 #include "Transform.hpp"
 
+#include <iostream>
+
 namespace StarBear {
 
 float easeInOutBack(double x)
@@ -27,6 +29,8 @@ void ShipControllerSystem::Update(Scene& aScene, const Input& aInput, double dt)
   {
     auto& controller = aScene.GetComponentForEntity<ShipController>(entity);
     auto& transform = aScene.GetComponentForEntity<Transform>(entity);
+
+    std::cout << "ship pos: " << transform.GetPosition() << std::endl;
 
     // Handle directional input
     if(aInput.mPressedKeys.count(GLFW_KEY_W))

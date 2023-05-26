@@ -15,13 +15,12 @@ void RailMoverSystem::Update(Scene& aScene)
     auto& railMover = aScene.GetComponentForEntity<RailMover>(entity);
     auto& transform = aScene.GetComponentForEntity<Transform>(entity);
 
-    transform.Translate(Vec3(0, 0, -1));
+    transform.Translate(Vec3(0, 0, -0.1));
 
     for(const auto& child : railMover.mChildren)
     {
       auto& childTransform = aScene.GetComponentForEntity<Transform>(child);
-      //childTransform.SetPosition(childTransform.GetPosition() + transform.GetPosition());
-      childTransform.Translate(Vec3(0, 0, -1));
+      childTransform.Combine(transform);
     }
   }
 }
