@@ -99,16 +99,16 @@ Game::Game(GLFWwindow* aWindow)
 
   auto enemy = CreateEnemy(mScene);
   mScene.GetComponentForEntity<Transform>(enemy).SetPosition(Vec3(10, 10, -50));
-  mScene.GetComponentForEntity<Transform>(enemy).Scale(2.5, 2.5, 2.5);
+  //mScene.GetComponentForEntity<Transform>(enemy).Scale(2.5, 2.5, 2.5);
   enemy = CreateEnemy(mScene);
   mScene.GetComponentForEntity<Transform>(enemy).SetPosition(Vec3(-10, 10, -50));
-  mScene.GetComponentForEntity<Transform>(enemy).Scale(2.5, 2.5, 2.5);
+  //mScene.GetComponentForEntity<Transform>(enemy).Scale(2.5, 2.5, 2.5);
   enemy = CreateEnemy(mScene);
   mScene.GetComponentForEntity<Transform>(enemy).SetPosition(Vec3(-10, -10, -50));
-  mScene.GetComponentForEntity<Transform>(enemy).Scale(2.5, 2.5, 2.5);
+  //mScene.GetComponentForEntity<Transform>(enemy).Scale(2.5, 2.5, 2.5);
   enemy = CreateEnemy(mScene);
   mScene.GetComponentForEntity<Transform>(enemy).SetPosition(Vec3(10, -10, -50));
-  mScene.GetComponentForEntity<Transform>(enemy).Scale(2.5, 2.5, 2.5);
+  //mScene.GetComponentForEntity<Transform>(enemy).Scale(2.5, 2.5, 2.5);
 
   auto camera = mScene.CreateEntity();
   mScene.AddComponentToEntity<Transform>(camera).SetPosition(Vec3(0, 0, 50));
