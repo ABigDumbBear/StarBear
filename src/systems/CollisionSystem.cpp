@@ -48,7 +48,7 @@ void CollisionSystem::Render(Scene& aScene,
     auto& transform = aScene.GetComponentForEntity<Transform>(entity);
     auto& hitbox = aScene.GetComponentForEntity<Hitbox>(entity);
 
-    auto targetPos = transform.GetWorldPosition();
+    auto targetPos = transform.GetPosition();
     targetPos.x += hitbox.x;
     targetPos.y += hitbox.y;
     targetPos.z += hitbox.z;
