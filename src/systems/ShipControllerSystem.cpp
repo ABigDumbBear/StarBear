@@ -133,10 +133,11 @@ void ShipControllerSystem::Render(Scene& aScene,
 void ShipControllerSystem::Fire(Scene& aScene, Entity aShip)
 {
   auto& controller = aScene.GetComponentForEntity<ShipController>(aShip);
+  auto& transform = aScene.GetComponentForEntity<Transform>(aShip);
 
   auto laser = CreateLaser(aScene);
-  aScene.GetComponentForEntity<Physics>(laser).mVelocity.z = -100;
-  aScene.GetComponentForEntity<Transform>(laser).SetPosition(controller.mTargetPos);
+  aScene.GetComponentForEntity<Physics>(laser).mVelocity = transform.GetForward() * 100;
+  aScene.GetComponentForEntity<Transform>(laser).SetPosition(transform.GetTranslationMatrix() * Vec3(0, 0, 0));
 
   controller.mTimeSinceFired = 0;
 }

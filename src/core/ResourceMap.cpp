@@ -16,8 +16,8 @@ ResourceMap::ResourceMap()
   mModelMap.emplace(ModelType::eBOB, Model());
   mModelMap.emplace(ModelType::eSPITFIRE, Model());
 
-  mModelMap[ModelType::eBOB].LoadFromFile("resources/models/Bob/OBJ/Bob.obj");
-  mModelMap[ModelType::eSPITFIRE].LoadFromFile("resources/models/Spitfire/OBJ/Spitfire.obj");
+  mModelMap[ModelType::eBOB].LoadFromFile("resources/models/Bob/Bob.obj");
+  mModelMap[ModelType::eSPITFIRE].LoadFromFile("resources/models/Spitfire/Spitfire.obj");
 
   for(const auto& mesh : mModelMap[ModelType::eBOB].GetMeshes())
   {

@@ -65,6 +65,7 @@ Game::Game(GLFWwindow* aWindow)
   mPhysicsSystem = mScene.RegisterSystemType<PhysicsSystem>(sig);
 
   sig.reset();
+  mScene.AddComponentToSignature<Transform>(sig);
   mScene.AddComponentToSignature<ParticleEmitter>(sig);
   mParticleEmitterSystem = mScene.RegisterSystemType<ParticleEmitterSystem>(sig);
 
@@ -95,7 +96,7 @@ Game::Game(GLFWwindow* aWindow)
 
   // Create entities.
   auto ship = CreateShip(mScene);
-  CreateEmitter(mScene);
+  auto emitter = CreateEmitter(mScene);
 
   auto enemy = CreateEnemy(mScene);
   mScene.GetComponentForEntity<Transform>(enemy).SetPosition(Vec3(10, 10, -50));
@@ -119,6 +120,7 @@ Game::Game(GLFWwindow* aWindow)
   auto& railMover = mScene.AddComponentToEntity<RailMover>(mover);
   railMover.mChildren.insert(ship);
   railMover.mChildren.insert(camera);
+  railMover.mChildren.insert(emitter);
 }
 
 /******************************************************************************/

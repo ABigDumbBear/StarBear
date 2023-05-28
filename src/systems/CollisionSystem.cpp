@@ -3,6 +3,7 @@
 #include "Mat4.hpp"
 
 #include "Laser.hpp"
+#include "Transform.hpp"
 
 namespace StarBear {
 
@@ -20,17 +21,18 @@ void CollisionSystem::Update(Scene& aScene)
     for(const auto& entityB : mEntities)
     {
       if(entityA == entityB) { continue; }
-      if(aScene.DoesEntityHaveComponent<Laser>(entityB)) { continue; }
 
       auto& transformA = aScene.GetComponentForEntity<Transform>(entityA);
+      auto posA = transformA.GetTranslationMatrix() * Vec3(0, 0, 0);
       auto& hitboxA = aScene.GetComponentForEntity<Hitbox>(entityA);
+
       auto& transformB = aScene.GetComponentForEntity<Transform>(entityB);
+      auto posB = transformB.GetTranslationMatrix() * Vec3(0, 0, 0);
       auto& hitboxB = aScene.GetComponentForEntity<Hitbox>(entityB);
 
       if(!hitboxB.mCollided)
       {
-        hitboxA.mCollided = CheckCollision(transformA, hitboxA, transformB, hitboxB);
-        hitboxB.mCollided = hitboxA.mCollided;
+        hitboxB.mCollided = CheckCollision(posA, hitboxA, posB, hitboxB);
       }
     }
   }
@@ -73,25 +75,25 @@ void CollisionSystem::Render(Scene& aScene,
 }
 
 /******************************************************************************/
-bool CollisionSystem::CheckCollision(const Transform& aTransformA,
+bool CollisionSystem::CheckCollision(const Vec3& aPositionA,
                                      const Hitbox& aHitboxA,
-                                     const Transform& aTransformB,
+                                     const Vec3& aPositionB,
                                      const Hitbox& aHitboxB)
 {
   bool collision = false;
 
-  auto leftA = aTransformA.GetPosition().x + aHitboxA.x;
+  auto leftA = aPositionA.x + aHitboxA.x;
   auto rightA = leftA + aHitboxA.mWidth;
-  auto bottomA = aTransformA.GetPosition().y + aHitboxA.y;
+  auto bottomA = aPositionA.y + aHitboxA.y;
   auto topA = bottomA + aHitboxA.mHeight;
-  auto farA = aTransformA.GetPosition().z + aHitboxA.z;
+  auto farA = aPositionA.z + aHitboxA.z;
   auto nearA = farA + aHitboxA.mDepth;
 
-  auto leftB = aTransformB.GetPosition().x + aHitboxB.x;
+  auto leftB = aPositionB.x + aHitboxB.x;
   auto rightB = leftB + aHitboxB.mWidth;
-  auto bottomB = aTransformB.GetPosition().y + aHitboxB.y;
+  auto bottomB = aPositionB.y + aHitboxB.y;
   auto topB = bottomB + aHitboxB.mHeight;
-  auto farB = aTransformB.GetPosition().z + aHitboxB.z;
+  auto farB = aPositionB.z + aHitboxB.z;
   auto nearB = farB + aHitboxB.mDepth;
 
   if(rightA >= leftB && rightB >= leftA)

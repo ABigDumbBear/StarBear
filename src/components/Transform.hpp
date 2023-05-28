@@ -14,10 +14,13 @@ class Transform
     void Combine(const Transform& aParent)
     {
       mTranslationMatrix = StarBear::Translate(mPosition) * aParent.mTranslationMatrix;
+
       mRotationMatrix = StarBear::Rotate(Vec3(1, 0, 0), mRotation.x);
       mRotationMatrix = mRotationMatrix * StarBear::Rotate(Vec3(0, 1, 0), mRotation.y);
       mRotationMatrix = mRotationMatrix * StarBear::Rotate(Vec3(0, 0, 1), mRotation.z);
       mRotationMatrix = mRotationMatrix * aParent.mRotationMatrix;
+      mForward = mRotationMatrix * Vec3(0, 0, -1);
+
       mScalarMatrix = StarBear::Scale(mScalar) * aParent.mScalarMatrix;
       UpdateMatrix();
     }
@@ -34,9 +37,11 @@ class Transform
     {
       mRotation += Vec3(x, y, z);
 
-      mRotationMatrix = StarBear::Rotate(Vec3(1, 0, 0), x);
-      mRotationMatrix = mRotationMatrix * StarBear::Rotate(Vec3(0, 1, 0), y);
-      mRotationMatrix = mRotationMatrix * StarBear::Rotate(Vec3(0, 0, 1), z);
+      mRotationMatrix = StarBear::Rotate(Vec3(1, 0, 0), mRotation.x);
+      mRotationMatrix = mRotationMatrix * StarBear::Rotate(Vec3(0, 1, 0), mRotation.y);
+      mRotationMatrix = mRotationMatrix * StarBear::Rotate(Vec3(0, 0, 1), mRotation.z);
+      
+      mForward = mRotationMatrix * mForward;
       UpdateMatrix();
     }
 
@@ -61,6 +66,8 @@ class Transform
       mRotationMatrix = StarBear::Rotate(Vec3(1, 0, 0), x);
       mRotationMatrix = mRotationMatrix * StarBear::Rotate(Vec3(0, 1, 0), y);
       mRotationMatrix = mRotationMatrix * StarBear::Rotate(Vec3(0, 0, 1), z);
+
+      mForward = mRotationMatrix * Vec3(0, 0, -1);
       UpdateMatrix();
     }
 
@@ -74,6 +81,8 @@ class Transform
     const Vec3& GetPosition() const { return mPosition; }
     const Vec3& GetRotation() const { return mRotation; }
     const Vec3& GetScalar() const { return mScalar; }
+
+    const Vec3& GetForward() const { return mForward; }
 
     const Mat4& GetTranslationMatrix() const { return mTranslationMatrix; }
     const Mat4& GetRotationMatrix() const { return mRotationMatrix; }
@@ -89,6 +98,8 @@ class Transform
     Vec3 mPosition;
     Vec3 mRotation;
     Vec3 mScalar { 1, 1, 1 };
+
+    Vec3 mForward { 0, 0, -1 };
 
     Mat4 mTranslationMatrix;
     Mat4 mRotationMatrix;

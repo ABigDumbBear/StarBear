@@ -2,11 +2,11 @@
 #define COLLISIONSYSTEM_HPP
 
 #include "ECS.hpp"
-
 #include "ResourceMap.hpp"
 
+#include "Vec3.hpp"
+
 #include "Hitbox.hpp"
-#include "Transform.hpp"
 
 namespace StarBear {
 
@@ -20,9 +20,9 @@ class CollisionSystem : public System
                 const Mat4& aProj);
 
   private:
-    bool CheckCollision(const Transform& aTransformA,
+    bool CheckCollision(const Vec3& aPositionA,
                         const Hitbox& aHitboxA,
-                        const Transform& aTransformB,
+                        const Vec3& aPositionB,
                         const Hitbox& aHitboxB);
 };
 

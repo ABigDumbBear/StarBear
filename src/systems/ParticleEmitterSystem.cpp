@@ -1,5 +1,6 @@
 #include "ParticleEmitterSystem.hpp"
 
+#include "Transform.hpp"
 #include "ParticleEmitter.hpp"
 
 #include "MathUtil.hpp"
@@ -15,6 +16,7 @@ void ParticleEmitterSystem::Update(Scene& aScene, std::random_device& aDevice, d
   for(const auto& entity : mEntities)
   {
     auto& emitter = aScene.GetComponentForEntity<ParticleEmitter>(entity);
+    auto& transform = aScene.GetComponentForEntity<Transform>(entity);
 
     int numParticles = emitter.mIntensity * mTimer;
     int maxParticles = emitter.mParticles.size() - emitter.mActiveParticles;
@@ -25,8 +27,13 @@ void ParticleEmitterSystem::Update(Scene& aScene, std::random_device& aDevice, d
       std::mt19937 generator(aDevice());
       std::uniform_real_distribution<> dist(-emitter.mRadius, emitter.mRadius);
 
+      auto pos = transform.GetTranslationMatrix() * Vec3(0, 0, 0);
+      pos.x += dist(generator);
+      pos.y += dist(generator);
+      pos.z += dist(generator);
+
       auto& particle = emitter.mParticles[emitter.mActiveParticles];
-      particle.mPosition = Vec3(dist(generator), dist(generator), dist(generator));
+      particle.mPosition = pos;
       ++emitter.mActiveParticles;
     }
   }
