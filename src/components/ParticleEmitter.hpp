@@ -9,20 +9,20 @@ namespace StarBear {
 
 struct Particle
 {
-  float mLifetime { 0.5 };
+  float mLifetime { 1 };
   Vec3 mVelocity;
   Vec3 mPosition;
 };
 
 struct ParticleEmitter
 {
-  int mIntensity { 1 };
+  float mEmissionRate { 1 };
+  double mTimeSinceEmission { 0 };
+
   float mRadius { 15 };
 
   size_t mActiveParticles { 0 };
   std::array<Particle, 500> mParticles;
-
-  double mTimeSinceEmission { 0 };
 };
 
 } // namespace StarBear

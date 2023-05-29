@@ -16,16 +16,7 @@ void ParticleEmitterSystem::Update(Scene& aScene, std::random_device& aDevice, d
     auto& transform = aScene.GetComponentForEntity<Transform>(entity);
 
     emitter.mTimeSinceEmission += dt;
-
-    // Determine how many particles to spawn.
-    int numParticles = emitter.mIntensity * emitter.mTimeSinceEmission;
-    int maxParticles = emitter.mParticles.size() - emitter.mActiveParticles;
-    numParticles = std::min(maxParticles, numParticles);
-
-    //if(numParticles >= 1) { emitter.mTimeSinceEmission = 0; }
-
-    // Spawn particles and place them according to the radius of the emitter.
-    for(int i = 0; i < numParticles; ++i)
+    if(emitter.mTimeSinceEmission >= 1.0 / emitter.mEmissionRate)
     {
       std::mt19937 generator(aDevice());
       std::uniform_real_distribution<> dist(-emitter.mRadius, emitter.mRadius);
@@ -38,6 +29,8 @@ void ParticleEmitterSystem::Update(Scene& aScene, std::random_device& aDevice, d
       auto& particle = emitter.mParticles[emitter.mActiveParticles];
       particle.mPosition = pos;
       ++emitter.mActiveParticles;
+
+      emitter.mTimeSinceEmission = 0;
     }
 
     // For each active particle, move it according to its velocity.
@@ -52,6 +45,7 @@ void ParticleEmitterSystem::Update(Scene& aScene, std::random_device& aDevice, d
       {
         --emitter.mActiveParticles;
         emitter.mParticles[i] = emitter.mParticles[emitter.mActiveParticles];
+        emitter.mParticles[emitter.mActiveParticles] = Particle();
         --i;
       }
     }
