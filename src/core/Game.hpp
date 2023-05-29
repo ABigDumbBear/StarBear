@@ -12,6 +12,7 @@
 #include "CameraSystem.hpp"
 #include "CollisionSystem.hpp"
 #include "EnemySystem.hpp"
+#include "ParentSystem.hpp"
 #include "ParticleEmitterSystem.hpp"
 #include "PhysicsSystem.hpp"
 #include "RailMoverSystem.hpp"
@@ -43,6 +44,7 @@ class Game
     CollisionSystem* mCollisionSystem;
     EnemySystem* mEnemySystem;
     LaserSystem* mLaserSystem;
+    ParentSystem* mParentSystem;
     ParticleEmitterSystem* mParticleEmitterSystem;
     RailMoverSystem* mRailMoverSystem;
     ShipControllerSystem* mShipControllerSystem;

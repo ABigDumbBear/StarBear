@@ -14,13 +14,6 @@ void RailMoverSystem::Update(Scene& aScene)
     auto& transform = aScene.GetComponentForEntity<Transform>(entity);
 
     transform.Translate(Vec3(0, 0, -0.1));
-    //transform.Rotate(0, 1, 0);
-
-    for(const auto& child : railMover.mChildren)
-    {
-      auto& childTransform = aScene.GetComponentForEntity<Transform>(child);
-      childTransform.Combine(transform);
-    }
   }
 }
 

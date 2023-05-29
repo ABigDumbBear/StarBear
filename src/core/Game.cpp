@@ -7,6 +7,7 @@
 #include "MathUtil.hpp"
 
 #include "Camera.hpp"
+#include "Parent.hpp"
 #include "RailMover.hpp"
 
 namespace StarBear {
@@ -53,6 +54,7 @@ Game::Game(GLFWwindow* aWindow)
   mScene.RegisterComponentType<ShipController>(1000);
   mScene.RegisterComponentType<Transform>(1000);
   mScene.RegisterComponentType<RailMover>(1000);
+  mScene.RegisterComponentType<Parent>(1000);
 
   // Register systems.
   Signature sig;
@@ -94,22 +96,23 @@ Game::Game(GLFWwindow* aWindow)
   mScene.AddComponentToSignature<Camera>(sig);
   mCameraSystem = mScene.RegisterSystemType<CameraSystem>(sig);
 
+  sig.reset();
+  mScene.AddComponentToSignature<Transform>(sig);
+  mScene.AddComponentToSignature<Parent>(sig);
+  mParentSystem = mScene.RegisterSystemType<ParentSystem>(sig);
+
   // Create entities.
   auto ship = CreateShip(mScene);
   auto emitter = CreateEmitter(mScene);
 
   auto enemy = CreateEnemy(mScene);
   mScene.GetComponentForEntity<Transform>(enemy).SetPosition(Vec3(10, 10, -50));
-  //mScene.GetComponentForEntity<Transform>(enemy).Scale(2.5, 2.5, 2.5);
   enemy = CreateEnemy(mScene);
   mScene.GetComponentForEntity<Transform>(enemy).SetPosition(Vec3(-10, 10, -50));
-  //mScene.GetComponentForEntity<Transform>(enemy).Scale(2.5, 2.5, 2.5);
   enemy = CreateEnemy(mScene);
   mScene.GetComponentForEntity<Transform>(enemy).SetPosition(Vec3(-10, -10, -50));
-  //mScene.GetComponentForEntity<Transform>(enemy).Scale(2.5, 2.5, 2.5);
   enemy = CreateEnemy(mScene);
   mScene.GetComponentForEntity<Transform>(enemy).SetPosition(Vec3(10, -10, -50));
-  //mScene.GetComponentForEntity<Transform>(enemy).Scale(2.5, 2.5, 2.5);
 
   auto camera = mScene.CreateEntity();
   mScene.AddComponentToEntity<Transform>(camera).SetPosition(Vec3(0, 0, 50));
@@ -117,10 +120,12 @@ Game::Game(GLFWwindow* aWindow)
 
   auto mover = mScene.CreateEntity();
   mScene.AddComponentToEntity<Transform>(mover);
-  auto& railMover = mScene.AddComponentToEntity<RailMover>(mover);
-  railMover.mChildren.insert(ship);
-  railMover.mChildren.insert(camera);
-  railMover.mChildren.insert(emitter);
+  mScene.AddComponentToEntity<RailMover>(mover);
+  mScene.AddComponentToEntity<Parent>(mover);
+
+  mScene.GetComponentForEntity<Parent>(mover).mChildren.insert(ship);
+  mScene.GetComponentForEntity<Parent>(mover).mChildren.insert(camera);
+  mScene.GetComponentForEntity<Parent>(mover).mChildren.insert(emitter);
 }
 
 /******************************************************************************/
@@ -145,6 +150,7 @@ void Game::Run()
     mShipControllerSystem->Update(mScene, mInput, dt);
     mPhysicsSystem->Update(mScene, dt);
     mRailMoverSystem->Update(mScene);
+    mParentSystem->Update(mScene);
 
     for(const auto& entity : mCameraSystem->mEntities)
     {

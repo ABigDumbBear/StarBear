@@ -23,6 +23,7 @@ list(APPEND SOURCE_FILES
             src/systems/CollisionSystem.cpp
             src/systems/EnemySystem.cpp
             src/systems/LaserSystem.cpp
+            src/systems/ParentSystem.cpp
             src/systems/PhysicsSystem.cpp
             src/systems/RailMoverSystem.cpp
             src/systems/ShipControllerSystem.cpp
