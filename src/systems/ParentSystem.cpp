@@ -6,18 +6,29 @@
 namespace StarBear {
 
 /******************************************************************************/
+void CombineTransforms(Scene& aScene, Entity aEntity)
+{
+  auto& transform = aScene.GetComponentForEntity<Transform>(aEntity);
+  auto& children = aScene.GetComponentForEntity<Parent>(aEntity).mChildren;
+
+  for(const auto& child : children)
+  {
+    auto& childTransform = aScene.GetComponentForEntity<Transform>(child);
+    childTransform.Combine(transform);
+
+    if(aScene.DoesEntityHaveComponent<Parent>(child))
+    {
+      CombineTransforms(aScene, child);
+    }
+  }
+}
+
+/******************************************************************************/
 void ParentSystem::Update(Scene& aScene)
 {
   for(const auto& entity : mEntities)
   {
-    auto& transform = aScene.GetComponentForEntity<Transform>(entity);
-    auto& children = aScene.GetComponentForEntity<Parent>(entity).mChildren;
-
-    for(const auto& child : children)
-    {
-      auto& childTransform = aScene.GetComponentForEntity<Transform>(child);
-      childTransform.Combine(transform);
-    }
+    CombineTransforms(aScene, entity);
   }
 }
 

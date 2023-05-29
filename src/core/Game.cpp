@@ -103,7 +103,19 @@ Game::Game(GLFWwindow* aWindow)
 
   // Create entities.
   auto ship = CreateShip(mScene);
+  mScene.AddComponentToEntity<Parent>(ship);
+
   auto emitter = CreateEmitter(mScene);
+
+  mScene.GetComponentForEntity<Parent>(ship).mChildren.insert(emitter);
+  mScene.GetComponentForEntity<ParticleEmitter>(emitter).mRadius = 0.1;
+  mScene.GetComponentForEntity<Transform>(emitter).Translate(Vec3(2.25, 0, 0));
+
+  auto emitter2 = CreateEmitter(mScene);
+
+  mScene.GetComponentForEntity<Parent>(ship).mChildren.insert(emitter2);
+  mScene.GetComponentForEntity<ParticleEmitter>(emitter2).mRadius = 0.1;
+  mScene.GetComponentForEntity<Transform>(emitter2).Translate(Vec3(-2.25, 0, 0));
 
   auto enemy = CreateEnemy(mScene);
   mScene.GetComponentForEntity<Transform>(enemy).SetPosition(Vec3(10, 10, -50));
@@ -125,7 +137,7 @@ Game::Game(GLFWwindow* aWindow)
 
   mScene.GetComponentForEntity<Parent>(mover).mChildren.insert(ship);
   mScene.GetComponentForEntity<Parent>(mover).mChildren.insert(camera);
-  mScene.GetComponentForEntity<Parent>(mover).mChildren.insert(emitter);
+  //mScene.GetComponentForEntity<Parent>(mover).mChildren.insert(emitter);
 }
 
 /******************************************************************************/
@@ -146,8 +158,8 @@ void Game::Run()
     mCollisionSystem->Update(mScene);
     mEnemySystem->Update(mScene, dt);
     mLaserSystem->Update(mScene, dt);
-    mParticleEmitterSystem->Update(mScene, rd, dt);
     mShipControllerSystem->Update(mScene, mInput, dt);
+    mParticleEmitterSystem->Update(mScene, rd, dt);
     mPhysicsSystem->Update(mScene, dt);
     mRailMoverSystem->Update(mScene);
     mParentSystem->Update(mScene);

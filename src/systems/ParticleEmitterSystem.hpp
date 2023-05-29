@@ -16,9 +16,6 @@ class ParticleEmitterSystem : public System
                 ResourceMap& aMap,
                 const Mat4& aView,
                 const Mat4& aProj);
-
-  private:
-    double mTimer { 0 };
 };
 
 } // namespace StarBear

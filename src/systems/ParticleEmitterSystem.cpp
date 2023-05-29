@@ -10,24 +10,27 @@ namespace StarBear {
 /******************************************************************************/
 void ParticleEmitterSystem::Update(Scene& aScene, std::random_device& aDevice, double dt)
 {
-  mTimer += dt;
-
-  // spawn particles
   for(const auto& entity : mEntities)
   {
     auto& emitter = aScene.GetComponentForEntity<ParticleEmitter>(entity);
     auto& transform = aScene.GetComponentForEntity<Transform>(entity);
 
-    int numParticles = emitter.mIntensity * mTimer;
+    emitter.mTimeSinceEmission += dt;
+
+    // Determine how many particles to spawn.
+    int numParticles = emitter.mIntensity * emitter.mTimeSinceEmission;
     int maxParticles = emitter.mParticles.size() - emitter.mActiveParticles;
     numParticles = std::min(maxParticles, numParticles);
 
+    //if(numParticles >= 1) { emitter.mTimeSinceEmission = 0; }
+
+    // Spawn particles and place them according to the radius of the emitter.
     for(int i = 0; i < numParticles; ++i)
     {
       std::mt19937 generator(aDevice());
       std::uniform_real_distribution<> dist(-emitter.mRadius, emitter.mRadius);
 
-      auto pos = transform.GetTranslationMatrix() * Vec3(0, 0, 0);
+      auto pos = transform.GetMatrix() * transform.GetPosition();
       pos.x += dist(generator);
       pos.y += dist(generator);
       pos.z += dist(generator);
@@ -36,30 +39,22 @@ void ParticleEmitterSystem::Update(Scene& aScene, std::random_device& aDevice, d
       particle.mPosition = pos;
       ++emitter.mActiveParticles;
     }
-  }
 
-  // move particles
-  for(const auto& entity : mEntities)
-  {
-    auto& emitter = aScene.GetComponentForEntity<ParticleEmitter>(entity);
+    // For each active particle, move it according to its velocity.
     for(size_t i = 0; i < emitter.mActiveParticles; ++i)
     {
-      emitter.mParticles[i].mPosition.z += 1.5;
+      emitter.mParticles[i].mPosition.z += 0.1;
 
-      // if the particle is too far forward, swap it with the last
-      // active particle
-      if(emitter.mParticles[i].mPosition.z > 50)
+      // Update the particle's lifetime, then if it has reached 0, swap
+      // it with the last active particle in the emitter.
+      emitter.mParticles[i].mLifetime -= dt;
+      if(emitter.mParticles[i].mLifetime <= 0)
       {
         --emitter.mActiveParticles;
         emitter.mParticles[i] = emitter.mParticles[emitter.mActiveParticles];
         --i;
       }
     }
-  }
-
-  if(mTimer >= 1)
-  {
-    mTimer = 0;
   }
 }
 
