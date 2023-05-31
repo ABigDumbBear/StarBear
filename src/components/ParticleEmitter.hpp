@@ -16,13 +16,14 @@ struct Particle
 
 struct ParticleEmitter
 {
+  Vec3 mPreviousPosition;
+
   float mEmissionRate { 1 };
-  double mTimeSinceEmission { 0 };
 
   float mRadius { 15 };
 
   size_t mActiveParticles { 0 };
-  std::array<Particle, 500> mParticles;
+  std::array<Particle, 5000> mParticles;
 };
 
 } // namespace StarBear

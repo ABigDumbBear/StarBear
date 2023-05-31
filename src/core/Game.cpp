@@ -109,13 +109,13 @@ Game::Game(GLFWwindow* aWindow)
 
   mScene.GetComponentForEntity<Parent>(ship).mChildren.insert(emitter);
   mScene.GetComponentForEntity<ParticleEmitter>(emitter).mRadius = 0.1;
-  mScene.GetComponentForEntity<Transform>(emitter).Translate(Vec3(2.25, 0, 0));
+  mScene.GetComponentForEntity<Transform>(emitter).Translate(Vec3(2.25, 0, 2));
 
   auto emitter2 = CreateEmitter(mScene);
 
   mScene.GetComponentForEntity<Parent>(ship).mChildren.insert(emitter2);
   mScene.GetComponentForEntity<ParticleEmitter>(emitter2).mRadius = 0.1;
-  mScene.GetComponentForEntity<Transform>(emitter2).Translate(Vec3(-2.25, 0, 0));
+  mScene.GetComponentForEntity<Transform>(emitter2).Translate(Vec3(-2.25, 0, 2));
 
   auto enemy = CreateEnemy(mScene);
   mScene.GetComponentForEntity<Transform>(enemy).SetPosition(Vec3(10, 10, -50));
@@ -147,13 +147,18 @@ void Game::Run()
 
   auto proj = Perspective(45, 1280, 720, 0.1, 1000);
 
+  int frameCounter = 0;
+  double frameTimer = 0;
+
   // Run until instructed to close.
   while(!glfwWindowShouldClose(mWindow))
   {
+    glfwPollEvents();
     glfwSwapBuffers(mWindow);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     auto dt = glfwGetTime() - mLastFrameTime;
+    mLastFrameTime = glfwGetTime();
 
     mCollisionSystem->Update(mScene);
     mEnemySystem->Update(mScene, dt);
@@ -175,10 +180,6 @@ void Game::Run()
       mParticleEmitterSystem->Render(mScene, mResourceMap, view, proj);
       mCollisionSystem->Render(mScene, mResourceMap, view, proj);
     }
-
-    mLastFrameTime = glfwGetTime();
-
-    glfwPollEvents();
   }
 }
 
