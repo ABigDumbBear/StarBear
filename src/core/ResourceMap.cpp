@@ -12,6 +12,18 @@ ResourceMap::ResourceMap()
   mMeshMap[MeshType::eQUAD].InitQuad();
   mMeshMap[MeshType::eCUBE].InitCube();
 
+  glBindVertexArray(mMeshMap[MeshType::eQUAD].GetVertexArrayID());
+  glBindBuffer(GL_ARRAY_BUFFER, mMeshMap[MeshType::eQUAD].GetCustomBufferID());
+  glEnableVertexAttribArray(8);
+  glVertexAttribPointer(8, 1, GL_FLOAT, GL_FALSE, 0, (void*)0);
+  glVertexAttribDivisor(8, 1);
+  glBindVertexArray(0);
+
+  // Load individual textures.
+  mTextureMap.emplace(TextureType::ePARTICLE, Texture());
+
+  mTextureMap[TextureType::ePARTICLE].LoadFromFile("resources/particle.png");
+
   // Load models.
   mModelMap.emplace(ModelType::eBOB, Model());
   mModelMap.emplace(ModelType::eSPITFIRE, Model());

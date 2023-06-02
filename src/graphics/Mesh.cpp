@@ -207,12 +207,20 @@ void Mesh::InitQuad()
   MeshVertex vertex;
 
   vertex.mPosition = Vec3(0, 0, 0);
+  vertex.mTexCoords[0] = 0;
+  vertex.mTexCoords[1] = 0;
   mVertices.emplace_back(vertex);
   vertex.mPosition = Vec3(0.1, 0, 0);
+  vertex.mTexCoords[0] = 1;
+  vertex.mTexCoords[1] = 0;
   mVertices.emplace_back(vertex);
   vertex.mPosition = Vec3(0.1, 0.1, 0);
+  vertex.mTexCoords[0] = 1;
+  vertex.mTexCoords[1] = 1;
   mVertices.emplace_back(vertex);
   vertex.mPosition = Vec3(0, 0.1, 0);
+  vertex.mTexCoords[0] = 0;
+  vertex.mTexCoords[1] = 1;
   mVertices.emplace_back(vertex);
 
   mIndices.emplace_back(0);

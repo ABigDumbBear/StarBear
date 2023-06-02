@@ -74,24 +74,40 @@ void ParticleEmitterSystem::Render(Scene& aScene,
                                    const Mat4& aProj)
 {
   std::vector<Mat4> modelMatrices;
+  std::vector<float> lifetimes;
   for(const auto& entity : mEntities)
   {
     auto& emitter = aScene.GetComponentForEntity<ParticleEmitter>(entity);
     for(size_t i = 0; i < emitter.mActiveParticles; ++i)
     {
       auto mat = Translate(emitter.mParticles[i].mPosition);
+      mat = mat * Scale(Vec3(5 * (emitter.mParticles[i].mLifetime / emitter.mParticles[i].mMaxLifetime),
+                             5 * (emitter.mParticles[i].mLifetime / emitter.mParticles[i].mMaxLifetime),
+                             1));
       modelMatrices.emplace_back(mat);
+
+      lifetimes.emplace_back(emitter.mParticles[i].mLifetime / emitter.mParticles[i].mMaxLifetime);
     }
   }
 
   auto& mesh = aMap.GetMesh(MeshType::eQUAD);
   auto& shader = aMap.GetShader(ShaderType::ePARTICLE);
+  auto& texture = aMap.GetTexture(TextureType::ePARTICLE);
 
   glBindBuffer(GL_ARRAY_BUFFER, mesh.GetInstanceBufferID());
   glBufferData(GL_ARRAY_BUFFER,
                modelMatrices.size() * sizeof(Mat4),
                modelMatrices.data(),
                GL_DYNAMIC_DRAW);
+
+  glBindBuffer(GL_ARRAY_BUFFER, mesh.GetCustomBufferID());
+  glBufferData(GL_ARRAY_BUFFER,
+               lifetimes.size() * sizeof(float),
+               lifetimes.data(),
+               GL_DYNAMIC_DRAW);
+
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, texture.GetID());
 
   shader.Use();
   shader.SetMat4("viewMatrix", aView);

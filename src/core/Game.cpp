@@ -117,6 +117,18 @@ Game::Game(GLFWwindow* aWindow)
   mScene.GetComponentForEntity<ParticleEmitter>(emitter2).mRadius = 0.1;
   mScene.GetComponentForEntity<Transform>(emitter2).Translate(Vec3(-2.25, 0, 2));
 
+  auto emitter3 = CreateEmitter(mScene);
+
+  mScene.GetComponentForEntity<Parent>(ship).mChildren.insert(emitter3);
+  mScene.GetComponentForEntity<ParticleEmitter>(emitter3).mRadius = 0.1;
+  mScene.GetComponentForEntity<Transform>(emitter3).Translate(Vec3(2.25, -1, 2));
+
+  auto emitter4 = CreateEmitter(mScene);
+
+  mScene.GetComponentForEntity<Parent>(ship).mChildren.insert(emitter4);
+  mScene.GetComponentForEntity<ParticleEmitter>(emitter4).mRadius = 0.1;
+  mScene.GetComponentForEntity<Transform>(emitter4).Translate(Vec3(-2.25, -1, 2));
+
   auto enemy = CreateEnemy(mScene);
   mScene.GetComponentForEntity<Transform>(enemy).SetPosition(Vec3(10, 10, -50));
   enemy = CreateEnemy(mScene);
@@ -177,8 +189,8 @@ void Game::Run()
       mLaserSystem->Render(mScene, mResourceMap, view, proj);
       mShipControllerSystem->Render(mScene, mResourceMap, view, proj);
       mEnemySystem->Render(mScene, mResourceMap, view, proj);
-      mParticleEmitterSystem->Render(mScene, mResourceMap, view, proj);
       mCollisionSystem->Render(mScene, mResourceMap, view, proj);
+      mParticleEmitterSystem->Render(mScene, mResourceMap, view, proj);
     }
   }
 }

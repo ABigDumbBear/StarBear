@@ -52,6 +52,9 @@ int main()
   glViewport(0, 0, 1280, 720);
   glEnable(GL_DEPTH_TEST);
 
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
   // Create a Game and run it.
   auto game = std::make_unique<StarBear::Game>(window);
   game->Run();
