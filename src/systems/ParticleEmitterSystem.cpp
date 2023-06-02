@@ -49,7 +49,7 @@ void ParticleEmitterSystem::Update(Scene& aScene, std::random_device& aDevice, d
     // For each active particle, move it according to its velocity.
     for(size_t i = emitter.mActiveParticles; i > 0; --i)
     {
-      emitter.mParticles[i - 1].mPosition.z += 0.1;
+      emitter.mParticles[i - 1].mPosition += (transform.GetForward() * -1) * 0.1;
 
       // Update the particle's lifetime, then if it has reached 0, swap
       // it with the last active particle in the emitter.
@@ -81,8 +81,8 @@ void ParticleEmitterSystem::Render(Scene& aScene,
     for(size_t i = 0; i < emitter.mActiveParticles; ++i)
     {
       auto mat = Translate(emitter.mParticles[i].mPosition);
-      mat = mat * Scale(Vec3(5 * (emitter.mParticles[i].mLifetime / emitter.mParticles[i].mMaxLifetime),
-                             5 * (emitter.mParticles[i].mLifetime / emitter.mParticles[i].mMaxLifetime),
+      mat = mat * Scale(Vec3((emitter.mParticles[i].mLifetime / emitter.mParticles[i].mMaxLifetime),
+                             (emitter.mParticles[i].mLifetime / emitter.mParticles[i].mMaxLifetime),
                              1));
       modelMatrices.emplace_back(mat);
 

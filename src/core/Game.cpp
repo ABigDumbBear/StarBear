@@ -108,25 +108,25 @@ Game::Game(GLFWwindow* aWindow)
   auto emitter = CreateEmitter(mScene);
 
   mScene.GetComponentForEntity<Parent>(ship).mChildren.insert(emitter);
-  mScene.GetComponentForEntity<ParticleEmitter>(emitter).mRadius = 0.1;
+  mScene.GetComponentForEntity<ParticleEmitter>(emitter).mRadius = 0.5;
   mScene.GetComponentForEntity<Transform>(emitter).Translate(Vec3(2.25, 0, 2));
 
   auto emitter2 = CreateEmitter(mScene);
 
   mScene.GetComponentForEntity<Parent>(ship).mChildren.insert(emitter2);
-  mScene.GetComponentForEntity<ParticleEmitter>(emitter2).mRadius = 0.1;
+  mScene.GetComponentForEntity<ParticleEmitter>(emitter2).mRadius = 0.5;
   mScene.GetComponentForEntity<Transform>(emitter2).Translate(Vec3(-2.25, 0, 2));
 
   auto emitter3 = CreateEmitter(mScene);
 
   mScene.GetComponentForEntity<Parent>(ship).mChildren.insert(emitter3);
-  mScene.GetComponentForEntity<ParticleEmitter>(emitter3).mRadius = 0.1;
+  mScene.GetComponentForEntity<ParticleEmitter>(emitter3).mRadius = 0.5;
   mScene.GetComponentForEntity<Transform>(emitter3).Translate(Vec3(2.25, -1, 2));
 
   auto emitter4 = CreateEmitter(mScene);
 
   mScene.GetComponentForEntity<Parent>(ship).mChildren.insert(emitter4);
-  mScene.GetComponentForEntity<ParticleEmitter>(emitter4).mRadius = 0.1;
+  mScene.GetComponentForEntity<ParticleEmitter>(emitter4).mRadius = 0.5;
   mScene.GetComponentForEntity<Transform>(emitter4).Translate(Vec3(-2.25, -1, 2));
 
   auto enemy = CreateEnemy(mScene);

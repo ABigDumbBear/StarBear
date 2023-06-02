@@ -15,5 +15,6 @@ void main()
   vec4 textureColor = texture(texSampler, texCoords);
   float textureAlpha = textureColor.a;
 
-  fragColor = mix(vec4(0, 0, 1, textureAlpha), vec4(1, 1, 1, textureAlpha), lifetime);
+  if(textureAlpha <= 0.9) { discard; }
+  fragColor = mix(vec4(0.458, 1, 1, textureAlpha), vec4(1, 1, 1, textureAlpha), lifetime);
 }
