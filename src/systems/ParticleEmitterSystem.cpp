@@ -5,6 +5,8 @@
 
 #include "MathUtil.hpp"
 
+#include <iostream>
+
 namespace StarBear {
 
 /******************************************************************************/
@@ -16,7 +18,14 @@ void ParticleEmitterSystem::Update(Scene& aScene, std::random_device& aDevice, d
     auto& transform = aScene.GetComponentForEntity<Transform>(entity);
 
     // Determine the current position of the emitter.
-    auto emitterPos = transform.GetMatrix() * transform.GetPosition();
+    std::cout << "emitter matrix: " << std::endl << transform.GetMatrix() << std::endl;
+    auto emitterPos = transform.GetMatrix() * Vec3(0, 0, 0);
+    std::cout << "emitterPos: " << emitterPos << std::endl;
+    
+    //std::cout << "emitter local position: " << transform.GetPosition() << std::endl;
+    //std::cout << "emitter global position: " << transform.GetMatrix() * Vec3(0, 0, 0) << std::endl;
+    //std::cout << "translation matrix: " << std::endl << transform.GetTranslationMatrix() << std::endl;
+    //std::cout << "rotation matrix: " << std::endl << transform.GetRotationMatrix() << std::endl;
 
     // Determine the number of particles to spawn.
     size_t numParticles = emitter.mEmissionRate * dt;
