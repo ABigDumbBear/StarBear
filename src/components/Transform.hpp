@@ -11,24 +11,9 @@ namespace StarBear {
 class Transform
 {
   public:
-    void Combine(const Transform& aParent)
-    {
-      mTranslationMatrix = StarBear::Translate(mPosition) * aParent.mTranslationMatrix;
-
-      mRotationMatrix = StarBear::Rotate(Vec3(1, 0, 0), mRotation.x);
-      mRotationMatrix = mRotationMatrix * StarBear::Rotate(Vec3(0, 1, 0), mRotation.y);
-      mRotationMatrix = mRotationMatrix * StarBear::Rotate(Vec3(0, 0, 1), mRotation.z);
-      mRotationMatrix = mRotationMatrix * aParent.mRotationMatrix;
-      mForward = mRotationMatrix * Vec3(0, 0, -1);
-
-      mScalarMatrix = StarBear::Scale(mScalar) * aParent.mScalarMatrix;
-      UpdateMatrix();
-    }
-
     void Translate(const StarBear::Vec3& aPos)
     {
       mPosition += aPos;
-
       mTranslationMatrix = StarBear::Translate(mPosition);
       UpdateMatrix();
     }
@@ -78,6 +63,20 @@ class Transform
       UpdateMatrix();
     }
 
+    void Combine(const Transform& aParent)
+    {
+      mTranslationMatrix = StarBear::Translate(mPosition) * aParent.mTranslationMatrix;
+
+      mRotationMatrix = StarBear::Rotate(Vec3(1, 0, 0), mRotation.x);
+      mRotationMatrix = mRotationMatrix * StarBear::Rotate(Vec3(0, 1, 0), mRotation.y);
+      mRotationMatrix = mRotationMatrix * StarBear::Rotate(Vec3(0, 0, 1), mRotation.z);
+      mRotationMatrix = mRotationMatrix * aParent.mRotationMatrix;
+      mForward = mRotationMatrix * Vec3(0, 0, -1);
+
+      mScalarMatrix = StarBear::Scale(mScalar) * aParent.mScalarMatrix;
+      UpdateMatrix();
+    }
+
     const Vec3& GetPosition() const { return mPosition; }
     const Vec3& GetRotation() const { return mRotation; }
     const Vec3& GetScalar() const { return mScalar; }
@@ -88,6 +87,8 @@ class Transform
     const Mat4& GetRotationMatrix() const { return mRotationMatrix; }
     const Mat4& GetScalarMatrix() const { return mScalarMatrix; }
     const Mat4& GetMatrix() const { return mMatrix; }
+
+    Vec3 mTempPosition;
 
   private:
     void UpdateMatrix()

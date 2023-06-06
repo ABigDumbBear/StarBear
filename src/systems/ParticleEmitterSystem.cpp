@@ -16,7 +16,7 @@ void ParticleEmitterSystem::Update(Scene& aScene, std::random_device& aDevice, d
     auto& transform = aScene.GetComponentForEntity<Transform>(entity);
 
     // Determine the current position of the emitter.
-    auto emitterPos = transform.GetMatrix() * Vec3(0, 0, 0);
+    auto emitterPos = transform.mTempPosition;//transform.GetMatrix() * Vec3(0, 0, 0);
     
     // Determine the number of particles to spawn.
     size_t numParticles = emitter.mEmissionRate * dt;

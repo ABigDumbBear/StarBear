@@ -111,7 +111,7 @@ Game::Game(GLFWwindow* aWindow)
   mScene.GetComponentForEntity<ParticleEmitter>(emitter).mRadius = 0.5;
   mScene.GetComponentForEntity<Transform>(emitter).Translate(Vec3(4.5, 0, 2));
 
-  /*auto emitter2 = CreateEmitter(mScene);
+  auto emitter2 = CreateEmitter(mScene);
 
   mScene.GetComponentForEntity<Parent>(ship).mChildren.insert(emitter2);
   mScene.GetComponentForEntity<ParticleEmitter>(emitter2).mRadius = 0.5;
@@ -121,13 +121,13 @@ Game::Game(GLFWwindow* aWindow)
 
   mScene.GetComponentForEntity<Parent>(ship).mChildren.insert(emitter3);
   mScene.GetComponentForEntity<ParticleEmitter>(emitter3).mRadius = 0.5;
-  mScene.GetComponentForEntity<Transform>(emitter3).Translate(Vec3(4.5, -0.7, 2));
+  mScene.GetComponentForEntity<Transform>(emitter3).Translate(Vec3(4.5, -1.2, 2));
 
   auto emitter4 = CreateEmitter(mScene);
 
   mScene.GetComponentForEntity<Parent>(ship).mChildren.insert(emitter4);
   mScene.GetComponentForEntity<ParticleEmitter>(emitter4).mRadius = 0.5;
-  mScene.GetComponentForEntity<Transform>(emitter4).Translate(Vec3(-4.5, -0.7, 2));*/
+  mScene.GetComponentForEntity<Transform>(emitter4).Translate(Vec3(-4.5, -1.2, 2));
 
   auto enemy = CreateEnemy(mScene);
   mScene.GetComponentForEntity<Transform>(enemy).SetPosition(Vec3(10, 10, -50));
