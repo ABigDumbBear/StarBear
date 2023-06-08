@@ -16,8 +16,8 @@ void CombineTransforms(Scene& aScene, Entity aEntity)
     auto& childTransform = aScene.GetComponentForEntity<Transform>(child);
     childTransform.Combine(transform);
 
-    childTransform.mTempPosition = (transform.GetRotationMatrix() * childTransform.GetPosition());
-    childTransform.mTempPosition = transform.GetTranslationMatrix() * childTransform.mTempPosition;
+    //childTransform.mTempPosition = (transform.GetRotationMatrix() * childTransform.GetPosition());
+    //childTransform.mTempPosition = transform.GetTranslationMatrix() * childTransform.mTempPosition;
 
     if(aScene.DoesEntityHaveComponent<Parent>(child))
     {

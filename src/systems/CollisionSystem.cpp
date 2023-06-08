@@ -23,11 +23,11 @@ void CollisionSystem::Update(Scene& aScene)
       if(entityA == entityB) { continue; }
 
       auto& transformA = aScene.GetComponentForEntity<Transform>(entityA);
-      auto posA = transformA.GetTranslationMatrix() * Vec3(0, 0, 0);
+      auto posA = transformA.GetMatrix() * Vec3(0, 0, 0);
       auto& hitboxA = aScene.GetComponentForEntity<Hitbox>(entityA);
 
       auto& transformB = aScene.GetComponentForEntity<Transform>(entityB);
-      auto posB = transformB.GetTranslationMatrix() * Vec3(0, 0, 0);
+      auto posB = transformB.GetMatrix() * Vec3(0, 0, 0);
       auto& hitboxB = aScene.GetComponentForEntity<Hitbox>(entityB);
 
       if(!hitboxB.mCollided)
@@ -51,7 +51,7 @@ void CollisionSystem::Render(Scene& aScene,
     auto& hitbox = aScene.GetComponentForEntity<Hitbox>(entity);
 
     Vec3 pos(hitbox.x, hitbox.y, hitbox.z);
-    pos = transform.GetTranslationMatrix() * pos;
+    pos = transform.GetMatrix() * pos;
 
     auto mat = Translate(pos);
     mat = mat * Scale(Vec3(hitbox.mWidth, hitbox.mHeight, hitbox.mDepth));

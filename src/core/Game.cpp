@@ -147,8 +147,8 @@ Game::Game(GLFWwindow* aWindow)
   mScene.AddComponentToEntity<RailMover>(mover);
   mScene.AddComponentToEntity<Parent>(mover);
 
-  mScene.GetComponentForEntity<Parent>(mover).mChildren.insert(ship);
-  mScene.GetComponentForEntity<Parent>(mover).mChildren.insert(camera);
+  //mScene.GetComponentForEntity<Parent>(mover).mChildren.insert(ship);
+  //mScene.GetComponentForEntity<Parent>(mover).mChildren.insert(camera);
   //mScene.GetComponentForEntity<Parent>(mover).mChildren.insert(emitter);
 }
 
@@ -172,13 +172,13 @@ void Game::Run()
     auto dt = glfwGetTime() - mLastFrameTime;
     mLastFrameTime = glfwGetTime();
 
-    mCollisionSystem->Update(mScene);
-    mEnemySystem->Update(mScene, dt);
-    mLaserSystem->Update(mScene, dt);
+    //mCollisionSystem->Update(mScene);
+    //mEnemySystem->Update(mScene, dt);
+    //mLaserSystem->Update(mScene, dt);
     mShipControllerSystem->Update(mScene, mInput, dt);
     mParticleEmitterSystem->Update(mScene, rd, dt);
-    mPhysicsSystem->Update(mScene, dt);
-    mRailMoverSystem->Update(mScene);
+    //mPhysicsSystem->Update(mScene, dt);
+    //mRailMoverSystem->Update(mScene);
     mParentSystem->Update(mScene);
 
     for(const auto& entity : mCameraSystem->mEntities)
@@ -186,9 +186,9 @@ void Game::Run()
       auto& transform = mScene.GetComponentForEntity<Transform>(entity);
       auto view = View(Vec3(0, 0, 1), Vec3(1, 0, 0), transform.GetMatrix() * Vec3(0, 0, 0));
 
-      mLaserSystem->Render(mScene, mResourceMap, view, proj);
+      //mLaserSystem->Render(mScene, mResourceMap, view, proj);
       mShipControllerSystem->Render(mScene, mResourceMap, view, proj);
-      mEnemySystem->Render(mScene, mResourceMap, view, proj);
+      //mEnemySystem->Render(mScene, mResourceMap, view, proj);
       //mCollisionSystem->Render(mScene, mResourceMap, view, proj);
       mParticleEmitterSystem->Render(mScene, mResourceMap, view, proj);
     }

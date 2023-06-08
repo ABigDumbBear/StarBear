@@ -60,7 +60,7 @@ void ShipControllerSystem::Update(Scene& aScene, const Input& aInput, double dt)
       controller.mState = ShipState::eROLLING;
     }
 
-    auto newPos = transform.GetPosition();
+    auto newPos = transform.GetLocalPosition();
     newPos = Lerp(newPos, controller.mTargetPos, 0.3);
     newPos.z = 0;
     transform.SetPosition(newPos);
@@ -137,7 +137,7 @@ void ShipControllerSystem::Fire(Scene& aScene, Entity aShip)
 
   auto laser = CreateLaser(aScene);
   aScene.GetComponentForEntity<Physics>(laser).mVelocity = transform.GetForward() * 100;
-  aScene.GetComponentForEntity<Transform>(laser).SetPosition(transform.GetTranslationMatrix() * Vec3(0, 0, 0));
+  aScene.GetComponentForEntity<Transform>(laser).SetPosition(transform.GetWorldPosition());
 
   controller.mTimeSinceFired = 0;
 }
