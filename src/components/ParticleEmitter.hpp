@@ -9,8 +9,8 @@ namespace StarBear {
 
 struct Particle
 {
-  float mMaxLifetime { 0.2 };
-  float mLifetime { 0.2 };
+  float mMaxLifetime { 2 };
+  float mLifetime { 2 };
 
   Vec3 mPosition;
   Vec3 mVelocity;

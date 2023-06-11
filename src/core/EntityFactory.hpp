@@ -17,7 +17,7 @@ namespace StarBear {
 inline Entity CreateShip(Scene& aScene)
 {
   auto entity = aScene.CreateEntity();
-  aScene.AddComponentToEntity<Transform>(entity);
+  aScene.AddComponentToEntity<Transform>(entity).Rotate(0, 90, 0);
   aScene.AddComponentToEntity<ShipController>(entity);
 
   auto& hitbox = aScene.AddComponentToEntity<Hitbox>(entity);
