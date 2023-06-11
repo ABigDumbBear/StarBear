@@ -33,18 +33,22 @@ class Transform
     void SetPosition(const Vec3& aPos)
     {
       mLocalPosition = aPos;
+      mWorldPosition = aPos;
       UpdateMatrix();
     }
 
     void SetRotation(float x, float y, float z)
     {
       mLocalRotation = Vec3(x, y, z);
+      mWorldRotation = Vec3(x, y, z);
       UpdateMatrix();
+      UpdateAxes();
     }
 
     void SetScale(float x, float y, float z)
     {
       mLocalScalar = Vec3(x, y, z);
+      mWorldScalar = Vec3(x, y, z);
       UpdateMatrix();
     }
 
@@ -54,10 +58,12 @@ class Transform
       mMatrix = mMatrix * aParent.mMatrix;
 
       mWorldPosition = aParent.mMatrix * mLocalPosition;
-      mWorldRotation += aParent.mWorldRotation;
-      mWorldScalar.x *= aParent.mWorldScalar.x;
-      mWorldScalar.y *= aParent.mWorldScalar.y;
-      mWorldScalar.z *= aParent.mWorldScalar.z;
+      mWorldRotation = aParent.mWorldRotation + mLocalRotation;
+      mWorldScalar.x = aParent.mWorldScalar.x * mLocalScalar.x;
+      mWorldScalar.y = aParent.mWorldScalar.y * mLocalScalar.y;
+      mWorldScalar.z = aParent.mWorldScalar.z * mLocalScalar.z;
+
+      UpdateAxes();
     }
 
     const Vec3& GetLocalPosition() const { return mLocalPosition; }
@@ -84,6 +90,17 @@ class Transform
       auto s = StarBear::Scale(mLocalScalar);
 
       mMatrix = t * r * s;
+    }
+
+    void UpdateAxes()
+    {
+      auto r = StarBear::Rotate(Vec3(1, 0, 0), mWorldRotation.x);
+      r = StarBear::Rotate(Vec3(0, 1, 0), mWorldRotation.y) * r;
+      r = StarBear::Rotate(Vec3(0, 0, 1), mWorldRotation.z) * r;
+
+      mRight = r * Vec3(1, 0, 0);
+      mUp = r * Vec3(0, 1, 0);
+      mForward = r * Vec3(0, 0, -1);
     }
 
     // These values are relative to the object's parent (or the world,

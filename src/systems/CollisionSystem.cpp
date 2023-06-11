@@ -51,7 +51,7 @@ void CollisionSystem::Render(Scene& aScene,
     auto& hitbox = aScene.GetComponentForEntity<Hitbox>(entity);
 
     Vec3 pos(hitbox.x, hitbox.y, hitbox.z);
-    pos = transform.GetMatrix() * pos;
+    pos = transform.GetWorldPosition() + pos;
 
     auto mat = Translate(pos);
     mat = mat * Scale(Vec3(hitbox.mWidth, hitbox.mHeight, hitbox.mDepth));
