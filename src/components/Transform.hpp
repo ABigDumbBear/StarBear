@@ -55,7 +55,7 @@ class Transform
     void Combine(const Transform& aParent)
     {
       UpdateMatrix();
-      mMatrix = mMatrix * aParent.mMatrix;
+      mMatrix = aParent.mMatrix * mMatrix;
 
       mWorldPosition = aParent.mMatrix * mLocalPosition;
       mWorldRotation = aParent.mWorldRotation + mLocalRotation;
