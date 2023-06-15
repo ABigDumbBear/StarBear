@@ -39,7 +39,7 @@ void ParticleEmitterSystem::Update(Scene& aScene, std::random_device& aDevice, d
       // position for the appearance of smooth emission.
       auto& particle = emitter.mParticles[emitter.mActiveParticles];
       particle.mPosition = Lerp(emitter.mPreviousPosition, particlePos, ((float)i / (float)numParticles));
-      particle.mVelocity = (transform.GetForward() * -1) * 10;
+      particle.mVelocity = (transform.GetForward() * -1) * 15;
 
       ++emitter.mActiveParticles;
     }
