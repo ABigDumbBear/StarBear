@@ -16,7 +16,7 @@ void ParticleEmitterSystem::Update(Scene& aScene, std::random_device& aDevice, d
     auto& transform = aScene.GetComponentForEntity<Transform>(entity);
 
     // Determine the current position of the emitter.
-    auto emitterPos = transform.mTempPosition;//transform.GetMatrix() * Vec3(0, 0, 0);
+    auto emitterPos = transform.GetWorldPosition();
     
     // Determine the number of particles to spawn.
     size_t numParticles = emitter.mEmissionRate * dt;
@@ -39,6 +39,7 @@ void ParticleEmitterSystem::Update(Scene& aScene, std::random_device& aDevice, d
       // position for the appearance of smooth emission.
       auto& particle = emitter.mParticles[emitter.mActiveParticles];
       particle.mPosition = Lerp(emitter.mPreviousPosition, particlePos, ((float)i / (float)numParticles));
+      particle.mVelocity = (transform.GetForward() * -1) * 15;
 
       ++emitter.mActiveParticles;
     }
@@ -49,7 +50,8 @@ void ParticleEmitterSystem::Update(Scene& aScene, std::random_device& aDevice, d
     // For each active particle, move it according to its velocity.
     for(size_t i = emitter.mActiveParticles; i > 0; --i)
     {
-      emitter.mParticles[i - 1].mPosition += (transform.GetForward() * -1) * 0.1;
+      auto& particle = emitter.mParticles[i - 1];
+      particle.mPosition += particle.mVelocity * dt;
 
       // Update the particle's lifetime, then if it has reached 0, swap
       // it with the last active particle in the emitter.

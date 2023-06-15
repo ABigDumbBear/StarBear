@@ -149,7 +149,6 @@ Game::Game(GLFWwindow* aWindow)
 
   mScene.GetComponentForEntity<Parent>(mover).mChildren.insert(ship);
   mScene.GetComponentForEntity<Parent>(mover).mChildren.insert(camera);
-  //mScene.GetComponentForEntity<Parent>(mover).mChildren.insert(emitter);
 }
 
 /******************************************************************************/
@@ -189,7 +188,7 @@ void Game::Run()
       mLaserSystem->Render(mScene, mResourceMap, view, proj);
       mShipControllerSystem->Render(mScene, mResourceMap, view, proj);
       mEnemySystem->Render(mScene, mResourceMap, view, proj);
-      //mCollisionSystem->Render(mScene, mResourceMap, view, proj);
+      mCollisionSystem->Render(mScene, mResourceMap, view, proj);
       mParticleEmitterSystem->Render(mScene, mResourceMap, view, proj);
     }
   }

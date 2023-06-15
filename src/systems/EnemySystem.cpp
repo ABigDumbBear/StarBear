@@ -24,7 +24,7 @@ void EnemySystem::Update(Scene& aScene, double dt)
     if(mTimer > 1)
     {
       auto laser = CreateLaser(aScene);
-      aScene.GetComponentForEntity<Transform>(laser).SetPosition(transform.GetPosition() + Vec3(0, 0, 5));
+      aScene.GetComponentForEntity<Transform>(laser).SetPosition(transform.GetWorldPosition() + Vec3(0, 0, 5));
       auto& physics = aScene.GetComponentForEntity<Physics>(laser);
 
       physics.mVelocity.z = 50;
