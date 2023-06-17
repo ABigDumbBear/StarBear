@@ -16,11 +16,6 @@ enum class MeshType
   eCUBE
 };
 
-enum class TextureType
-{
-  ePARTICLE
-};
-
 enum class ModelType
 {
   eBOB,
@@ -41,6 +36,12 @@ enum class ShaderType
   eSHIP,
   ePARTICLE,
   eHITBOX
+};
+
+enum class TextureType
+{
+  eCROSSHAIR,
+  ePARTICLE
 };
 
 class ResourceMap

@@ -20,8 +20,10 @@ ResourceMap::ResourceMap()
   glBindVertexArray(0);
 
   // Load individual textures.
+  mTextureMap.emplace(TextureType::eCROSSHAIR, Texture());
   mTextureMap.emplace(TextureType::ePARTICLE, Texture());
 
+  mTextureMap[TextureType::eCROSSHAIR].LoadFromFile("resources/crosshair.png");
   mTextureMap[TextureType::ePARTICLE].LoadFromFile("resources/particle.png");
 
   // Load models.
