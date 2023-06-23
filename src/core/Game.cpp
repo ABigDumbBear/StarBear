@@ -183,7 +183,7 @@ void Game::Run()
     for(const auto& entity : mCameraSystem->mEntities)
     {
       auto& transform = mScene.GetComponentForEntity<Transform>(entity);
-      auto view = View(Vec3(0, 0, 1), Vec3(1, 0, 0), transform.GetMatrix() * Vec3(0, 0, 0));
+      auto view = View(Vec3(0, 0, 1), Vec3(1, 0, 0), transform.GetWorldPosition());
 
       mLaserSystem->Render(mScene, mResourceMap, view, proj);
       mShipControllerSystem->Render(mScene, mResourceMap, view, proj);
