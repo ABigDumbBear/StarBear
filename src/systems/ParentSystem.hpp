@@ -5,10 +5,9 @@
 
 namespace StarBear {
 
-class ParentSystem : public System
-{
-  public:
-    void Update(Scene& aScene);
+class ParentSystem : public System {
+public:
+  void Update(Scene &aScene);
 };
 
 } // namespace StarBear

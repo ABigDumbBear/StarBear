@@ -1,30 +1,29 @@
 #include "ParticleEmitterSystem.hpp"
 
-#include "Transform.hpp"
 #include "ParticleEmitter.hpp"
+#include "Transform.hpp"
 
 #include "MathUtil.hpp"
 
 namespace StarBear {
 
 /******************************************************************************/
-void ParticleEmitterSystem::Update(Scene& aScene, std::random_device& aDevice, double dt)
-{
-  for(const auto& entity : mEntities)
-  {
-    auto& emitter = aScene.GetComponentForEntity<ParticleEmitter>(entity);
-    auto& transform = aScene.GetComponentForEntity<Transform>(entity);
+void ParticleEmitterSystem::Update(Scene &aScene, std::random_device &aDevice,
+                                   double dt) {
+  for (const auto &entity : mEntities) {
+    auto &emitter = aScene.GetComponentForEntity<ParticleEmitter>(entity);
+    auto &transform = aScene.GetComponentForEntity<Transform>(entity);
 
     // Determine the current position of the emitter.
     auto emitterPos = transform.GetWorldPosition();
-    
+
     // Determine the number of particles to spawn.
     size_t numParticles = emitter.mEmissionRate * dt;
-    size_t availableParticles = emitter.mParticles.size() - emitter.mActiveParticles;
+    size_t availableParticles =
+        emitter.mParticles.size() - emitter.mActiveParticles;
     numParticles = std::min(numParticles, availableParticles);
 
-    for(size_t i = 0; i < numParticles; ++i)
-    {
+    for (size_t i = 0; i < numParticles; ++i) {
       std::mt19937 generator(aDevice());
       std::uniform_real_distribution<> dist(-emitter.mRadius, emitter.mRadius);
 
@@ -37,8 +36,9 @@ void ParticleEmitterSystem::Update(Scene& aScene, std::random_device& aDevice, d
 
       // Interpolate between the emitter's previous position and the particle's
       // position for the appearance of smooth emission.
-      auto& particle = emitter.mParticles[emitter.mActiveParticles];
-      particle.mPosition = Lerp(emitter.mPreviousPosition, particlePos, ((float)i / (float)numParticles));
+      auto &particle = emitter.mParticles[emitter.mActiveParticles];
+      particle.mPosition = Lerp(emitter.mPreviousPosition, particlePos,
+                                ((float)i / (float)numParticles));
       particle.mVelocity = (transform.GetForward() * -1) * 15;
 
       ++emitter.mActiveParticles;
@@ -48,16 +48,14 @@ void ParticleEmitterSystem::Update(Scene& aScene, std::random_device& aDevice, d
     emitter.mPreviousPosition = emitterPos;
 
     // For each active particle, move it according to its velocity.
-    for(size_t i = emitter.mActiveParticles; i > 0; --i)
-    {
-      auto& particle = emitter.mParticles[i - 1];
+    for (size_t i = emitter.mActiveParticles; i > 0; --i) {
+      auto &particle = emitter.mParticles[i - 1];
       particle.mPosition += particle.mVelocity * dt;
 
       // Update the particle's lifetime, then if it has reached 0, swap
       // it with the last active particle in the emitter.
       emitter.mParticles[i - 1].mLifetime -= dt;
-      if(emitter.mParticles[i - 1].mLifetime <= 0)
-      {
+      if (emitter.mParticles[i - 1].mLifetime <= 0) {
         auto lastValidIndex = emitter.mActiveParticles - 1;
 
         emitter.mParticles[i - 1] = emitter.mParticles[lastValidIndex];
@@ -70,43 +68,37 @@ void ParticleEmitterSystem::Update(Scene& aScene, std::random_device& aDevice, d
 }
 
 /******************************************************************************/
-void ParticleEmitterSystem::Render(Scene& aScene,
-                                   ResourceMap& aMap,
-                                   const Mat4& aView,
-                                   const Mat4& aProj)
-{
+void ParticleEmitterSystem::Render(Scene &aScene, ResourceMap &aMap,
+                                   const Mat4 &aView, const Mat4 &aProj) {
   std::vector<Mat4> modelMatrices;
   std::vector<float> lifetimes;
-  for(const auto& entity : mEntities)
-  {
-    auto& emitter = aScene.GetComponentForEntity<ParticleEmitter>(entity);
-    for(size_t i = 0; i < emitter.mActiveParticles; ++i)
-    {
+  for (const auto &entity : mEntities) {
+    auto &emitter = aScene.GetComponentForEntity<ParticleEmitter>(entity);
+    for (size_t i = 0; i < emitter.mActiveParticles; ++i) {
       auto mat = Translate(emitter.mParticles[i].mPosition);
-      mat = mat * Scale(Vec3((emitter.mParticles[i].mLifetime / emitter.mParticles[i].mMaxLifetime),
-                             (emitter.mParticles[i].mLifetime / emitter.mParticles[i].mMaxLifetime),
+      mat = mat * Scale(Vec3((emitter.mParticles[i].mLifetime /
+                              emitter.mParticles[i].mMaxLifetime),
+                             (emitter.mParticles[i].mLifetime /
+                              emitter.mParticles[i].mMaxLifetime),
                              1));
       modelMatrices.emplace_back(mat);
 
-      lifetimes.emplace_back(emitter.mParticles[i].mLifetime / emitter.mParticles[i].mMaxLifetime);
+      lifetimes.emplace_back(emitter.mParticles[i].mLifetime /
+                             emitter.mParticles[i].mMaxLifetime);
     }
   }
 
-  auto& mesh = aMap.GetMesh(MeshType::eQUAD);
-  auto& shader = aMap.GetShader(ShaderType::ePARTICLE);
-  auto& texture = aMap.GetTexture(TextureType::ePARTICLE);
+  auto &mesh = aMap.GetMesh(MeshType::eQUAD);
+  auto &shader = aMap.GetShader(ShaderType::ePARTICLE);
+  auto &texture = aMap.GetTexture(TextureType::ePARTICLE);
 
   glBindBuffer(GL_ARRAY_BUFFER, mesh.GetInstanceBufferID());
-  glBufferData(GL_ARRAY_BUFFER,
-               modelMatrices.size() * sizeof(Mat4),
-               modelMatrices.data(),
-               GL_DYNAMIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, modelMatrices.size() * sizeof(Mat4),
+               modelMatrices.data(), GL_DYNAMIC_DRAW);
 
   glBindBuffer(GL_ARRAY_BUFFER, mesh.GetCustomBufferID());
-  glBufferData(GL_ARRAY_BUFFER,
-               lifetimes.size() * sizeof(float),
-               lifetimes.data(),
-               GL_DYNAMIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, lifetimes.size() * sizeof(float),
+               lifetimes.data(), GL_DYNAMIC_DRAW);
 
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, texture.GetID());

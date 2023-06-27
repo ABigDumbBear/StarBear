@@ -1,29 +1,23 @@
 #include "Shader.hpp"
 
-#include <iostream>
 #include <fstream>
+#include <iostream>
 #include <sstream>
 
 namespace StarBear {
 
 /******************************************************************************/
-Shader::Shader()
-{
-  mID = glCreateProgram();
-}
+Shader::Shader() { mID = glCreateProgram(); }
 
 /******************************************************************************/
-Shader::~Shader()
-{
-  if(mValid)
-  {
+Shader::~Shader() {
+  if (mValid) {
     glDeleteProgram(mID);
   }
 }
 
 /******************************************************************************/
-Shader::Shader(Shader&& aShader)
-{
+Shader::Shader(Shader &&aShader) {
   mID = aShader.mID;
 
   aShader.mValid = false;
@@ -31,8 +25,7 @@ Shader::Shader(Shader&& aShader)
 }
 
 /******************************************************************************/
-Shader& Shader::operator=(Shader&& aShader)
-{
+Shader &Shader::operator=(Shader &&aShader) {
   mID = aShader.mID;
 
   aShader.mValid = false;
@@ -42,9 +35,8 @@ Shader& Shader::operator=(Shader&& aShader)
 }
 
 /******************************************************************************/
-void Shader::LoadFromFiles(const std::string& aVertexFile,
-                           const std::string& aFragmentFile)
-{
+void Shader::LoadFromFiles(const std::string &aVertexFile,
+                           const std::string &aFragmentFile) {
   std::ifstream vertexInput, fragmentInput;
   vertexInput.open(aVertexFile);
   fragmentInput.open(aFragmentFile);
@@ -60,9 +52,8 @@ void Shader::LoadFromFiles(const std::string& aVertexFile,
 }
 
 /******************************************************************************/
-void Shader::LoadFromSource(const std::string& aVertexSource,
-                            const std::string& aFragmentSource)
-{
+void Shader::LoadFromSource(const std::string &aVertexSource,
+                            const std::string &aFragmentSource) {
   // First, compile the shaders.
   unsigned int vertexID, fragmentID;
   CompileShader(vertexID, aVertexSource, ShaderType::eVERTEX);
@@ -78,50 +69,46 @@ void Shader::LoadFromSource(const std::string& aVertexSource,
 }
 
 /******************************************************************************/
-void Shader::Use() const
-{
-  glUseProgram(mID);
-}
+void Shader::Use() const { glUseProgram(mID); }
 
 /******************************************************************************/
-void Shader::SetInt(const std::string& aName, int aValue) const
-{
+void Shader::SetInt(const std::string &aName, int aValue) const {
   int loc = glGetUniformLocation(mID, aName.c_str());
   glUniform1i(loc, aValue);
 }
 
 /******************************************************************************/
-void Shader::SetFloat(const std::string& aName, float aValue) const
-{
+void Shader::SetFloat(const std::string &aName, float aValue) const {
   int loc = glGetUniformLocation(mID, aName.c_str());
   glUniform1f(loc, aValue);
 }
 
 /******************************************************************************/
-void Shader::SetVec3(const std::string& aName, const Vec3& aValue) const
-{
+void Shader::SetVec3(const std::string &aName, const Vec3 &aValue) const {
   int loc = glGetUniformLocation(mID, aName.c_str());
   glUniform3fv(loc, 1, &aValue.x);
 }
 
 /******************************************************************************/
-void Shader::SetMat4(const std::string& aName, const Mat4& aValue) const
-{
+void Shader::SetMat4(const std::string &aName, const Mat4 &aValue) const {
   int loc = glGetUniformLocation(mID, aName.c_str());
   glUniformMatrix4fv(loc, 1, GL_FALSE, &aValue(0, 0));
 }
 
 /******************************************************************************/
-void Shader::CompileShader(unsigned int& aID,
-                           const std::string& aSource,
-                           ShaderType aType)
-{
-  const char* source = aSource.c_str();
+void Shader::CompileShader(unsigned int &aID, const std::string &aSource,
+                           ShaderType aType) {
+  const char *source = aSource.c_str();
 
-  switch(aType)
-  {
-    case ShaderType::eVERTEX: { aID = glCreateShader(GL_VERTEX_SHADER); break; }
-    case ShaderType::eFRAGMENT: { aID = glCreateShader(GL_FRAGMENT_SHADER); break; }
+  switch (aType) {
+  case ShaderType::eVERTEX: {
+    aID = glCreateShader(GL_VERTEX_SHADER);
+    break;
+  }
+  case ShaderType::eFRAGMENT: {
+    aID = glCreateShader(GL_FRAGMENT_SHADER);
+    break;
+  }
   }
 
   glShaderSource(aID, 1, &source, NULL);
@@ -131,17 +118,14 @@ void Shader::CompileShader(unsigned int& aID,
   int success;
   char infoLog[512];
   glGetShaderiv(aID, GL_COMPILE_STATUS, &success);
-  if(!success)
-  {
+  if (!success) {
     glGetShaderInfoLog(aID, 512, NULL, infoLog);
     std::cout << "Error compiling shader!\n" << infoLog << std::endl;
   }
 }
 
 /******************************************************************************/
-void Shader::LinkProgram(unsigned int aVertexID,
-                         unsigned int aFragmentID)
-{
+void Shader::LinkProgram(unsigned int aVertexID, unsigned int aFragmentID) {
   glAttachShader(mID, aVertexID);
   glAttachShader(mID, aFragmentID);
   glLinkProgram(mID);
@@ -150,8 +134,7 @@ void Shader::LinkProgram(unsigned int aVertexID,
   int success;
   char infoLog[512];
   glGetProgramiv(mID, GL_LINK_STATUS, &success);
-  if(!success)
-  {
+  if (!success) {
     glGetProgramInfoLog(mID, 512, NULL, infoLog);
     std::cout << "Error linking program!\n" << infoLog << std::endl;
   }

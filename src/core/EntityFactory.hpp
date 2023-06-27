@@ -14,13 +14,12 @@
 namespace StarBear {
 
 /******************************************************************************/
-inline Entity CreateShip(Scene& aScene)
-{
+inline Entity CreateShip(Scene &aScene) {
   auto entity = aScene.CreateEntity();
   aScene.AddComponentToEntity<Transform>(entity);
   aScene.AddComponentToEntity<ShipController>(entity);
 
-  auto& hitbox = aScene.AddComponentToEntity<Hitbox>(entity);
+  auto &hitbox = aScene.AddComponentToEntity<Hitbox>(entity);
   hitbox.mWidth = 10;
   hitbox.mHeight = 2;
   hitbox.x = -5;
@@ -30,8 +29,7 @@ inline Entity CreateShip(Scene& aScene)
 }
 
 /******************************************************************************/
-inline Entity CreateLaser(Scene& aScene)
-{
+inline Entity CreateLaser(Scene &aScene) {
   auto entity = aScene.CreateEntity();
   aScene.AddComponentToEntity<Laser>(entity);
   aScene.AddComponentToEntity<Transform>(entity);
@@ -42,13 +40,12 @@ inline Entity CreateLaser(Scene& aScene)
 }
 
 /******************************************************************************/
-inline Entity CreateEnemy(Scene& aScene)
-{
+inline Entity CreateEnemy(Scene &aScene) {
   auto entity = aScene.CreateEntity();
   aScene.AddComponentToEntity<Enemy>(entity).mHealth = 10;
   aScene.AddComponentToEntity<Transform>(entity);
 
-  auto& hitbox = aScene.AddComponentToEntity<Hitbox>(entity);
+  auto &hitbox = aScene.AddComponentToEntity<Hitbox>(entity);
   hitbox.mHeight = 2.5;
   hitbox.mWidth = 5;
   hitbox.x = -2.5;
@@ -58,8 +55,7 @@ inline Entity CreateEnemy(Scene& aScene)
 }
 
 /******************************************************************************/
-inline Entity CreateEmitter(Scene& aScene)
-{
+inline Entity CreateEmitter(Scene &aScene) {
   auto entity = aScene.CreateEntity();
   aScene.AddComponentToEntity<Transform>(entity);
   aScene.AddComponentToEntity<ParticleEmitter>(entity).mEmissionRate = 500;

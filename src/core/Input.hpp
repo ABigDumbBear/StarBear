@@ -5,8 +5,7 @@
 
 namespace StarBear {
 
-struct Input
-{
+struct Input {
   std::set<int> mPressedKeys;
 };
 

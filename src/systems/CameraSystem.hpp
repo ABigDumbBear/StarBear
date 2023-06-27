@@ -5,9 +5,7 @@
 
 namespace StarBear {
 
-class CameraSystem : public System
-{
-};
+class CameraSystem : public System {};
 
 } // namespace StarBear
 

@@ -8,14 +8,11 @@
 
 namespace StarBear {
 
-class ParticleEmitterSystem : public System
-{
-  public:
-    void Update(Scene& aScene, std::random_device& aDevice, double dt);
-    void Render(Scene& aScene,
-                ResourceMap& aMap,
-                const Mat4& aView,
-                const Mat4& aProj);
+class ParticleEmitterSystem : public System {
+public:
+  void Update(Scene &aScene, std::random_device &aDevice, double dt);
+  void Render(Scene &aScene, ResourceMap &aMap, const Mat4 &aView,
+              const Mat4 &aProj);
 };
 
 } // namespace StarBear

@@ -11,10 +11,8 @@ FT_Library Font::mLibrary = nullptr;
 int Font::mInstances = 0;
 
 /******************************************************************************/
-Font::Font()
-{
-  if(mLibrary == nullptr)
-  {
+Font::Font() {
+  if (mLibrary == nullptr) {
     FT_Init_FreeType(&mLibrary);
   }
 
@@ -22,28 +20,24 @@ Font::Font()
 }
 
 /******************************************************************************/
-Font::~Font()
-{
+Font::~Font() {
   --mInstances;
 
-  if(mInstances == 0)
-  {
+  if (mInstances == 0) {
     FT_Done_FreeType(mLibrary);
     mLibrary = nullptr;
   }
 }
 
 /******************************************************************************/
-void Font::LoadFromFile(const std::string& aFile)
-{
+void Font::LoadFromFile(const std::string &aFile) {
   FT_New_Face(mLibrary, aFile.c_str(), 0, &mFace);
   CreateTexture(48);
   CreateGlyphMap(48);
 }
 
 /******************************************************************************/
-void Font::UpdateMeshToDisplayText(Mesh& aMesh, const std::string& aText)
-{
+void Font::UpdateMeshToDisplayText(Mesh &aMesh, const std::string &aText) {
   // First, remove the mesh's geometry.
   aMesh.mVertices.clear();
   aMesh.mIndices.clear();
@@ -62,11 +56,9 @@ void Font::UpdateMeshToDisplayText(Mesh& aMesh, const std::string& aText)
   int numLines = 0;
 
   int indexCount = 0;
-  for(const auto& character : aText)
-  {
+  for (const auto &character : aText) {
     auto glyph = mGlyphMap.find(character);
-    if(glyph != mGlyphMap.end())
-    {
+    if (glyph != mGlyphMap.end()) {
       xPos += glyph->second.mBearingX;
       yPos = -1 * (glyph->second.mHeight - glyph->second.mBearingY);
       width = glyph->second.mWidth;
@@ -133,9 +125,7 @@ void Font::UpdateMeshToDisplayText(Mesh& aMesh, const std::string& aText)
 
       // Update the x position for the next character.
       xPos += (glyph->second.mAdvance / 64);
-    }
-    else if(character == '\n')
-    {
+    } else if (character == '\n') {
       xPos = 0;
       ++numLines;
     }
@@ -147,8 +137,7 @@ void Font::UpdateMeshToDisplayText(Mesh& aMesh, const std::string& aText)
 }
 
 /******************************************************************************/
-void Font::CreateTexture(int aSize)
-{
+void Font::CreateTexture(int aSize) {
   // First, set the size of the font face.
   FT_Set_Pixel_Sizes(mFace, 0, aSize);
 
@@ -157,11 +146,9 @@ void Font::CreateTexture(int aSize)
   // horizontally from left to right.
   unsigned int atlasHeight = 0;
   unsigned int atlasWidth = 0;
-  for(unsigned int i = 32; i < 128; ++i)
-  {
+  for (unsigned int i = 32; i < 128; ++i) {
     auto error = FT_Load_Char(mFace, i, FT_LOAD_RENDER);
-    if(error)
-    {
+    if (error) {
       // If the font doesn't support this character, skip it.
       continue;
     }
@@ -181,24 +168,16 @@ void Font::CreateTexture(int aSize)
   // Now that we have an empty texture, fill it with the image data
   // for each of the first 128 ASCII characters.
   unsigned int xOffset = 0;
-  for(unsigned int i = 32; i < 128; ++i)
-  {
+  for (unsigned int i = 32; i < 128; ++i) {
     auto error = FT_Load_Char(mFace, i, FT_LOAD_RENDER);
-    if(error)
-    {
+    if (error) {
       // If the font doesn't support this character, skip it.
       continue;
     }
 
     // Add the glyph data to the font atlas.
-    glTexSubImage2D(GL_TEXTURE_2D,
-                    0,
-                    xOffset,
-                    0,
-                    mFace->glyph->bitmap.width,
-                    mFace->glyph->bitmap.rows,
-                    GL_RED,
-                    GL_UNSIGNED_BYTE,
+    glTexSubImage2D(GL_TEXTURE_2D, 0, xOffset, 0, mFace->glyph->bitmap.width,
+                    mFace->glyph->bitmap.rows, GL_RED, GL_UNSIGNED_BYTE,
                     mFace->glyph->bitmap.buffer);
 
     xOffset += mFace->glyph->bitmap.width;
@@ -214,19 +193,16 @@ void Font::CreateTexture(int aSize)
 }
 
 /******************************************************************************/
-void Font::CreateGlyphMap(int aSize)
-{
+void Font::CreateGlyphMap(int aSize) {
   mGlyphMap.clear();
 
   // For each of the first 128 ASCII characters, access their glyph information
   // and store it in the map.
   GlyphInfo info;
   unsigned int xOffset = 0;
-  for(unsigned int i = 32; i < 128; ++i)
-  {
+  for (unsigned int i = 32; i < 128; ++i) {
     auto error = FT_Load_Char(mFace, i, FT_LOAD_RENDER);
-    if(error)
-    {
+    if (error) {
       // If the curent font doesn't support this character, skip it.
       continue;
     }
@@ -239,7 +215,7 @@ void Font::CreateGlyphMap(int aSize)
     info.mAdvance = mFace->glyph->advance.x;
     info.mOffsetX = xOffset;
     mGlyphMap.emplace((char)i, info);
-    
+
     xOffset += info.mWidth;
   }
 }

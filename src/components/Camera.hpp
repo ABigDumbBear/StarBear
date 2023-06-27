@@ -3,9 +3,7 @@
 
 namespace StarBear {
 
-struct Camera
-{
-};
+struct Camera {};
 
 } // namespace StarBear
 

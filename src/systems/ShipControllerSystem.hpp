@@ -10,17 +10,14 @@
 
 namespace StarBear {
 
-class ShipControllerSystem : public System
-{
-  public:
-    void Update(Scene& aScene, const Input& aInput, double dt);
-    void Render(Scene& aScene,
-                ResourceMap& aMap,
-                const Mat4& aView,
-                const Mat4& aProj);
+class ShipControllerSystem : public System {
+public:
+  void Update(Scene &aScene, const Input &aInput, double dt);
+  void Render(Scene &aScene, ResourceMap &aMap, const Mat4 &aView,
+              const Mat4 &aProj);
 
-  private:
-    void Fire(Scene& aScene, Entity aShip);
+private:
+  void Fire(Scene &aScene, Entity aShip);
 };
 
 } // namespace StarBear

@@ -3,9 +3,7 @@
 
 namespace StarBear {
 
-struct RailMover
-{
-};
+struct RailMover {};
 
 } // namespace StarBear
 

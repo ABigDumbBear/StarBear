@@ -6,17 +6,14 @@
 
 namespace StarBear {
 
-class EnemySystem : public System
-{
-  public:
-    void Update(Scene& aScene, double dt);
-    void Render(Scene& aScene,
-                ResourceMap& aMap,
-                const Mat4& aView,
-                const Mat4& aProj);
+class EnemySystem : public System {
+public:
+  void Update(Scene &aScene, double dt);
+  void Render(Scene &aScene, ResourceMap &aMap, const Mat4 &aView,
+              const Mat4 &aProj);
 
-  private:
-    double mTimer { 0 };
+private:
+  double mTimer{0};
 };
 
 } // namespace StarBear

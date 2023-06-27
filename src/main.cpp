@@ -1,4 +1,5 @@
 #include <glad/glad.h>
+
 #include <GLFW/glfw3.h>
 
 #include <iostream>
@@ -7,11 +8,9 @@
 #include "Game.hpp"
 
 /******************************************************************************/
-int main()
-{
+int main() {
   // Initialize GLFW.
-  if(!glfwInit())
-  {
+  if (!glfwInit()) {
     std::cout << "Failed to initialize GLFW!" << std::endl;
     return -1;
   }
@@ -22,29 +21,25 @@ int main()
 
   // Use the core profile only; this removes backwards-compatible features
   // that are no longer needed for the engine.
-  glfwWindowHint(GLFW_OPENGL_PROFILE,
-                 GLFW_OPENGL_CORE_PROFILE);
+  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
   // Enable forward compatibility; this removes all deprecated features
   // in the desired version of OpenGL (3.3).
-  glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT,
-                 GLFW_TRUE);
+  glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
 
   // Enable double buffering.
   glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE);
 
   // Create a new window.
   auto window = glfwCreateWindow(1280, 720, "StarBear", nullptr, nullptr);
-  if(window == nullptr)
-  {
+  if (window == nullptr) {
     std::cout << "Failed to create window!" << std::endl;
     return -1;
   }
   glfwMakeContextCurrent(window);
 
   // Initialize GLAD.
-  if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-  {
+  if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
     std::cout << "Failed to initialize GLAD!" << std::endl;
     return -1;
   }

@@ -13,34 +13,26 @@
 namespace StarBear {
 
 /******************************************************************************/
-Game::Game(GLFWwindow* aWindow)
-  : mWindow(aWindow)
-  , mLastFrameTime(0)
-  , mCameraSystem(nullptr)
-  , mCollisionSystem(nullptr)
-  , mEnemySystem(nullptr)
-  , mLaserSystem(nullptr)
-  , mParticleEmitterSystem(nullptr)
-  , mRailMoverSystem(nullptr)
-  , mShipControllerSystem(nullptr)
-  , mPhysicsSystem(nullptr)
-{
+Game::Game(GLFWwindow *aWindow)
+    : mWindow(aWindow), mLastFrameTime(0), mCameraSystem(nullptr),
+      mCollisionSystem(nullptr), mEnemySystem(nullptr), mLaserSystem(nullptr),
+      mParticleEmitterSystem(nullptr), mRailMoverSystem(nullptr),
+      mShipControllerSystem(nullptr), mPhysicsSystem(nullptr) {
   // Set GLFW callbacks.
   glfwSetWindowUserPointer(mWindow, this);
-  glfwSetErrorCallback([](int aError, const char* aDescription)
-  {
+  glfwSetErrorCallback([](int aError, const char *aDescription) {
     std::cout << "GLFW encountered an error: " << aDescription << std::endl;
   });
 
-  glfwSetFramebufferSizeCallback(mWindow, [](GLFWwindow* aWindow, int aWidth, int aHeight)
-  {
-    auto game = static_cast<Game*>(glfwGetWindowUserPointer(aWindow));
-    game->FramebufferSizeCallback(aWidth, aHeight);
-  });
+  glfwSetFramebufferSizeCallback(
+      mWindow, [](GLFWwindow *aWindow, int aWidth, int aHeight) {
+        auto game = static_cast<Game *>(glfwGetWindowUserPointer(aWindow));
+        game->FramebufferSizeCallback(aWidth, aHeight);
+      });
 
-  glfwSetKeyCallback(mWindow, [](GLFWwindow* aWindow, int aKey, int aScancode, int aAction, int aMods)
-  {
-    auto game = static_cast<Game*>(glfwGetWindowUserPointer(aWindow));
+  glfwSetKeyCallback(mWindow, [](GLFWwindow *aWindow, int aKey, int aScancode,
+                                 int aAction, int aMods) {
+    auto game = static_cast<Game *>(glfwGetWindowUserPointer(aWindow));
     game->KeyCallback(aKey, aScancode, aAction, aMods);
   });
 
@@ -69,7 +61,8 @@ Game::Game(GLFWwindow* aWindow)
   sig.reset();
   mScene.AddComponentToSignature<Transform>(sig);
   mScene.AddComponentToSignature<ParticleEmitter>(sig);
-  mParticleEmitterSystem = mScene.RegisterSystemType<ParticleEmitterSystem>(sig);
+  mParticleEmitterSystem =
+      mScene.RegisterSystemType<ParticleEmitterSystem>(sig);
 
   sig.reset();
   mScene.AddComponentToSignature<Transform>(sig);
@@ -121,22 +114,27 @@ Game::Game(GLFWwindow* aWindow)
 
   mScene.GetComponentForEntity<Parent>(ship).mChildren.insert(emitter3);
   mScene.GetComponentForEntity<ParticleEmitter>(emitter3).mRadius = 0.5;
-  mScene.GetComponentForEntity<Transform>(emitter3).Translate(Vec3(4.5, -1.2, 2));
+  mScene.GetComponentForEntity<Transform>(emitter3).Translate(
+      Vec3(4.5, -1.2, 2));
 
   auto emitter4 = CreateEmitter(mScene);
 
   mScene.GetComponentForEntity<Parent>(ship).mChildren.insert(emitter4);
   mScene.GetComponentForEntity<ParticleEmitter>(emitter4).mRadius = 0.5;
-  mScene.GetComponentForEntity<Transform>(emitter4).Translate(Vec3(-4.5, -1.2, 2));
+  mScene.GetComponentForEntity<Transform>(emitter4).Translate(
+      Vec3(-4.5, -1.2, 2));
 
   auto enemy = CreateEnemy(mScene);
   mScene.GetComponentForEntity<Transform>(enemy).SetPosition(Vec3(10, 10, -50));
   enemy = CreateEnemy(mScene);
-  mScene.GetComponentForEntity<Transform>(enemy).SetPosition(Vec3(-10, 10, -50));
+  mScene.GetComponentForEntity<Transform>(enemy).SetPosition(
+      Vec3(-10, 10, -50));
   enemy = CreateEnemy(mScene);
-  mScene.GetComponentForEntity<Transform>(enemy).SetPosition(Vec3(-10, -10, -50));
+  mScene.GetComponentForEntity<Transform>(enemy).SetPosition(
+      Vec3(-10, -10, -50));
   enemy = CreateEnemy(mScene);
-  mScene.GetComponentForEntity<Transform>(enemy).SetPosition(Vec3(10, -10, -50));
+  mScene.GetComponentForEntity<Transform>(enemy).SetPosition(
+      Vec3(10, -10, -50));
 
   auto camera = mScene.CreateEntity();
   mScene.AddComponentToEntity<Transform>(camera).SetPosition(Vec3(0, 0, 50));
@@ -152,8 +150,7 @@ Game::Game(GLFWwindow* aWindow)
 }
 
 /******************************************************************************/
-void Game::Run()
-{
+void Game::Run() {
   std::random_device rd;
 
   auto proj = Perspective(45, 1280, 720, 0.1, 1000);
@@ -162,8 +159,7 @@ void Game::Run()
   double frameTimer = 0;
 
   // Run until instructed to close.
-  while(!glfwWindowShouldClose(mWindow))
-  {
+  while (!glfwWindowShouldClose(mWindow)) {
     glfwPollEvents();
     glfwSwapBuffers(mWindow);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -180,10 +176,10 @@ void Game::Run()
     mRailMoverSystem->Update(mScene);
     mParentSystem->Update(mScene);
 
-    for(const auto& entity : mCameraSystem->mEntities)
-    {
-      auto& transform = mScene.GetComponentForEntity<Transform>(entity);
-      auto view = View(Vec3(0, 0, 1), Vec3(1, 0, 0), transform.GetWorldPosition());
+    for (const auto &entity : mCameraSystem->mEntities) {
+      auto &transform = mScene.GetComponentForEntity<Transform>(entity);
+      auto view =
+          View(Vec3(0, 0, 1), Vec3(1, 0, 0), transform.GetWorldPosition());
 
       mLaserSystem->Render(mScene, mResourceMap, view, proj);
       mShipControllerSystem->Render(mScene, mResourceMap, view, proj);
@@ -195,20 +191,15 @@ void Game::Run()
 }
 
 /******************************************************************************/
-void Game::FramebufferSizeCallback(int aWidth, int aHeight)
-{
+void Game::FramebufferSizeCallback(int aWidth, int aHeight) {
   glViewport(0, 0, aWidth, aHeight);
 }
 
 /******************************************************************************/
-void Game::KeyCallback(int aKey, int aScancode, int aAction, int aMods)
-{
-  if(aAction == GLFW_PRESS)
-  {
+void Game::KeyCallback(int aKey, int aScancode, int aAction, int aMods) {
+  if (aAction == GLFW_PRESS) {
     mInput.mPressedKeys.insert(aKey);
-  }
-  else if(aAction == GLFW_RELEASE)
-  {
+  } else if (aAction == GLFW_RELEASE) {
     mInput.mPressedKeys.erase(aKey);
   }
 }

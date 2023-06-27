@@ -5,10 +5,9 @@
 
 namespace StarBear {
 
-class RailMoverSystem : public System
-{
-  public:
-    void Update(Scene& aScene);
+class RailMoverSystem : public System {
+public:
+  void Update(Scene &aScene);
 };
 
 } // namespace StarBear

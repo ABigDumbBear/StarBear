@@ -3,8 +3,7 @@
 namespace StarBear {
 
 /******************************************************************************/
-Mesh::Mesh()
-{
+Mesh::Mesh() {
   // Generate a VAO and several VBOs for the mesh, then configure them.
   glGenVertexArrays(1, &mVertexArray);
   glGenBuffers(1, &mVertexBuffer);
@@ -20,72 +19,39 @@ Mesh::Mesh()
 
   // Configure the vertex position attribute.
   glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0,
-                        3,
-                        GL_FLOAT,
-                        GL_FALSE,
-                        sizeof(MeshVertex),
-                        (void*)(0));
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(MeshVertex),
+                        (void *)(0));
 
   // Configure the vertex color attribute.
   glEnableVertexAttribArray(1);
-  glVertexAttribPointer(1,
-                        3,
-                        GL_FLOAT,
-                        GL_FALSE,
-                        sizeof(MeshVertex),
-                        (void*)(offsetof(MeshVertex, mColor)));
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(MeshVertex),
+                        (void *)(offsetof(MeshVertex, mColor)));
 
   // Configure the vertex normal attribute.
   glEnableVertexAttribArray(2);
-  glVertexAttribPointer(2,
-                        3,
-                        GL_FLOAT,
-                        GL_FALSE,
-                        sizeof(MeshVertex),
-                        (void*)(offsetof(MeshVertex, mNormal)));
+  glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(MeshVertex),
+                        (void *)(offsetof(MeshVertex, mNormal)));
 
   // Configure the vertex texture coordinate attribute.
   glEnableVertexAttribArray(3);
-  glVertexAttribPointer(3,
-                        2,
-                        GL_FLOAT,
-                        GL_FALSE,
-                        sizeof(MeshVertex),
-                        (void*)(offsetof(MeshVertex, mTexCoords)));
+  glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(MeshVertex),
+                        (void *)(offsetof(MeshVertex, mTexCoords)));
 
   // Bind the instance buffer.
   glBindBuffer(GL_ARRAY_BUFFER, mInstanceBuffer);
 
   // Configure the instance attributes.
   glEnableVertexAttribArray(4);
-  glVertexAttribPointer(4,
-                        4,
-                        GL_FLOAT,
-                        GL_FALSE,
-                        sizeof(Mat4),
-                        (void*)0);
+  glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(Mat4), (void *)0);
   glEnableVertexAttribArray(5);
-  glVertexAttribPointer(5,
-                        4,
-                        GL_FLOAT,
-                        GL_FALSE,
-                        sizeof(Mat4),
-                        (void*)(4 * sizeof(float)));
+  glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(Mat4),
+                        (void *)(4 * sizeof(float)));
   glEnableVertexAttribArray(6);
-  glVertexAttribPointer(6,
-                        4,
-                        GL_FLOAT,
-                        GL_FALSE,
-                        sizeof(Mat4),
-                        (void*)(8 * sizeof(float)));
+  glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(Mat4),
+                        (void *)(8 * sizeof(float)));
   glEnableVertexAttribArray(7);
-  glVertexAttribPointer(7,
-                        4,
-                        GL_FLOAT,
-                        GL_FALSE,
-                        sizeof(Mat4),
-                        (void*)(12 * sizeof(float)));
+  glVertexAttribPointer(7, 4, GL_FLOAT, GL_FALSE, sizeof(Mat4),
+                        (void *)(12 * sizeof(float)));
 
   glVertexAttribDivisor(4, 1);
   glVertexAttribDivisor(5, 1);
@@ -102,10 +68,8 @@ Mesh::Mesh()
 }
 
 /******************************************************************************/
-Mesh::~Mesh()
-{
-  if(mValid)
-  {
+Mesh::~Mesh() {
+  if (mValid) {
     glDeleteVertexArrays(1, &mVertexArray);
     glDeleteBuffers(1, &mVertexBuffer);
     glDeleteBuffers(1, &mInstanceBuffer);
@@ -115,8 +79,7 @@ Mesh::~Mesh()
 }
 
 /******************************************************************************/
-Mesh::Mesh(Mesh&& aMesh)
-{
+Mesh::Mesh(Mesh &&aMesh) {
   mVertices = aMesh.mVertices;
   mIndices = aMesh.mIndices;
 
@@ -131,8 +94,7 @@ Mesh::Mesh(Mesh&& aMesh)
 }
 
 /******************************************************************************/
-Mesh& Mesh::operator=(Mesh&& aMesh)
-{
+Mesh &Mesh::operator=(Mesh &&aMesh) {
   mVertices = aMesh.mVertices;
   mIndices = aMesh.mIndices;
 
@@ -149,61 +111,45 @@ Mesh& Mesh::operator=(Mesh&& aMesh)
 }
 
 /******************************************************************************/
-void Mesh::Draw(const Shader& aShader, GLenum aMode) const
-{
+void Mesh::Draw(const Shader &aShader, GLenum aMode) const {
   glBindVertexArray(mVertexArray);
 
   // Draw the mesh.
   aShader.Use();
-  glDrawElements(aMode,
-                 mIndices.size(),
-                 GL_UNSIGNED_INT,
-                 0);
+  glDrawElements(aMode, mIndices.size(), GL_UNSIGNED_INT, 0);
 
   glBindVertexArray(0);
 }
 
 /******************************************************************************/
-void Mesh::DrawInstanced(const Shader& aShader,
-                         int aNumInstances,
-                         GLenum aMode) const
-{
+void Mesh::DrawInstanced(const Shader &aShader, int aNumInstances,
+                         GLenum aMode) const {
   glBindVertexArray(mVertexArray);
 
   // Draw the mesh.
   aShader.Use();
-  glDrawElementsInstanced(aMode,
-                          mIndices.size(),
-                          GL_UNSIGNED_INT,
-                          0,
+  glDrawElementsInstanced(aMode, mIndices.size(), GL_UNSIGNED_INT, 0,
                           aNumInstances);
 
   glBindVertexArray(0);
 }
 
 /******************************************************************************/
-void Mesh::UpdateVertices()
-{
+void Mesh::UpdateVertices() {
   glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
-  glBufferData(GL_ARRAY_BUFFER,
-               mVertices.size() * sizeof(MeshVertex),
-               &mVertices[0],
-               GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, mVertices.size() * sizeof(MeshVertex),
+               &mVertices[0], GL_STATIC_DRAW);
 }
 
 /******************************************************************************/
-void Mesh::UpdateIndices()
-{
+void Mesh::UpdateIndices() {
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mElementBuffer);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-               mIndices.size() * sizeof(unsigned int),
-               &mIndices[0],
-               GL_STATIC_DRAW);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, mIndices.size() * sizeof(unsigned int),
+               &mIndices[0], GL_STATIC_DRAW);
 }
 
 /******************************************************************************/
-void Mesh::InitQuad()
-{
+void Mesh::InitQuad() {
   MeshVertex vertex;
 
   vertex.mPosition = Vec3(-0.5, -0.5, 0);
@@ -235,8 +181,7 @@ void Mesh::InitQuad()
 }
 
 /******************************************************************************/
-void Mesh::InitCube()
-{
+void Mesh::InitCube() {
   MeshVertex vertex;
 
   // Front face

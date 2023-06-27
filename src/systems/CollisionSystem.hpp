@@ -10,20 +10,15 @@
 
 namespace StarBear {
 
-class CollisionSystem : public System
-{
-  public:
-    void Update(Scene& aScene);
-    void Render(Scene& aScene,
-                ResourceMap& aMap,
-                const Mat4& aView,
-                const Mat4& aProj);
+class CollisionSystem : public System {
+public:
+  void Update(Scene &aScene);
+  void Render(Scene &aScene, ResourceMap &aMap, const Mat4 &aView,
+              const Mat4 &aProj);
 
-  private:
-    bool CheckCollision(const Vec3& aPositionA,
-                        const Hitbox& aHitboxA,
-                        const Vec3& aPositionB,
-                        const Hitbox& aHitboxB);
+private:
+  bool CheckCollision(const Vec3 &aPositionA, const Hitbox &aHitboxA,
+                      const Vec3 &aPositionB, const Hitbox &aHitboxB);
 };
 
 } // namespace StarBear

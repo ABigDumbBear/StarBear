@@ -5,12 +5,11 @@
 
 namespace StarBear {
 
-class PhysicsSystem : public System
-{
-  public:
-    void Update(Scene& aScene, double dt);
+class PhysicsSystem : public System {
+public:
+  void Update(Scene &aScene, double dt);
 };
 
-} // namespace FoolsErrand
+} // namespace StarBear
 
 #endif

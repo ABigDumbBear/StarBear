@@ -5,8 +5,7 @@
 
 namespace StarBear {
 
-struct Physics
-{
+struct Physics {
   Vec3 mAcceleration;
   Vec3 mVelocity;
 };

@@ -5,8 +5,7 @@
 
 namespace StarBear {
 
-struct Parent
-{
+struct Parent {
   EntitySet mChildren;
 };
 

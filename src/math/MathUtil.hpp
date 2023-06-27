@@ -14,15 +14,12 @@ namespace StarBear {
  * @param aVector The vector to normalize.
  * @return The normalized version of the given vector.
  */
-inline Vec3 Normalize(const Vec3& aVector)
-{
-  auto magnitude = std::sqrt(std::pow(aVector.x, 2) +
-                             std::pow(aVector.y, 2) +
+inline Vec3 Normalize(const Vec3 &aVector) {
+  auto magnitude = std::sqrt(std::pow(aVector.x, 2) + std::pow(aVector.y, 2) +
                              std::pow(aVector.z, 2));
 
   Vec3 result(0, 0, 0);
-  if(magnitude > 0)
-  {
+  if (magnitude > 0) {
     result.x = aVector.x / magnitude;
     result.y = aVector.y / magnitude;
     result.z = aVector.z / magnitude;
@@ -38,8 +35,7 @@ inline Vec3 Normalize(const Vec3& aVector)
  * @param aVectorB The second vector in the equation.
  * @return The cross product of the two vectors.
  */
-inline Vec3 Cross(const Vec3& aVectorA, const Vec3& aVectorB)
-{
+inline Vec3 Cross(const Vec3 &aVectorA, const Vec3 &aVectorB) {
   auto yz = aVectorA.y * aVectorB.z;
   auto zy = aVectorA.z * aVectorB.y;
   auto zx = aVectorA.z * aVectorB.x;
@@ -57,8 +53,7 @@ inline Vec3 Cross(const Vec3& aVectorA, const Vec3& aVectorB)
  * @param aVectorB The second vector in the equation.
  * @return The dot product of the two vectors.
  */
-inline float Dot(const Vec3& aVectorA, const Vec3& aVectorB)
-{
+inline float Dot(const Vec3 &aVectorA, const Vec3 &aVectorB) {
   auto xx = aVectorA.x * aVectorB.x;
   auto yy = aVectorA.y * aVectorB.y;
   auto zz = aVectorA.z * aVectorB.z;
@@ -73,8 +68,7 @@ inline float Dot(const Vec3& aVectorA, const Vec3& aVectorB)
  * @param aVectorB The second vector.
  * @return The distance between the two vectors.
  */
-inline float Distance(const Vec3& aVectorA, const Vec3& aVectorB)
-{
+inline float Distance(const Vec3 &aVectorA, const Vec3 &aVectorB) {
   auto xVal = aVectorB.x - aVectorA.x;
   auto yVal = aVectorB.y - aVectorA.y;
   auto zVal = aVectorB.z - aVectorA.z;
@@ -89,12 +83,9 @@ inline float Distance(const Vec3& aVectorA, const Vec3& aVectorB)
  * @param aVector The scalar vector.
  * @return A scalar transformation matrix.
  */
-inline Mat4 Scale(const Vec3& aVector)
-{
-  return Mat4(aVector.x, 0.0, 0.0, 0.0,
-              0.0, aVector.y, 0.0, 0.0,
-              0.0, 0.0, aVector.z, 0.0,
-              0.0, 0.0, 0.0, 1.0);
+inline Mat4 Scale(const Vec3 &aVector) {
+  return Mat4(aVector.x, 0.0, 0.0, 0.0, 0.0, aVector.y, 0.0, 0.0, 0.0, 0.0,
+              aVector.z, 0.0, 0.0, 0.0, 0.0, 1.0);
 }
 
 /**
@@ -104,12 +95,9 @@ inline Mat4 Scale(const Vec3& aVector)
  * @param aVector The destination vector.
  * @return A translation transformation matrix.
  */
-inline Mat4 Translate(const Vec3& aVector)
-{
-  return Mat4(1.0, 0.0, 0.0, aVector.x,
-              0.0, 1.0, 0.0, aVector.y,
-              0.0, 0.0, 1.0, aVector.z,
-              0.0, 0.0, 0.0, 1.0);
+inline Mat4 Translate(const Vec3 &aVector) {
+  return Mat4(1.0, 0.0, 0.0, aVector.x, 0.0, 1.0, 0.0, aVector.y, 0.0, 0.0, 1.0,
+              aVector.z, 0.0, 0.0, 0.0, 1.0);
 }
 
 /**
@@ -121,9 +109,7 @@ inline Mat4 Translate(const Vec3& aVector)
  * @param aDegrees The amount of degrees to rotate.
  * @return A rotation transformation matrix.
  */
-inline Mat4 Rotate(const Vec3& aVector,
-                   float aDegrees)
-{
+inline Mat4 Rotate(const Vec3 &aVector, float aDegrees) {
   float c = std::cos(aDegrees * (M_PI / 180.0));
   float s = std::sin(aDegrees * (M_PI / 180.0));
   float d = 1.0 - c;
@@ -140,10 +126,9 @@ inline Mat4 Rotate(const Vec3& aVector,
   float vxvz = (vx * vz) * d;
   float vyvz = (vy * vz) * d;
 
-  return Mat4(c + vx2, vxvy - s * vz, vxvz + s * vy, 0.0,
-              vxvy + s * vz, c + vy2, vyvz - s * vx, 0.0,
-              vxvz - s * vy, vyvz + s * vx, c + vz2, 0.0,
-              0.0, 0.0, 0.0, 1.0);
+  return Mat4(c + vx2, vxvy - s * vz, vxvz + s * vy, 0.0, vxvy + s * vz,
+              c + vy2, vyvz - s * vx, 0.0, vxvz - s * vy, vyvz + s * vx,
+              c + vz2, 0.0, 0.0, 0.0, 0.0, 1.0);
 }
 
 /**
@@ -155,19 +140,16 @@ inline Mat4 Rotate(const Vec3& aVector,
  * @param aRightVector A vector pointing to the right of the camera.
  * @param aPosition The position of the camera.
  */
-inline Mat4 View(const Vec3& aDirectionVector,
-                 const Vec3& aRightVector,
-                 const Vec3& aPosition)
-{
+inline Mat4 View(const Vec3 &aDirectionVector, const Vec3 &aRightVector,
+                 const Vec3 &aPosition) {
   auto upVector = Cross(aDirectionVector, aRightVector);
-  Mat4 axesMatrix = Mat4(aRightVector.x, aRightVector.y, aRightVector.z, 0.0,
-                         upVector.x, upVector.y, upVector.z, 0.0,
-                         aDirectionVector.x, aDirectionVector.y, aDirectionVector.z, 0.0,
-                         0.0, 0.0, 0.0, 1.0);
-  Mat4 translationMatrix = Mat4(1.0, 0.0, 0.0, -aPosition.x,
-                                0.0, 1.0, 0.0, -aPosition.y,
-                                0.0, 0.0, 1.0, -aPosition.z,
-                                0.0, 0.0, 0.0, 1.0);
+  Mat4 axesMatrix =
+      Mat4(aRightVector.x, aRightVector.y, aRightVector.z, 0.0, upVector.x,
+           upVector.y, upVector.z, 0.0, aDirectionVector.x, aDirectionVector.y,
+           aDirectionVector.z, 0.0, 0.0, 0.0, 0.0, 1.0);
+  Mat4 translationMatrix =
+      Mat4(1.0, 0.0, 0.0, -aPosition.x, 0.0, 1.0, 0.0, -aPosition.y, 0.0, 0.0,
+           1.0, -aPosition.z, 0.0, 0.0, 0.0, 1.0);
 
   return axesMatrix * translationMatrix;
 }
@@ -181,22 +163,17 @@ inline Mat4 View(const Vec3& aDirectionVector,
  * @param aNearPlane The near plane of the frustum.
  * @param aFarPlane The far plane of the frustum.
  */
-inline Mat4 Perspective(float aFOV,
-                        float aViewportWidth,
-                        float aViewportHeight,
-                        float aNearPlane,
-                        float aFarPlane)
-{
+inline Mat4 Perspective(float aFOV, float aViewportWidth, float aViewportHeight,
+                        float aNearPlane, float aFarPlane) {
   auto rad = aFOV * (M_PI / 180.0);
   auto f = 1.0 / std::tan(rad * 0.5);
   auto aspect = aViewportWidth / aViewportHeight;
   auto far = aFarPlane;
   auto near = aNearPlane;
 
-  return Mat4(f / aspect, 0.0, 0.0, 0.0,
-              0.0, f, 0.0, 0.0,
-              0.0, 0.0, (near + far) / (near - far), (2 * far * near) / (near - far),
-              0.0, 0.0, -1.0, 0.0);
+  return Mat4(f / aspect, 0.0, 0.0, 0.0, 0.0, f, 0.0, 0.0, 0.0, 0.0,
+              (near + far) / (near - far), (2 * far * near) / (near - far), 0.0,
+              0.0, -1.0, 0.0);
 }
 
 /**
@@ -208,20 +185,15 @@ inline Mat4 Perspective(float aFOV,
  * @param aNearPlane The near plane of the frustum.
  * @param aFarPlane The far plane of the frustum.
  */
-inline Mat4 Orthographic(float aViewportWidth,
-                         float aViewportHeight,
-                         float aNearPlane,
-                         float aFarPlane)
-{
+inline Mat4 Orthographic(float aViewportWidth, float aViewportHeight,
+                         float aNearPlane, float aFarPlane) {
   auto right = aViewportWidth;
   auto top = aViewportHeight;
   auto far = aFarPlane;
   auto near = aNearPlane;
 
-  return Mat4(2.0 / right, 0.0, 0.0, -1.0,
-              0.0, 2.0 / top, 0.0, -1.0,
-              0.0, 0.0, 1.0 / (far - near), -near / (far - near),
-              0.0, 0.0, 0.0, 1.0);
+  return Mat4(2.0 / right, 0.0, 0.0, -1.0, 0.0, 2.0 / top, 0.0, -1.0, 0.0, 0.0,
+              1.0 / (far - near), -near / (far - near), 0.0, 0.0, 0.0, 1.0);
 }
 
 /**
@@ -233,8 +205,7 @@ inline Mat4 Orthographic(float aViewportWidth,
  * @param aPercent The percentage to interpolate by, between 0.0 and 1.0.
  * @return The value that is aPercent of the way towards aTarget from aStart.
  */
-inline float Lerp(float aStart, float aTarget, float aPercent)
-{
+inline float Lerp(float aStart, float aTarget, float aPercent) {
   return (aStart + (aTarget - aStart) * aPercent);
 }
 
@@ -246,8 +217,7 @@ inline float Lerp(float aStart, float aTarget, float aPercent)
  * @param aPercent The percentage to interpolate by, between 0.0 and 1.0.
  * @return The Vec3 that is aPercent of the way towards aTarget from aStart.
  */
-inline Vec3 Lerp(const Vec3& aStart, const Vec3& aTarget, float aPercent)
-{
+inline Vec3 Lerp(const Vec3 &aStart, const Vec3 &aTarget, float aPercent) {
   return Vec3(Lerp(aStart.x, aTarget.x, aPercent),
               Lerp(aStart.y, aTarget.y, aPercent),
               Lerp(aStart.z, aTarget.z, aPercent));

@@ -3,10 +3,9 @@
 
 namespace StarBear {
 
-struct Laser
-{
-  int mDamage { 1 };
-  float mLifetime { 2 };
+struct Laser {
+  int mDamage{1};
+  float mLifetime{2};
 };
 
 } // namespace StarBear
