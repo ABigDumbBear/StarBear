@@ -1,18 +1,19 @@
 #include "ParticleEmitterSystem.hpp"
 
-#include "ParticleEmitter.hpp"
-#include "Transform.hpp"
+#include <KumaGL/MathUtil.hpp>
+#include <KumaGL/Transform.hpp>
 
-#include "MathUtil.hpp"
+#include "KumaECS/ECS.hpp"
+#include "ParticleEmitter.hpp"
 
 namespace StarBear {
 
 /******************************************************************************/
-void ParticleEmitterSystem::Update(Scene &aScene, std::random_device &aDevice,
-                                   double dt) {
+void ParticleEmitterSystem::Update(KumaECS::Scene &aScene,
+                                   std::random_device &aDevice, double dt) {
   for (const auto &entity : mEntities) {
     auto &emitter = aScene.GetComponentForEntity<ParticleEmitter>(entity);
-    auto &transform = aScene.GetComponentForEntity<Transform>(entity);
+    auto &transform = aScene.GetComponentForEntity<KumaGL::Transform>(entity);
 
     // Determine the current position of the emitter.
     auto emitterPos = transform.GetWorldPosition();
@@ -68,19 +69,20 @@ void ParticleEmitterSystem::Update(Scene &aScene, std::random_device &aDevice,
 }
 
 /******************************************************************************/
-void ParticleEmitterSystem::Render(Scene &aScene, ResourceMap &aMap,
-                                   const Mat4 &aView, const Mat4 &aProj) {
-  std::vector<Mat4> modelMatrices;
+void ParticleEmitterSystem::Render(KumaECS::Scene &aScene, ResourceMap &aMap,
+                                   const KumaGL::Mat4 &aView,
+                                   const KumaGL::Mat4 &aProj) {
+  std::vector<KumaGL::Mat4> modelMatrices;
   std::vector<float> lifetimes;
   for (const auto &entity : mEntities) {
     auto &emitter = aScene.GetComponentForEntity<ParticleEmitter>(entity);
     for (size_t i = 0; i < emitter.mActiveParticles; ++i) {
       auto mat = Translate(emitter.mParticles[i].mPosition);
-      mat = mat * Scale(Vec3((emitter.mParticles[i].mLifetime /
-                              emitter.mParticles[i].mMaxLifetime),
-                             (emitter.mParticles[i].mLifetime /
-                              emitter.mParticles[i].mMaxLifetime),
-                             1));
+      mat = mat * Scale(KumaGL::Vec3((emitter.mParticles[i].mLifetime /
+                                      emitter.mParticles[i].mMaxLifetime),
+                                     (emitter.mParticles[i].mLifetime /
+                                      emitter.mParticles[i].mMaxLifetime),
+                                     1));
       modelMatrices.emplace_back(mat);
 
       lifetimes.emplace_back(emitter.mParticles[i].mLifetime /
@@ -93,7 +95,7 @@ void ParticleEmitterSystem::Render(Scene &aScene, ResourceMap &aMap,
   auto &texture = aMap.GetTexture(TextureType::ePARTICLE);
 
   glBindBuffer(GL_ARRAY_BUFFER, mesh.GetInstanceBufferID());
-  glBufferData(GL_ARRAY_BUFFER, modelMatrices.size() * sizeof(Mat4),
+  glBufferData(GL_ARRAY_BUFFER, modelMatrices.size() * sizeof(KumaGL::Mat4),
                modelMatrices.data(), GL_DYNAMIC_DRAW);
 
   glBindBuffer(GL_ARRAY_BUFFER, mesh.GetCustomBufferID());

@@ -1,24 +1,24 @@
 #ifndef COLLISIONSYSTEM_HPP
 #define COLLISIONSYSTEM_HPP
 
-#include "ECS.hpp"
-#include "ResourceMap.hpp"
+#include <KumaECS/ECS.hpp>
 
-#include "Vec3.hpp"
+#include <KumaGL/Vec3.hpp>
 
 #include "Hitbox.hpp"
+#include "ResourceMap.hpp"
 
 namespace StarBear {
 
-class CollisionSystem : public System {
+class CollisionSystem : public KumaECS::System {
 public:
-  void Update(Scene &aScene);
-  void Render(Scene &aScene, ResourceMap &aMap, const Mat4 &aView,
-              const Mat4 &aProj);
+  void Update(KumaECS::Scene &aScene);
+  void Render(KumaECS::Scene &aScene, ResourceMap &aMap,
+              const KumaGL::Mat4 &aView, const KumaGL::Mat4 &aProj);
 
 private:
-  bool CheckCollision(const Vec3 &aPositionA, const Hitbox &aHitboxA,
-                      const Vec3 &aPositionB, const Hitbox &aHitboxB);
+  bool CheckCollision(const KumaGL::Vec3 &aPositionA, const Hitbox &aHitboxA,
+                      const KumaGL::Vec3 &aPositionB, const Hitbox &aHitboxB);
 };
 
 } // namespace StarBear

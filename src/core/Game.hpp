@@ -5,15 +5,14 @@
 
 #include <GLFW/glfw3.h>
 
-#include "ECS.hpp"
+#include <KumaECS/ECS.hpp>
+
 #include "Input.hpp"
 
 #include "ResourceMap.hpp"
 
 #include "CameraSystem.hpp"
 #include "CollisionSystem.hpp"
-#include "EnemySystem.hpp"
-#include "LaserSystem.hpp"
 #include "ParentSystem.hpp"
 #include "ParticleEmitterSystem.hpp"
 #include "PhysicsSystem.hpp"
@@ -37,13 +36,11 @@ private:
 
   ResourceMap mResourceMap;
 
-  Scene mScene;
+  KumaECS::Scene mScene;
   double mLastFrameTime;
 
   CameraSystem *mCameraSystem;
   CollisionSystem *mCollisionSystem;
-  EnemySystem *mEnemySystem;
-  LaserSystem *mLaserSystem;
   ParentSystem *mParentSystem;
   ParticleEmitterSystem *mParticleEmitterSystem;
   RailMoverSystem *mRailMoverSystem;

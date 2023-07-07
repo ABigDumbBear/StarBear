@@ -13,8 +13,6 @@ list(APPEND SOURCE_FILES
   src/core/Game.cpp
   src/core/ResourceMap.cpp
   src/systems/CollisionSystem.cpp
-  src/systems/EnemySystem.cpp
-  src/systems/LaserSystem.cpp
   src/systems/ParentSystem.cpp
   src/systems/PhysicsSystem.cpp
   src/systems/RailMoverSystem.cpp
@@ -25,9 +23,13 @@ list(APPEND SOURCE_FILES
 
 # Create the executable.
 add_executable(starBear ${SOURCE_FILES})
-target_link_libraries(starBear PUBLIC KumaGL)
+target_link_libraries(starBear PUBLIC glfw KumaGL)
 target_include_directories(starBear PUBLIC
+  3rd_party/include
   src/components
   src/core
   src/systems
 )
+
+install(TARGETS starBear DESTINATION ${CMAKE_SOURCE_DIR}/install)
+install(DIRECTORY resources DESTINATION ${CMAKE_SOURCE_DIR}/install)

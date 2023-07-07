@@ -3,28 +3,16 @@
 
 #include <map>
 
-#include "Mesh.hpp"
-#include "Model.hpp"
-#include "Shader.hpp"
-#include "Texture.hpp"
+#include <KumaGL/Mesh.hpp>
+#include <KumaGL/Model.hpp>
+#include <KumaGL/Shader.hpp>
+#include <KumaGL/Texture.hpp>
 
 namespace StarBear {
 
 enum class MeshType { eQUAD, eCUBE };
 
-enum class ModelType {
-  eBOB,
-  eCHALLENGER,
-  eDISPATCHER,
-  eEXECUTIONER,
-  eIMPERIAL,
-  eINSURGENT,
-  eOMEN,
-  ePANCAKE,
-  eSPITFIRE,
-  eSTRIKER,
-  eZENITH
-};
+enum class ModelType { eBOB, eSPITFIRE };
 
 enum class ShaderType { eSHIP, ePARTICLE, eHITBOX };
 
@@ -34,16 +22,18 @@ class ResourceMap {
 public:
   ResourceMap();
 
-  Mesh &GetMesh(MeshType aType) { return mMeshMap.at(aType); }
-  Model &GetModel(ModelType aType) { return mModelMap.at(aType); }
-  Shader &GetShader(ShaderType aType) { return mShaderMap.at(aType); }
-  Texture &GetTexture(TextureType aType) { return mTextureMap.at(aType); }
+  KumaGL::Mesh &GetMesh(MeshType aType) { return mMeshMap.at(aType); }
+  KumaGL::Model &GetModel(ModelType aType) { return mModelMap.at(aType); }
+  KumaGL::Shader &GetShader(ShaderType aType) { return mShaderMap.at(aType); }
+  KumaGL::Texture &GetTexture(TextureType aType) {
+    return mTextureMap.at(aType);
+  }
 
 private:
-  std::map<MeshType, Mesh> mMeshMap;
-  std::map<TextureType, Texture> mTextureMap;
-  std::map<ModelType, Model> mModelMap;
-  std::map<ShaderType, Shader> mShaderMap;
+  std::map<MeshType, KumaGL::Mesh> mMeshMap;
+  std::map<TextureType, KumaGL::Texture> mTextureMap;
+  std::map<ModelType, KumaGL::Model> mModelMap;
+  std::map<ShaderType, KumaGL::Shader> mShaderMap;
 };
 
 } // namespace StarBear

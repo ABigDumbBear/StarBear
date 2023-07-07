@@ -2,11 +2,12 @@
 
 #include <GLFW/glfw3.h>
 
+#include <KumaGL/MathUtil.hpp>
+#include <KumaGL/Transform.hpp>
+
 #include "EntityFactory.hpp"
-#include "MathUtil.hpp"
 
 #include "ShipController.hpp"
-#include "Transform.hpp"
 
 namespace StarBear {
 
@@ -22,11 +23,11 @@ float easeInOutBack(double x) {
 }
 
 /******************************************************************************/
-void ShipControllerSystem::Update(Scene &aScene, const Input &aInput,
+void ShipControllerSystem::Update(KumaECS::Scene &aScene, const Input &aInput,
                                   double dt) {
   for (const auto &entity : mEntities) {
     auto &controller = aScene.GetComponentForEntity<ShipController>(entity);
-    auto &transform = aScene.GetComponentForEntity<Transform>(entity);
+    auto &transform = aScene.GetComponentForEntity<KumaGL::Transform>(entity);
 
     // Handle directional input
     if (aInput.mPressedKeys.count(GLFW_KEY_W)) {
@@ -40,13 +41,6 @@ void ShipControllerSystem::Update(Scene &aScene, const Input &aInput,
     }
     if (aInput.mPressedKeys.count(GLFW_KEY_D)) {
       controller.mTargetPos.x += 1;
-    }
-
-    // Handle firing input
-    controller.mTimeSinceFired += dt;
-    if (aInput.mPressedKeys.count(GLFW_KEY_SPACE) &&
-        controller.mTimeSinceFired >= 1.0 / controller.mFireRate) {
-      Fire(aScene, entity);
     }
 
     // Handle rolling input
@@ -81,13 +75,14 @@ void ShipControllerSystem::Update(Scene &aScene, const Input &aInput,
 }
 
 /******************************************************************************/
-void ShipControllerSystem::Render(Scene &aScene, ResourceMap &aMap,
-                                  const Mat4 &aView, const Mat4 &aProj) {
+void ShipControllerSystem::Render(KumaECS::Scene &aScene, ResourceMap &aMap,
+                                  const KumaGL::Mat4 &aView,
+                                  const KumaGL::Mat4 &aProj) {
   // Store the model matrix for each ship.
-  std::vector<Mat4> modelMatrices;
+  std::vector<KumaGL::Mat4> modelMatrices;
   std::vector<float> inverts;
   for (const auto &entity : mEntities) {
-    auto &transform = aScene.GetComponentForEntity<Transform>(entity);
+    auto &transform = aScene.GetComponentForEntity<KumaGL::Transform>(entity);
     modelMatrices.emplace_back(transform.GetMatrix());
     inverts.emplace_back(0);
   }
@@ -97,7 +92,7 @@ void ShipControllerSystem::Render(Scene &aScene, ResourceMap &aMap,
   auto &model = aMap.GetModel(ModelType::eSPITFIRE);
   for (const auto &mesh : model.GetMeshes()) {
     glBindBuffer(GL_ARRAY_BUFFER, mesh.GetInstanceBufferID());
-    glBufferData(GL_ARRAY_BUFFER, modelMatrices.size() * sizeof(Mat4),
+    glBufferData(GL_ARRAY_BUFFER, modelMatrices.size() * sizeof(KumaGL::Mat4),
                  modelMatrices.data(), GL_DYNAMIC_DRAW);
 
     glBindBuffer(GL_ARRAY_BUFFER, mesh.GetCustomBufferID());
@@ -112,20 +107,6 @@ void ShipControllerSystem::Render(Scene &aScene, ResourceMap &aMap,
   shader.SetMat4("projectionMatrix", aProj);
 
   model.DrawInstanced(shader, mEntities.size());
-}
-
-/******************************************************************************/
-void ShipControllerSystem::Fire(Scene &aScene, Entity aShip) {
-  auto &controller = aScene.GetComponentForEntity<ShipController>(aShip);
-  auto &transform = aScene.GetComponentForEntity<Transform>(aShip);
-
-  auto laser = CreateLaser(aScene);
-  aScene.GetComponentForEntity<Physics>(laser).mVelocity =
-      transform.GetForward() * 100;
-  aScene.GetComponentForEntity<Transform>(laser).SetPosition(
-      transform.GetWorldPosition());
-
-  controller.mTimeSinceFired = 0;
 }
 
 } // namespace StarBear

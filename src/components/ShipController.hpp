@@ -1,15 +1,15 @@
 #ifndef SHIPCONTROLLER_HPP
 #define SHIPCONTROLLER_HPP
 
-#include "Vec3.hpp"
+#include <KumaGL/Vec3.hpp>
 
 namespace StarBear {
 
 enum class ShipState { eDEFAULT, eROLLING };
 
 struct ShipController {
-  Vec3 mTargetPos{0, 0, -1};
-  Vec3 mForward{0, 0, -1};
+  KumaGL::Vec3 mTargetPos{0, 0, -1};
+  KumaGL::Vec3 mForward{0, 0, -1};
   float mSpeed{0};
 
   ShipState mState{ShipState::eDEFAULT};

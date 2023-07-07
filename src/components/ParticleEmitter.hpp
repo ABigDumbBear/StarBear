@@ -3,7 +3,7 @@
 
 #include <array>
 
-#include "Vec3.hpp"
+#include <KumaGL/Vec3.hpp>
 
 namespace StarBear {
 
@@ -11,12 +11,12 @@ struct Particle {
   float mMaxLifetime{0.2};
   float mLifetime{0.2};
 
-  Vec3 mPosition;
-  Vec3 mVelocity;
+  KumaGL::Vec3 mPosition;
+  KumaGL::Vec3 mVelocity;
 };
 
 struct ParticleEmitter {
-  Vec3 mPreviousPosition;
+  KumaGL::Vec3 mPreviousPosition;
 
   float mEmissionRate{1};
 

@@ -11,7 +11,7 @@
 #include <unordered_map>
 #include <vector>
 
-namespace StarBear {
+namespace KumaECS {
 
 /*******************************************************************************
  * Definitions
@@ -221,6 +221,6 @@ private:
   std::vector<std::unique_ptr<IComponentMap>> mComponentMaps;
 };
 
-} // namespace StarBear
+} // namespace KumaECS
 
 #endif

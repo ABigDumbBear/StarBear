@@ -1,18 +1,18 @@
 #include "RailMoverSystem.hpp"
 
+#include <KumaGL/Transform.hpp>
+
 #include "RailMover.hpp"
-#include "Transform.hpp"
 
 namespace StarBear {
 
 /******************************************************************************/
-void RailMoverSystem::Update(Scene &aScene) {
+void RailMoverSystem::Update(KumaECS::Scene &aScene) {
   for (const auto &entity : mEntities) {
     auto &railMover = aScene.GetComponentForEntity<RailMover>(entity);
-    auto &transform = aScene.GetComponentForEntity<Transform>(entity);
+    auto &transform = aScene.GetComponentForEntity<KumaGL::Transform>(entity);
 
-    transform.Translate(Vec3(0, 0, -0.1));
-    // transform.Rotate(0, 1, 0);
+    transform.Translate(KumaGL::Vec3(0, 0, -0.1));
   }
 }
 

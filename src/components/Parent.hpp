@@ -1,12 +1,12 @@
 #ifndef PARENT_HPP
 #define PARENT_HPP
 
-#include "ECS.hpp"
+#include <KumaECS/ECS.hpp>
 
 namespace StarBear {
 
 struct Parent {
-  EntitySet mChildren;
+  KumaECS::EntitySet mChildren;
 };
 
 } // namespace StarBear

@@ -1,14 +1,12 @@
 #include "CollisionSystem.hpp"
 
-#include "Mat4.hpp"
-
-#include "Laser.hpp"
-#include "Transform.hpp"
+#include <KumaGL/Mat4.hpp>
+#include <KumaGL/Transform.hpp>
 
 namespace StarBear {
 
 /******************************************************************************/
-void CollisionSystem::Update(Scene &aScene) {
+void CollisionSystem::Update(KumaECS::Scene &aScene) {
   for (const auto &entity : mEntities) {
     auto &hitbox = aScene.GetComponentForEntity<Hitbox>(entity);
     hitbox.mCollided = false;
@@ -20,12 +18,14 @@ void CollisionSystem::Update(Scene &aScene) {
         continue;
       }
 
-      auto &transformA = aScene.GetComponentForEntity<Transform>(entityA);
-      auto posA = transformA.GetMatrix() * Vec3(0, 0, 0);
+      auto &transformA =
+          aScene.GetComponentForEntity<KumaGL::Transform>(entityA);
+      auto posA = transformA.GetMatrix() * KumaGL::Vec3(0, 0, 0);
       auto &hitboxA = aScene.GetComponentForEntity<Hitbox>(entityA);
 
-      auto &transformB = aScene.GetComponentForEntity<Transform>(entityB);
-      auto posB = transformB.GetMatrix() * Vec3(0, 0, 0);
+      auto &transformB =
+          aScene.GetComponentForEntity<KumaGL::Transform>(entityB);
+      auto posB = transformB.GetMatrix() * KumaGL::Vec3(0, 0, 0);
       auto &hitboxB = aScene.GetComponentForEntity<Hitbox>(entityB);
 
       if (!hitboxB.mCollided) {
@@ -36,18 +36,20 @@ void CollisionSystem::Update(Scene &aScene) {
 }
 
 /******************************************************************************/
-void CollisionSystem::Render(Scene &aScene, ResourceMap &aMap,
-                             const Mat4 &aView, const Mat4 &aProj) {
-  std::vector<Mat4> modelMatrices;
+void CollisionSystem::Render(KumaECS::Scene &aScene, ResourceMap &aMap,
+                             const KumaGL::Mat4 &aView,
+                             const KumaGL::Mat4 &aProj) {
+  std::vector<KumaGL::Mat4> modelMatrices;
   for (const auto &entity : mEntities) {
-    auto &transform = aScene.GetComponentForEntity<Transform>(entity);
+    auto &transform = aScene.GetComponentForEntity<KumaGL::Transform>(entity);
     auto &hitbox = aScene.GetComponentForEntity<Hitbox>(entity);
 
-    Vec3 pos(hitbox.x, hitbox.y, hitbox.z);
+    KumaGL::Vec3 pos(hitbox.x, hitbox.y, hitbox.z);
     pos = transform.GetWorldPosition() + pos;
 
     auto mat = Translate(pos);
-    mat = mat * Scale(Vec3(hitbox.mWidth, hitbox.mHeight, hitbox.mDepth));
+    mat =
+        mat * Scale(KumaGL::Vec3(hitbox.mWidth, hitbox.mHeight, hitbox.mDepth));
     modelMatrices.emplace_back(mat);
   }
 
@@ -55,7 +57,7 @@ void CollisionSystem::Render(Scene &aScene, ResourceMap &aMap,
   auto &shader = aMap.GetShader(ShaderType::eHITBOX);
 
   glBindBuffer(GL_ARRAY_BUFFER, mesh.GetInstanceBufferID());
-  glBufferData(GL_ARRAY_BUFFER, modelMatrices.size() * sizeof(Mat4),
+  glBufferData(GL_ARRAY_BUFFER, modelMatrices.size() * sizeof(KumaGL::Mat4),
                modelMatrices.data(), GL_DYNAMIC_DRAW);
 
   shader.Use();
@@ -66,9 +68,9 @@ void CollisionSystem::Render(Scene &aScene, ResourceMap &aMap,
 }
 
 /******************************************************************************/
-bool CollisionSystem::CheckCollision(const Vec3 &aPositionA,
+bool CollisionSystem::CheckCollision(const KumaGL::Vec3 &aPositionA,
                                      const Hitbox &aHitboxA,
-                                     const Vec3 &aPositionB,
+                                     const KumaGL::Vec3 &aPositionB,
                                      const Hitbox &aHitboxB) {
   bool collision = false;
 

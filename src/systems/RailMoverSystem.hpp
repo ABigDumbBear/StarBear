@@ -1,13 +1,13 @@
 #ifndef RAILMOVERSYSTEM_HPP
 #define RAILMOVERSYSTEM_HPP
 
-#include "ECS.hpp"
+#include <KumaECS/ECS.hpp>
 
 namespace StarBear {
 
-class RailMoverSystem : public System {
+class RailMoverSystem : public KumaECS::System {
 public:
-  void Update(Scene &aScene);
+  void Update(KumaECS::Scene &aScene);
 };
 
 } // namespace StarBear

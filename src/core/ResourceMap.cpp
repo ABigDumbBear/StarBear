@@ -5,8 +5,8 @@ namespace StarBear {
 /******************************************************************************/
 ResourceMap::ResourceMap() {
   // Load individual meshes.
-  mMeshMap.emplace(MeshType::eQUAD, Mesh());
-  mMeshMap.emplace(MeshType::eCUBE, Mesh());
+  mMeshMap.emplace(MeshType::eQUAD, KumaGL::Mesh());
+  mMeshMap.emplace(MeshType::eCUBE, KumaGL::Mesh());
 
   mMeshMap[MeshType::eQUAD].InitQuad();
   mMeshMap[MeshType::eCUBE].InitCube();
@@ -19,15 +19,15 @@ ResourceMap::ResourceMap() {
   glBindVertexArray(0);
 
   // Load individual textures.
-  mTextureMap.emplace(TextureType::eCROSSHAIR, Texture());
-  mTextureMap.emplace(TextureType::ePARTICLE, Texture());
+  mTextureMap.emplace(TextureType::eCROSSHAIR, KumaGL::Texture());
+  mTextureMap.emplace(TextureType::ePARTICLE, KumaGL::Texture());
 
   mTextureMap[TextureType::eCROSSHAIR].LoadFromFile("resources/crosshair.png");
   mTextureMap[TextureType::ePARTICLE].LoadFromFile("resources/particle.png");
 
   // Load models.
-  mModelMap.emplace(ModelType::eBOB, Model());
-  mModelMap.emplace(ModelType::eSPITFIRE, Model());
+  mModelMap.emplace(ModelType::eBOB, KumaGL::Model());
+  mModelMap.emplace(ModelType::eSPITFIRE, KumaGL::Model());
 
   mModelMap[ModelType::eBOB].LoadFromFile("resources/models/Bob/Bob.obj");
   mModelMap[ModelType::eSPITFIRE].LoadFromFile(
@@ -58,9 +58,9 @@ ResourceMap::ResourceMap() {
   }
 
   // Load shaders.
-  mShaderMap.emplace(ShaderType::eSHIP, Shader());
-  mShaderMap.emplace(ShaderType::ePARTICLE, Shader());
-  mShaderMap.emplace(ShaderType::eHITBOX, Shader());
+  mShaderMap.emplace(ShaderType::eSHIP, KumaGL::Shader());
+  mShaderMap.emplace(ShaderType::ePARTICLE, KumaGL::Shader());
+  mShaderMap.emplace(ShaderType::eHITBOX, KumaGL::Shader());
 
   mShaderMap[ShaderType::eSHIP].LoadFromFiles("resources/shaders/Ship.vert",
                                               "resources/shaders/Ship.frag");

@@ -1,17 +1,19 @@
 #include "ParentSystem.hpp"
 
+#include <KumaGL/Transform.hpp>
+
 #include "Parent.hpp"
-#include "Transform.hpp"
 
 namespace StarBear {
 
 /******************************************************************************/
-void CombineTransforms(Scene &aScene, Entity aEntity) {
-  auto &transform = aScene.GetComponentForEntity<Transform>(aEntity);
+void CombineTransforms(KumaECS::Scene &aScene, KumaECS::Entity aEntity) {
+  auto &transform = aScene.GetComponentForEntity<KumaGL::Transform>(aEntity);
   auto &children = aScene.GetComponentForEntity<Parent>(aEntity).mChildren;
 
   for (const auto &child : children) {
-    auto &childTransform = aScene.GetComponentForEntity<Transform>(child);
+    auto &childTransform =
+        aScene.GetComponentForEntity<KumaGL::Transform>(child);
     childTransform.Combine(transform);
 
     if (aScene.DoesEntityHaveComponent<Parent>(child)) {
@@ -21,7 +23,7 @@ void CombineTransforms(Scene &aScene, Entity aEntity) {
 }
 
 /******************************************************************************/
-void ParentSystem::Update(Scene &aScene) {
+void ParentSystem::Update(KumaECS::Scene &aScene) {
   for (const auto &entity : mEntities) {
     CombineTransforms(aScene, entity);
   }

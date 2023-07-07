@@ -1,14 +1,15 @@
 #include "PhysicsSystem.hpp"
 
+#include <KumaGL/Transform.hpp>
+
 #include "Physics.hpp"
-#include "Transform.hpp"
 
 namespace StarBear {
 
 /******************************************************************************/
-void PhysicsSystem::Update(Scene &aScene, double dt) {
+void PhysicsSystem::Update(KumaECS::Scene &aScene, double dt) {
   for (const auto &entity : mEntities) {
-    auto &transform = aScene.GetComponentForEntity<Transform>(entity);
+    auto &transform = aScene.GetComponentForEntity<KumaGL::Transform>(entity);
     auto &physics = aScene.GetComponentForEntity<Physics>(entity);
 
     physics.mVelocity += physics.mAcceleration * dt;

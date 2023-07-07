@@ -1,13 +1,13 @@
 #ifndef PHYSICSSYSTEM_HPP
 #define PHYSICSSYSTEM_HPP
 
-#include "ECS.hpp"
+#include <KumaECS/ECS.hpp>
 
 namespace StarBear {
 
-class PhysicsSystem : public System {
+class PhysicsSystem : public KumaECS::System {
 public:
-  void Update(Scene &aScene, double dt);
+  void Update(KumaECS::Scene &aScene, double dt);
 };
 
 } // namespace StarBear
