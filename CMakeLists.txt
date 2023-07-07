@@ -6,45 +6,28 @@ project(StarBear VERSION 0.0.1)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Find the required external dependencies.
-find_package(Freetype REQUIRED)
-find_package(assimp REQUIRED)
-find_package(glfw3 REQUIRED)
+find_package(KumaGL REQUIRED)
 
 # Gather up the source and header files.
 list(APPEND SOURCE_FILES
-            3rd_party/glad/glad.c
-            src/core/Game.cpp
-            src/core/ResourceMap.cpp
-            src/graphics/Font.cpp
-            src/graphics/Mesh.cpp
-            src/graphics/Model.cpp
-            src/graphics/Shader.cpp
-            src/graphics/Texture.cpp
-            src/systems/CollisionSystem.cpp
-            src/systems/EnemySystem.cpp
-            src/systems/LaserSystem.cpp
-            src/systems/ParentSystem.cpp
-            src/systems/PhysicsSystem.cpp
-            src/systems/RailMoverSystem.cpp
-            src/systems/ShipControllerSystem.cpp
-            src/systems/ParticleEmitterSystem.cpp
-            src/main.cpp)
+  src/core/Game.cpp
+  src/core/ResourceMap.cpp
+  src/systems/CollisionSystem.cpp
+  src/systems/EnemySystem.cpp
+  src/systems/LaserSystem.cpp
+  src/systems/ParentSystem.cpp
+  src/systems/PhysicsSystem.cpp
+  src/systems/RailMoverSystem.cpp
+  src/systems/ShipControllerSystem.cpp
+  src/systems/ParticleEmitterSystem.cpp
+  src/main.cpp
+)
 
 # Create the executable.
 add_executable(starBear ${SOURCE_FILES})
-target_link_libraries(starBear PUBLIC glfw
-                                      ${FREETYPE_LIBRARIES}
-                                      ${ASSIMP_LIBRARIES})
-target_include_directories(starBear PUBLIC 3rd_party
-                                           src/components
-                                           src/core
-                                           src/graphics
-                                           src/math
-                                           src/systems
-                                           src/util
-                                           ${FREETYPE_INCLUDE_DIRS}
-                                           ${ASSIMP_INCLUDE_DIRS})
-
-# Install the executable.
-install(TARGETS starBear DESTINATION ${CMAKE_SOURCE_DIR}/install)
-install(DIRECTORY resources DESTINATION ${CMAKE_SOURCE_DIR}/install)
+target_link_libraries(starBear PUBLIC KumaGL)
+target_include_directories(starBear PUBLIC
+  src/components
+  src/core
+  src/systems
+)
