@@ -44,7 +44,9 @@ void CollisionSystem::Render(KumaECS::Scene &aScene, ResourceMap &aMap,
     auto &transform = aScene.GetComponentForEntity<KumaGL::Transform>(entity);
     auto &hitbox = aScene.GetComponentForEntity<Hitbox>(entity);
 
-    KumaGL::Vec3 pos(hitbox.x, hitbox.y, hitbox.z);
+    KumaGL::Vec3 pos(hitbox.x + (hitbox.mWidth / 2.0),
+                     hitbox.y + (hitbox.mHeight / 2.0),
+                     hitbox.z + (hitbox.mDepth / 2.0));
     pos = transform.GetWorldPosition() + pos;
 
     auto mat = Translate(pos);

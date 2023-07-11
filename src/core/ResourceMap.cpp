@@ -58,12 +58,13 @@ ResourceMap::ResourceMap() {
   }
 
   // Load shaders.
-  mShaderMap.emplace(ShaderType::eSHIP, KumaGL::Shader());
+  mShaderMap.emplace(ShaderType::eTEXTURED_MESH, KumaGL::Shader());
   mShaderMap.emplace(ShaderType::ePARTICLE, KumaGL::Shader());
   mShaderMap.emplace(ShaderType::eHITBOX, KumaGL::Shader());
 
-  mShaderMap[ShaderType::eSHIP].LoadFromFiles("resources/shaders/Ship.vert",
-                                              "resources/shaders/Ship.frag");
+  mShaderMap[ShaderType::eTEXTURED_MESH].LoadFromFiles(
+      "resources/shaders/TexturedMesh.vert",
+      "resources/shaders/TexturedMesh.frag");
   mShaderMap[ShaderType::ePARTICLE].LoadFromFiles(
       "resources/shaders/Particle.vert", "resources/shaders/Particle.frag");
   mShaderMap[ShaderType::eHITBOX].LoadFromFiles(

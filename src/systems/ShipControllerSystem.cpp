@@ -80,28 +80,20 @@ void ShipControllerSystem::Render(KumaECS::Scene &aScene, ResourceMap &aMap,
                                   const KumaGL::Mat4 &aProj) {
   // Store the model matrix for each ship.
   std::vector<KumaGL::Mat4> modelMatrices;
-  std::vector<float> inverts;
   for (const auto &entity : mEntities) {
     auto &transform = aScene.GetComponentForEntity<KumaGL::Transform>(entity);
     modelMatrices.emplace_back(transform.GetMatrix());
-    inverts.emplace_back(0);
   }
 
-  // For each mesh in the model, bind the mesh's instance buffer and
-  // write the model matrices into it.
   auto &model = aMap.GetModel(ModelType::eSPITFIRE);
   for (const auto &mesh : model.GetMeshes()) {
     glBindBuffer(GL_ARRAY_BUFFER, mesh.GetInstanceBufferID());
     glBufferData(GL_ARRAY_BUFFER, modelMatrices.size() * sizeof(KumaGL::Mat4),
                  modelMatrices.data(), GL_DYNAMIC_DRAW);
-
-    glBindBuffer(GL_ARRAY_BUFFER, mesh.GetCustomBufferID());
-    glBufferData(GL_ARRAY_BUFFER, inverts.size() * sizeof(float),
-                 inverts.data(), GL_DYNAMIC_DRAW);
   }
 
   // Set shader uniforms and draw the model.
-  auto &shader = aMap.GetShader(ShaderType::eSHIP);
+  auto &shader = aMap.GetShader(ShaderType::eTEXTURED_MESH);
   shader.Use();
   shader.SetMat4("viewMatrix", aView);
   shader.SetMat4("projectionMatrix", aProj);

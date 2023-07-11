@@ -14,7 +14,7 @@ enum class MeshType { eQUAD, eCUBE };
 
 enum class ModelType { eBOB, eSPITFIRE };
 
-enum class ShaderType { eSHIP, ePARTICLE, eHITBOX };
+enum class ShaderType { eTEXTURED_MESH, ePARTICLE, eHITBOX };
 
 enum class TextureType { eCROSSHAIR, ePARTICLE };
 
