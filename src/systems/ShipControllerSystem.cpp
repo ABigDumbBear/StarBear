@@ -98,7 +98,7 @@ void ShipControllerSystem::Render(KumaECS::Scene &aScene, ResourceMap &aMap,
   shader.SetMat4("viewMatrix", aView);
   shader.SetMat4("projectionMatrix", aProj);
 
-  model.DrawInstanced(shader, mEntities.size());
+  model.DrawInstanced(mEntities.size());
 }
 
 } // namespace StarBear

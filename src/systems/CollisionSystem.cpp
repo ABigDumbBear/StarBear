@@ -66,7 +66,7 @@ void CollisionSystem::Render(KumaECS::Scene &aScene, ResourceMap &aMap,
   shader.SetMat4("viewMatrix", aView);
   shader.SetMat4("projectionMatrix", aProj);
 
-  mesh.DrawInstanced(shader, modelMatrices.size(), GL_LINE_LOOP);
+  mesh.DrawInstanced(modelMatrices.size(), GL_LINE_LOOP);
 }
 
 /******************************************************************************/

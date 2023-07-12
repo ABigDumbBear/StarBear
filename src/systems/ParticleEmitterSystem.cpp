@@ -109,7 +109,7 @@ void ParticleEmitterSystem::Render(KumaECS::Scene &aScene, ResourceMap &aMap,
   shader.SetMat4("viewMatrix", aView);
   shader.SetMat4("projectionMatrix", aProj);
 
-  mesh.DrawInstanced(shader, modelMatrices.size());
+  mesh.DrawInstanced(modelMatrices.size());
 }
 
 } // namespace StarBear
